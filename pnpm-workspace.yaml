@@ -1,0 +1,5 @@
+packages:
+  # 后台服务
+  - api
+  # 前端页面
+  - web

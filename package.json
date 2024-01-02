@@ -1,0 +1,14 @@
+{
+  "name": "foolon-admin-monorepo",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "prepare": "husky install"
+  },
+  "keywords": [],
+  "author": "",
+  "dependencies": {
+    "husky": "^8.0.3"
+  }
+}

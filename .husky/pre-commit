@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+cd api/ && pnpm lint && pnpm format && cd ../web && pnpm lint && pnpm format
