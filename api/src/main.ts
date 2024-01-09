@@ -12,6 +12,7 @@ import { ValidationError } from 'class-validator';
 import fs from 'fs';
 import compression from 'compression';
 import express from 'express';
+import { RedisIoAdapter } from './socket/RedisIoAdapter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -36,6 +37,11 @@ async function bootstrap() {
   );
   app.use(compression());
   app.use(express.static('./upload'));
+
+  // socket.io配置
+  const redisIoAdapter = new RedisIoAdapter(app);
+  await redisIoAdapter.connectToRedis();
+  app.useWebSocketAdapter(redisIoAdapter);
 
   // swagger配置
   if (process.env.NODE_ENV != 'production') {

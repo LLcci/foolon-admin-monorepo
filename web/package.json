@@ -21,6 +21,7 @@
     "postcss": "^8.4.32",
     "postcss-px-conversion": "^0.0.4",
     "sass": "^1.69.6",
+    "socket.io-client": "^4.7.3",
     "vue": "^3.3.11",
     "vue-router": "^4.2.5"
   },

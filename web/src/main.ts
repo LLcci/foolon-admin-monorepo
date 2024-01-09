@@ -14,6 +14,8 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 import '@/styles/globalClass.scss'
 
+import '@/sockets/index'
+
 const app = createApp(App)
 
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {

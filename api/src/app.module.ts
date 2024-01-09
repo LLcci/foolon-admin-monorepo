@@ -1,3 +1,4 @@
+import { SocketModule } from './socket/socket.module';
 import { AdminModule } from './admin/admin.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
@@ -9,6 +10,7 @@ import { LoggerModule } from '@/global/logger/logger.module';
 
 @Module({
   imports: [
+    SocketModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: [`.env.${process.env.NODE_ENV}`, '.env'],
