@@ -35,7 +35,7 @@ export class UserService {
     createUserDto.iv = iv;
     const user = await this.userRepository.save(createUserDto);
     await this.redisService.client.set(
-      `${process.env.REDIS_PREFIX}${user.id}`,
+      `${process.env.REDIS_USERID_PREFIX}${user.id}`,
       iv,
     );
     return user;

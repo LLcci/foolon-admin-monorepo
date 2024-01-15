@@ -1,14 +1,11 @@
 import { reactive } from 'vue'
 import { Socket, io } from 'socket.io-client'
+import { ElNotification } from 'element-plus'
 
 export const state = reactive<{
   connected: boolean
-  fooEvents: Array<any>
-  barEvents: Array<any>
 }>({
-  connected: false,
-  fooEvents: [],
-  barEvents: []
+  connected: false
 })
 
 export const socket: Socket = io(import.meta.env.VITE_WS_URL, {
@@ -20,14 +17,11 @@ socket.on('connect', () => {
   state.connected = true
 })
 
+socket.on('connect_error', () => {
+  ElNotification.error('服务器无法访问')
+})
+
 socket.on('disconnect', () => {
   state.connected = false
-})
-
-socket.on('foo', (...args) => {
-  state.fooEvents.push(args)
-})
-
-socket.on('bar', (...args) => {
-  state.barEvents.push(args)
+  ElNotification.error('服务器连接已断开')
 })

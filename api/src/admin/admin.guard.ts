@@ -22,7 +22,12 @@ export class AdminGuard implements CanActivate {
   /**
    * 不进行登录校验的接口地址
    */
-  private readonly fillters = ['/admin/sys/login'];
+  private readonly fillters = [
+    // 用户登录
+    '/admin/sys/login',
+    // 获取验证码
+    '/admin/sys/login/code',
+  ];
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
@@ -43,7 +48,7 @@ export class AdminGuard implements CanActivate {
       secret: process.env.JWT_SECRET,
     });
     const userIv = await this.redisService.client.get(
-      `${process.env.REDIS_PREFIX}${payload.id}`,
+      `${process.env.REDIS_USERID_PREFIX}${payload.id}`,
     );
     if (userIv !== redisUserIv) {
       throw new UnauthorizedException('密码已修改，请重新登录');

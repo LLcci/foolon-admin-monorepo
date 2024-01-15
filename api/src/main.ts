@@ -54,10 +54,11 @@ async function bootstrap() {
     const document = SwaggerModule.createDocument(app, options);
     fs.writeFileSync('./swagger-spec.json', JSON.stringify(document));
   }
-
+  app.enableCors({ origin: '*' });
   await app.listen(process.env.SERVER_PORT, '0.0.0.0');
   const serverUrl = await app.getUrl();
   logger.log(`api服务已经启动,请访问: ${serverUrl}`);
+  logger.log(`ws服务已启动,请访问：http://127.0.0.1:${process.env.WS_PORT}/ws`);
   if (process.env.NODE_ENV != 'production') {
     logger.log(`api文档地址: ${serverUrl}/swagger-api`);
   }

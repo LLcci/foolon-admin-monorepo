@@ -21,9 +21,5 @@ export class SocketGateway implements OnGatewayInit {
     return data;
   }
 
-  afterInit() {
-    this.logger.log(
-      `ws服务已启动,请访问：http://127.0.0.1:${process.env.WS_PORT}`,
-    );
-  }
+  afterInit() {}
 }

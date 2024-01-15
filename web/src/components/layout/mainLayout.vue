@@ -24,7 +24,7 @@
                 'font-size-lg': useSystem().orientation == 'Landscape',
                 'font-size-sm': useSystem().orientation == 'Portrait'
               }"
-              >火龙果的操作台</span
+              >{{ title }}</span
             >
             <el-button
               v-if="useSystem().orientation == 'Landscape'"
@@ -213,6 +213,8 @@ import { ref } from 'vue'
 import type { TabPaneName } from 'element-plus'
 import { useSystem } from '@/stores/useSystem'
 
+const title = ref(import.meta.env.VITE_APP_NAME)
+
 const router = useRouter()
 const route = useRoute()
 
@@ -270,13 +272,9 @@ const handleTabsEdit = (targetName: TabPaneName | undefined, action: 'remove' | 
   }
 }
 
-const handleSelect = (index: string) => {
-  console.log('🚀 ~ file: mainLayout.vue:274 ~ index:', index)
-}
+const handleSelect = (index: string) => {}
 
-const handleTabsChange = (name: TabPaneName) => {
-  console.log('🚀 ~ file: mainLayout.vue:152 ~ handleTabsChange ~ name:', name)
-}
+const handleTabsChange = (name: TabPaneName) => {}
 
 let drawer = ref(false)
 </script>

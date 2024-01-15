@@ -1,8 +1,5 @@
 import { createFetch } from '@vueuse/core'
-import { useRouter } from 'vue-router'
 import { ElNotification, ElMessage } from 'element-plus'
-
-const router = useRouter()
 
 export const useFetch = createFetch({
   baseUrl: import.meta.env.VITE_API_URL,
@@ -15,13 +12,22 @@ export const useFetch = createFetch({
       }
       return { options }
     },
+    async afterFetch(ctx) {
+      ctx.data = JSON.parse(ctx.data).data
+      return ctx
+    },
     async onFetchError(ctx) {
-      if (ctx.data.code === 401) {
-        localStorage.removeItem('token')
-        router.replace('/login')
-        ElNotification.error({ message: ctx.data.message })
+      if (ctx.data) {
+        const data = JSON.parse(ctx.data)
+        if (data.code == 401) {
+          localStorage.removeItem('token')
+          window.location.reload()
+          ElNotification.error({ message: data.message })
+        } else {
+          ElMessage.error(data.message)
+        }
       } else {
-        ElMessage.error(ctx.data.message)
+        ElNotification.error(ctx.error.message)
       }
       return ctx
     }
