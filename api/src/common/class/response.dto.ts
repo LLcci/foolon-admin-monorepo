@@ -27,3 +27,28 @@ export class ResponseDto<T> {
     return new ResponseDto<T>(data, code, message, false);
   }
 }
+
+export class PageResultDto<T> {
+  constructor(records: T[], currentPage = 1, pageSize = 10) {
+    this.currentPage = currentPage;
+    this.pageSize = pageSize;
+    this.total = records.length;
+    this.records = records.slice(
+      (currentPage - 1) * pageSize,
+      currentPage * pageSize,
+    );
+  }
+  currentPage: number;
+  pageSize: number;
+  total: number;
+  records: T[];
+}
+
+export class PageRequestDto {
+  constructor(currentPage = 1, pageSize = 10) {
+    this.currentPage = currentPage;
+    this.pageSize = pageSize;
+  }
+  currentPage: number;
+  pageSize: number;
+}
