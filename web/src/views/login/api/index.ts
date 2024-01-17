@@ -1,4 +1,4 @@
-import { useFetch } from '@/fetch/useFetch'
+import { useFetch } from '@/hooks/useFetch'
 import type { Code, LoginForm, Token } from '../types'
 
 /**
