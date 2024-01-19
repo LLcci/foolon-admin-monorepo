@@ -9,7 +9,7 @@
   ],
   "compilerOptions": {
     "composite": true,
-    "noEmit": true,
+    "noEmit": false,
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "types": ["node"]
