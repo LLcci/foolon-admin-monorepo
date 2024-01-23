@@ -1,0 +1,48 @@
+<template>
+  <el-table v-bind="props.table.props">
+    <template
+      v-for="(slotItem, slotItemIndex) in props.table.slots"
+      :key="slotItemIndex"
+      #[slotItemIndex]
+    >
+      <component
+        v-for="(slotItemComponent, slotItemComponentIndex) in slotItem"
+        :key="slotItemComponentIndex"
+        :is="slotItemComponent"
+      ></component>
+    </template>
+    <el-table-column
+      v-for="(column, index) in props.table.columns"
+      :key="index"
+      v-bind="column?.props"
+      :prop="index"
+    >
+    </el-table-column>
+    <el-table-column v-if="props.table.actionsProps" v-bind="props.table.actionsProps">
+      <template #default="scope">
+        <slot v-bind="scope"></slot>
+      </template>
+    </el-table-column>
+  </el-table>
+  <el-pagination
+    class="mt float-right mr"
+    layout="total, sizes, prev, pager, next, jumper"
+    :page-sizes="[10, 50, 100]"
+    v-bind="props.table.pagination?.props"
+    :total="pagination.total"
+    v-model:page-size="pagination.pageSize"
+    v-model:currentPage="pagination.currentPage"
+    v-on="{ ...props.table.pagination?.events }"
+  />
+</template>
+<script setup lang="ts">
+import type SchemaTable from './types'
+import type { FormModel } from '@/types/index'
+
+const props = defineProps<{ table: SchemaTable<FormModel> }>()
+
+const pagination = defineModel<{ pageSize: number; currentPage: number; total: number }>({
+  required: true
+})
+</script>
+<style lang="scss" scoped></style>

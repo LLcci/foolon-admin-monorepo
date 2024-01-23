@@ -31,6 +31,17 @@ const router = createRouter({
           path: '/sys/menu',
           name: 'menu',
           component: () => import('@/views/sys/sysMenu.vue')
+        },
+
+        {
+          path: '/demo/schemaFormDemo',
+          name: 'schemaFormDemo',
+          component: () => import('@/views/demo/schemaFormDemo.vue')
+        },
+        {
+          path: '/demo/schemaTableDemo',
+          name: 'schemaTableDemo',
+          component: () => import('@/views/demo/schemaTableDemo.vue')
         }
       ]
     }

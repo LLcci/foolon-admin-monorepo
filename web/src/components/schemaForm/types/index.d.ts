@@ -21,12 +21,12 @@ import type {
   SliderEmits,
   SwitchEmits,
   TransferEmits,
-  FormRules,
-  ButtonProps
+  FormRules
 } from 'element-plus'
 
 import { ElSelect, ElTimePicker, ElTimeSelect, ElTree, ElTreeSelect } from 'element-plus'
 import type { VNode } from 'vue'
+import type { FormModel, ButtonItem } from '@/types/index'
 
 export type FormItemCompanents = keyof Pick<
   typeof import('element-plus/es/components'),
@@ -134,8 +134,6 @@ export type FormItemCompanentsEvents = Partial<
   | TreeSelectEmits
 >
 
-type FormModel = Record<string, any>
-
 /**
  *
  */
@@ -179,27 +177,6 @@ export type FormItems<T> = Record<
     componentSlots?: Record<string, VNode[]>
   }
 >
-
-/**
- * 按钮
- * @param {ButtonProps} props ElementUI按钮属性,https://element-plus.org/zh-CN/component/button.html#button-attributes
- * @param {Record<string, VNode[]>} slots 插槽,key:插槽名称,value:返回h函数数组https://element-plus.org/zh-CN/component/button.html#button-slots
- * @param {Record<string, (e: MouseEvent) => any>} events 事件
- */
-export type ButtonItem = {
-  /**
-   * 按钮属性,https://element-plus.org/zh-CN/component/button.html#button-attributes
-   */
-  props: Partial<ButtonProps>
-  /**
-   * 插槽,key:插槽名称,value:返回h函数数组https://element-plus.org/zh-CN/component/button.html#button-slots
-   */
-  slots?: Record<string, VNode[]>
-  /**
-   * 事件
-   */
-  events?: { click: (e: MouseEvent) => any }
-}
 
 /**
  * 简单表单

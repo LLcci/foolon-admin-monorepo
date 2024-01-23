@@ -129,6 +129,22 @@
               </template>
             </el-menu-item>
           </el-sub-menu>
+          <el-sub-menu index="/demo">
+            <template #title>
+              <el-icon><DataLine /></el-icon>
+              <span>组件Demo</span>
+            </template>
+            <el-menu-item index="/demo/schemaFormDemo">
+              <template #title>
+                <span>简单表单Demo</span>
+              </template>
+            </el-menu-item>
+            <el-menu-item index="/demo/schemaTableDemo">
+              <template #title>
+                <span>简单表格Demo</span>
+              </template>
+            </el-menu-item>
+          </el-sub-menu>
         </el-menu>
       </el-aside>
       <el-container>
@@ -198,6 +214,22 @@
           <el-icon><User /></el-icon>
           <template #title>
             <span>用户管理</span>
+          </template>
+        </el-menu-item>
+      </el-sub-menu>
+      <el-sub-menu index="/demo">
+        <template #title>
+          <el-icon><DataLine /></el-icon>
+          <span>组件Demo</span>
+        </template>
+        <el-menu-item index="/demo/schemaFormDemo">
+          <template #title>
+            <span>简单表单Demo</span>
+          </template>
+        </el-menu-item>
+        <el-menu-item index="/demo/schemaTableDemo">
+          <template #title>
+            <span>简单表格Demo</span>
           </template>
         </el-menu-item>
       </el-sub-menu>

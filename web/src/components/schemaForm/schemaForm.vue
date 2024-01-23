@@ -77,7 +77,7 @@ import {
   ElOption,
   type FormInstance
 } from 'element-plus'
-import type { FormModel } from './types/'
+import type { FormModel } from '@/types/index'
 export default {
   props: {
     form: {
