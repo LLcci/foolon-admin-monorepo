@@ -21,7 +21,8 @@ import type {
   SliderEmits,
   SwitchEmits,
   TransferEmits,
-  FormRules
+  FormRules,
+  ButtonProps
 } from 'element-plus'
 
 import { ElSelect, ElTimePicker, ElTimeSelect, ElTree, ElTreeSelect } from 'element-plus'
@@ -164,12 +165,22 @@ export type FormItems<T> = Record<
   }
 >
 
+export type ButtonItem = {
+  props: Partial<ButtonProps>
+  slots?: Record<string, VNode[]>
+  events?: { click: (e: MouseEvent) => any }
+}
+
 /**
  * 简单表单
  * @param {FormProps} props ElementUI表单属性,https://element-plus.org/zh-CN/component/form.html#form-attributes
  * @param {FormItems} formItems 表单项目及对应的组件
+ * @param {ButtonItem[]} buttons 按钮组,不传默认显示提交和重置按钮
  */
 export default interface SchemaForm<T extends FormModel> {
   props: FormProps<T>
   formItems: FormItems<T>
+  buttons?: ButtonItem[]
 }
+
+export type SchemaFormInstance = InstanceType<typeof import('../schemaForm.vue').default>

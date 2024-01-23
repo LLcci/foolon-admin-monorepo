@@ -25,8 +25,32 @@
         </template>
       </component>
     </el-form-item>
-    <el-form-item>
-      <el-button type="primary" size="default" @click="handleSubmit">提交</el-button>
+    <el-form-item v-if="form.buttons">
+      <el-button
+        v-for="(item, index) in form.buttons"
+        :class="{
+          'ml-3': index > 0
+        }"
+        v-bind="item.props"
+        v-on="{ ...item.events }"
+        :key="index"
+      >
+        <template
+          v-for="(slotItem, slotItemIndex) in item.slots"
+          :key="slotItemIndex"
+          #[slotItemIndex]
+        >
+          <component
+            v-for="(slotItemComponent, slotItemComponentIndex) in slotItem"
+            :key="slotItemComponentIndex"
+            :is="slotItemComponent"
+          ></component>
+        </template>
+      </el-button>
+    </el-form-item>
+    <el-form-item v-else>
+      <el-button type="primary" @click="handleSubmit">提交</el-button>
+      <el-button @click="resetForm">重置</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -66,6 +90,7 @@ export default {
       return model
     }
   },
+  expose: ['formRef'],
   components: {
     ElAutocomplete,
     ElCascader,
@@ -99,6 +124,13 @@ export default {
       } catch (error) {
         console.warn(error)
       }
+    },
+    resetForm() {
+      const formRef = this.$refs.formRef as FormInstance
+      formRef.resetFields()
+    },
+    formRef(): FormInstance {
+      return this.$refs.formRef as FormInstance
     }
   }
 }
