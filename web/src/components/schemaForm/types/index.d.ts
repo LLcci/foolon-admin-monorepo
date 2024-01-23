@@ -157,17 +157,47 @@ export type FormItemProps = Partial<Omit<ElFormItemProps, 'prop'>>
 export type FormItems<T> = Record<
   keyof T,
   {
+    /**
+     * ElementUI表单项目属性,https://element-plus.org/zh-CN/component/form.html#formitem-attributes
+     */
     props: FormItemProps
+    /**
+     * 组件名称
+     */
     component: FormItemCompanents
+    /**
+     * 组件属性,ElementUI各个组件对应的属性
+     */
     componentProps?: FormItemCompanentsProps
+    /**
+     * 组件事件,ElementUI各个组件对应的事件
+     */
     componentEvents?: FormItemCompanentsEvents
+    /**
+     * 插槽,key:插槽名称,value:返回h函数数组https://element-plus.org/zh-CN/component/form.html#formitem-slots
+     */
     componentSlots?: Record<string, VNode[]>
   }
 >
 
+/**
+ * 按钮
+ * @param {ButtonProps} props ElementUI按钮属性,https://element-plus.org/zh-CN/component/button.html#button-attributes
+ * @param {Record<string, VNode[]>} slots 插槽,key:插槽名称,value:返回h函数数组https://element-plus.org/zh-CN/component/button.html#button-slots
+ * @param {Record<string, (e: MouseEvent) => any>} events 事件
+ */
 export type ButtonItem = {
+  /**
+   * 按钮属性,https://element-plus.org/zh-CN/component/button.html#button-attributes
+   */
   props: Partial<ButtonProps>
+  /**
+   * 插槽,key:插槽名称,value:返回h函数数组https://element-plus.org/zh-CN/component/button.html#button-slots
+   */
   slots?: Record<string, VNode[]>
+  /**
+   * 事件
+   */
   events?: { click: (e: MouseEvent) => any }
 }
 
@@ -178,8 +208,17 @@ export type ButtonItem = {
  * @param {ButtonItem[]} buttons 按钮组,不传默认显示提交和重置按钮
  */
 export default interface SchemaForm<T extends FormModel> {
+  /**
+   * ElementUI表单属性,https://element-plus.org/zh-CN/component/form.html#form-attributes
+   */
   props: FormProps<T>
+  /**
+   * 表单项目及对应的组件
+   */
   formItems: FormItems<T>
+  /**
+   * 按钮组,不传默认显示提交和重置按钮
+   */
   buttons?: ButtonItem[]
 }
 
