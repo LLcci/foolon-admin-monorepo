@@ -5,13 +5,13 @@ import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('sys_menu')
 export class MenuEntity extends BaseEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   @ApiProperty({
     required: false,
     description: '菜单id,新增时不需要传,更新时需要传',
   })
   @IsNotEmpty({ message: '菜单id不能为空' })
-  @IsString({ message: '菜单id必须是数字' })
+  @IsString({ message: '菜单id必须是字符串' })
   @IsOptional()
   id: string;
 
@@ -104,5 +104,6 @@ export class MenuEntity extends BaseEntity {
   })
   @IsNotEmpty({ message: '是否启用不能为空' })
   @IsNumber({}, { message: '是否启用必须是数字' })
+  @IsOptional()
   status: number;
 }

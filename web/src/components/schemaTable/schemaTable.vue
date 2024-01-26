@@ -1,5 +1,5 @@
 <template>
-  <el-table v-bind="props.table.props">
+  <el-table v-bind="props.table.props" v-loading="props.table.props.loading">
     <template
       v-for="(slotItem, slotItemIndex) in props.table.slots"
       :key="slotItemIndex"
@@ -14,7 +14,7 @@
     <el-table-column
       v-for="(column, index) in props.table.columns"
       :key="index"
-      v-bind="column?.props"
+      v-bind="column"
       :prop="index"
     >
     </el-table-column>
@@ -25,7 +25,7 @@
     </el-table-column>
   </el-table>
   <el-pagination
-    class="mt float-right mr"
+    class="mt float-right mr mb"
     layout="total, sizes, prev, pager, next, jumper"
     :page-sizes="[10, 50, 100]"
     v-bind="props.table.pagination?.props"
@@ -36,12 +36,13 @@
   />
 </template>
 <script setup lang="ts">
+import type { Pagination } from './types'
 import type SchemaTable from './types'
 import type { FormModel } from '@/types/index'
 
 const props = defineProps<{ table: SchemaTable<FormModel> }>()
 
-const pagination = defineModel<{ pageSize: number; currentPage: number; total: number }>({
+const pagination = defineModel<Pagination>({
   required: true
 })
 </script>

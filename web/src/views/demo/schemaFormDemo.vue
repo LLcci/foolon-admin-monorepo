@@ -1,5 +1,10 @@
 <template>
-  <schemaForm ref="formRef" :form="form" @on-validate-ok="handleSubmit"></schemaForm>
+  <schemaForm
+    ref="formRef"
+    v-model="formModel"
+    :form="form"
+    @on-validate-ok="handleSubmit"
+  ></schemaForm>
 </template>
 <script setup lang="ts">
 import schemaForm from '@/components/schemaForm/schemaForm.vue'
@@ -14,12 +19,10 @@ type Form = {
 }
 const formRef = ref<SchemaFormInstance>()
 
+const formModel = ref<Form>({ input: null, select: null })
+
 const form = ref<SchemaForm<Form>>({
   props: {
-    model: {
-      input: null,
-      select: null
-    },
     rules: {
       input: [{ required: true, message: '请输入' }]
     },
@@ -77,12 +80,9 @@ const form = ref<SchemaForm<Form>>({
       },
       events: {
         click() {
-          formRef.value
-            ?.formRef()
-            .validate()
-            .then((res: any) => {
-              console.log('🚀 ~ formRef.value?.formRef ~ res:', res)
-            })
+          formRef.value?.formRef?.validate().then(() => {
+            console.log('🚀 ~ res:', formModel.value)
+          })
         }
       }
     }

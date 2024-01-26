@@ -42,6 +42,11 @@ const router = createRouter({
           path: '/demo/schemaTableDemo',
           name: 'schemaTableDemo',
           component: () => import('@/views/demo/schemaTableDemo.vue')
+        },
+        {
+          path: '/demo/schemaTableFormDemo',
+          name: 'schemaTableFormDemo',
+          component: () => import('@/views/demo/schemaTableFormDemo.vue')
         }
       ]
     }

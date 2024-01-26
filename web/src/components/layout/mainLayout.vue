@@ -144,6 +144,11 @@
                 <span>简单表格Demo</span>
               </template>
             </el-menu-item>
+            <el-menu-item index="/demo/schemaTableFormDemo">
+              <template #title>
+                <span>简单表格表格Demo</span>
+              </template>
+            </el-menu-item>
           </el-sub-menu>
         </el-menu>
       </el-aside>
@@ -230,6 +235,11 @@
         <el-menu-item index="/demo/schemaTableDemo">
           <template #title>
             <span>简单表格Demo</span>
+          </template>
+        </el-menu-item>
+        <el-menu-item index="/demo/schemaTableFormDemo">
+          <template #title>
+            <span>简单表格表格Demo</span>
           </template>
         </el-menu-item>
       </el-sub-menu>

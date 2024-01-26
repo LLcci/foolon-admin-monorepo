@@ -31,6 +31,7 @@ export default defineConfig({
     vueJsx(),
     UnoCSS(),
     AutoImport({
+      imports: ['vue', 'vue-router'],
       resolvers: [ElementPlusResolver()]
     }),
     Components({

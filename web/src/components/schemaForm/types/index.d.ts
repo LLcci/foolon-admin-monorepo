@@ -138,7 +138,6 @@ export type FormItemCompanentsEvents = Partial<
  *
  */
 export type FormProps<T> = Partial<Omit<ElFormProps, 'model' | 'rules'>> & {
-  model: T
   rules?: FormRules<T>
 }
 
@@ -158,7 +157,7 @@ export type FormItems<T> = Record<
     /**
      * ElementUI表单项目属性,https://element-plus.org/zh-CN/component/form.html#formitem-attributes
      */
-    props: FormItemProps
+    props?: FormItemProps
     /**
      * 组件名称
      */

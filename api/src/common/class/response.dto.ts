@@ -1,3 +1,5 @@
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 import dayjs from 'dayjs';
 
 export class ResponseDto<T> {
@@ -49,6 +51,23 @@ export class PageRequestDto {
     this.currentPage = currentPage;
     this.pageSize = pageSize;
   }
+  @ApiProperty({
+    required: false,
+    description: '当前页码',
+    default: 1,
+  })
+  @IsNotEmpty({ message: '当前页码不能为空' })
+  @IsNumber({}, { message: '当前页码必须是数字' })
+  @IsOptional()
   currentPage: number;
+
+  @ApiProperty({
+    required: false,
+    description: '页大小',
+    default: 10,
+  })
+  @IsNotEmpty({ message: '当前页码不能为空' })
+  @IsNumber({}, { message: '当前页码必须是数字' })
+  @IsOptional()
   pageSize: number;
 }

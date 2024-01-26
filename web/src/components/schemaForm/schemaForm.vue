@@ -1,7 +1,7 @@
 <template>
-  <el-form ref="formRef" v-bind="form.props">
+  <el-form ref="formRef" v-bind="props.form.props" :model="formModel">
     <el-form-item
-      v-for="(item, index) in form.formItems"
+      v-for="(item, index) in props.form.formItems"
       :key="index"
       v-bind="item.props"
       :prop="index"
@@ -25,9 +25,9 @@
         </template>
       </component>
     </el-form-item>
-    <el-form-item v-if="form.buttons">
+    <el-form-item v-if="props.form.buttons">
       <el-button
-        v-for="(item, index) in form.buttons"
+        v-for="(item, index) in props.form.buttons"
         :class="{
           'ml-3': index > 0
         }"
@@ -54,85 +54,37 @@
     </el-form-item>
   </el-form>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 import type SchemaForm from './types/'
-import { type PropType } from 'vue'
-import {
-  ElAutocomplete,
-  ElCascader,
-  ElColorPicker,
-  ElDatePicker,
-  ElInput,
-  ElInputNumber,
-  ElRate,
-  ElSelect,
-  ElSlider,
-  ElSwitch,
-  ElTimePicker,
-  ElTimeSelect,
-  ElTransfer,
-  ElTree,
-  ElUpload,
-  ElTreeSelect,
-  ElOption,
-  type FormInstance
-} from 'element-plus'
+import { type PropType, defineModel, defineProps, ref, defineEmits, defineExpose } from 'vue'
+import { type FormInstance } from 'element-plus'
 import type { FormModel } from '@/types/index'
-export default {
-  props: {
-    form: {
-      required: true,
-      type: Object as PropType<SchemaForm<FormModel>>
-    }
-  },
-  emits: {
-    onValidateOk<T>(model: T) {
-      return model
-    }
-  },
-  expose: ['formRef'],
-  components: {
-    ElAutocomplete,
-    ElCascader,
-    ElColorPicker,
-    ElDatePicker,
-    ElInput,
-    ElInputNumber,
-    ElRate,
-    ElSelect,
-    ElOption,
-    ElSlider,
-    ElSwitch,
-    ElTimePicker,
-    ElTimeSelect,
-    ElTransfer,
-    ElTree,
-    ElTreeSelect,
-    ElUpload
-  },
-  computed: {
-    formModel() {
-      return this.form.props.model
-    }
-  },
-  methods: {
-    async handleSubmit() {
-      try {
-        const formRef = this.$refs.formRef as FormInstance
-        await formRef.validate()
-        this.$emit('onValidateOk', this.formModel)
-      } catch (error) {
-        console.warn(error)
-      }
-    },
-    resetForm() {
-      const formRef = this.$refs.formRef as FormInstance
-      formRef.resetFields()
-    },
-    formRef(): FormInstance {
-      return this.$refs.formRef as FormInstance
-    }
+
+const formModel = defineModel<FormModel>({
+  required: true
+})
+const props = defineProps({
+  form: { type: Object as PropType<SchemaForm<FormModel>>, required: true }
+})
+
+const emits = defineEmits(['onValidateOk'])
+
+const formRef = ref<FormInstance>()
+
+async function handleSubmit() {
+  try {
+    await formRef.value?.validate()
+    emits('onValidateOk', formModel)
+  } catch (error) {
+    console.warn(error)
   }
 }
+function resetForm() {
+  formRef.value?.resetFields()
+}
+
+defineExpose({
+  formRef
+})
 </script>
 <style lang="scss" scoped></style>

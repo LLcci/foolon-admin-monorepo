@@ -8,6 +8,7 @@
 </template>
 <script setup lang="ts">
 import schemaTable from '@/components/schemaTable/schemaTable.vue'
+import type { Pagination } from '@/components/schemaTable/types'
 import type SchemaTable from '@/components/schemaTable/types'
 import { ref } from 'vue'
 
@@ -27,19 +28,15 @@ const table = ref<SchemaTable<TableData>>({
   },
   columns: {
     name: {
-      props: {
-        align: 'center',
-        label: 'Name',
-        formatter: (value) => {
-          return `${value.name}2233`
-        }
+      align: 'center',
+      label: 'Name',
+      formatter: (value) => {
+        return `${value.name}2233`
       }
     },
     age: {
-      props: {
-        align: 'center',
-        label: 'Age'
-      }
+      align: 'center',
+      label: 'Age'
     }
   },
   actionsProps: {
@@ -55,7 +52,7 @@ const table = ref<SchemaTable<TableData>>({
   }
 })
 
-const pagination = ref({
+const pagination = ref<Pagination>({
   pageSize: 10,
   currentPage: 1,
   total: 1000

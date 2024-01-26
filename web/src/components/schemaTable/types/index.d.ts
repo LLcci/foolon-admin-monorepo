@@ -21,6 +21,7 @@ export default interface SchemaTable<T extends FormModel> {
    */
   props: Partial<Omit<TableProps<T>, 'data'>> & {
     data: T[]
+    loading?: boolean
   }
   /**
    * 表格事件,https://element-plus.org/zh-CN/component/table.html#table-%E4%BA%8B%E4%BB%B6
@@ -33,14 +34,7 @@ export default interface SchemaTable<T extends FormModel> {
   /**
    * key:数据类型key,value:表格列属性,https://element-plus.org/zh-CN/component/table.html#table-column-%E5%B1%9E%E6%80%A7
    */
-  columns: Partial<
-    Record<
-      keyof T,
-      {
-        props: Omit<TableColumnInstance['$props'], 'prop'>
-      }
-    >
-  >
+  columns: Partial<Record<keyof T, Omit<TableColumnInstance['$props'], 'prop'>>>
   /**
    * 表格操作列属性,https://element-plus.org/zh-CN/component/table.html#table-column-%E5%B1%9E%E6%80%A7
    */
@@ -65,3 +59,5 @@ export default interface SchemaTable<T extends FormModel> {
     }
   }
 }
+
+export type Pagination = { pageSize: number; currentPage: number; total: number }

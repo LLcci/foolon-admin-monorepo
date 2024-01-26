@@ -1,6 +1,6 @@
 <template>
   <el-config-provider :locale="locale">
-    <RouterView />
+    <el-scrollbar height="100vh"><RouterView /></el-scrollbar>
   </el-config-provider>
 </template>
 <script setup lang="ts">

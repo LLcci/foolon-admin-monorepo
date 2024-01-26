@@ -3,10 +3,10 @@ https://docs.nestjs.com/providers#services
 */
 
 import { Injectable } from '@nestjs/common';
-import { MenuListDto } from './menu.dto';
+import { MenuPageListDto } from './menu.dto';
 import { MenuEntity } from './menu.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { PageResultDto } from '@/common/class/response.dto';
 
 @Injectable()
@@ -16,19 +16,36 @@ export class MenuService {
     private readonly menuRepository: Repository<MenuEntity>,
   ) {}
 
-  async getMenuList(menuListDto: MenuListDto) {
+  async getMenuPageList(menuPageListDto: MenuPageListDto) {
     const list: MenuEntity[] = await this.menuRepository.find({
-      where: menuListDto,
+      where: {
+        name: menuPageListDto.name
+          ? Like(`%${menuPageListDto.name}%`)
+          : undefined,
+        status: menuPageListDto.status,
+      },
       order: { createTime: 'DESC', sort: 'ASC' },
     });
     return new PageResultDto<MenuEntity>(
       list,
-      menuListDto.currentPage,
-      menuListDto.pageSize,
+      menuPageListDto.currentPage,
+      menuPageListDto.pageSize,
     );
   }
 
-  async saveMenu(menu: MenuEntity) {
+  async getMenuList(menuPageListDto: MenuPageListDto) {
+    return await this.menuRepository.find({
+      where: {
+        name: menuPageListDto.name
+          ? Like(`%${menuPageListDto.name}%`)
+          : undefined,
+        status: menuPageListDto.status,
+      },
+      order: { createTime: 'DESC', sort: 'ASC' },
+    });
+  }
+
+  async saveMenu(menu: MenuEntity[]) {
     return await this.menuRepository.save(menu);
   }
 
@@ -36,7 +53,7 @@ export class MenuService {
     return await this.menuRepository.findOne({ where: { id } });
   }
 
-  async deleteMenuById(id: string) {
-    return await this.menuRepository.delete({ id });
+  async deleteMenuById(id: string[]) {
+    return await this.menuRepository.delete(id);
   }
 }
