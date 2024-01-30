@@ -159,21 +159,13 @@ export type FormItems<T> = Record<
      */
     props?: FormItemProps
     /**
-     * 组件名称
+     * 组件
      */
-    component: FormItemCompanents
+    component: VNode
     /**
-     * 组件属性,ElementUI各个组件对应的属性
+     * 等同于v-if
      */
-    componentProps?: FormItemCompanentsProps
-    /**
-     * 组件事件,ElementUI各个组件对应的事件
-     */
-    componentEvents?: FormItemCompanentsEvents
-    /**
-     * 插槽,key:插槽名称,value:返回h函数数组https://element-plus.org/zh-CN/component/form.html#formitem-slots
-     */
-    componentSlots?: Record<string, VNode[]>
+    vIf?: (model: T) => boolean
   }
 >
 

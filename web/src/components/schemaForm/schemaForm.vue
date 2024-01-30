@@ -1,30 +1,10 @@
 <template>
   <el-form ref="formRef" v-bind="props.form.props" :model="formModel">
-    <el-form-item
-      v-for="(item, index) in props.form.formItems"
-      :key="index"
-      v-bind="item.props"
-      :prop="index"
-    >
-      <component
-        :is="item.component"
-        v-bind="item.componentProps"
-        v-on="{ ...item.componentEvents }"
-        v-model="formModel[index]"
-      >
-        <template
-          v-for="(slotItem, slotItemIndex) in item.componentSlots"
-          :key="slotItemIndex"
-          #[slotItemIndex]
-        >
-          <component
-            v-for="(slotItemComponent, slotItemComponentIndex) in slotItem"
-            :key="slotItemComponentIndex"
-            :is="slotItemComponent"
-          ></component>
-        </template>
-      </component>
-    </el-form-item>
+    <template v-for="(item, index) in props.form.formItems" :key="index">
+      <el-form-item v-if="item.vIf ? item.vIf(formModel) : true" v-bind="item.props" :prop="index">
+        <component :is="item.component" v-model="formModel[index as string]"> </component>
+      </el-form-item>
+    </template>
     <el-form-item v-if="props.form.buttons">
       <el-button
         v-for="(item, index) in props.form.buttons"
@@ -56,16 +36,14 @@
 </template>
 <script setup lang="ts">
 import type SchemaForm from './types/'
-import { type PropType, defineModel, ref } from 'vue'
+import { defineModel, ref } from 'vue'
 import { type FormInstance } from 'element-plus'
 import type { FormModel } from '@/types/index'
 
 const formModel = defineModel<FormModel>({
   required: true
 })
-const props = defineProps({
-  form: { type: Object as PropType<SchemaForm<FormModel>>, required: true }
-})
+const props = defineProps<{ form: SchemaForm<any> }>()
 
 const emits = defineEmits(['onValidateOk'])
 

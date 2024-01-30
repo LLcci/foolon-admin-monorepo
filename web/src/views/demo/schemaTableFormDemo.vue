@@ -6,7 +6,7 @@ import schemaTableForm from '@/components/schemaTableForm/schemaTableForm.vue'
 import type { Api } from '@/components/schemaTableForm/types'
 import type SchemaTableForm from '@/components/schemaTableForm/types'
 import type { paths } from '@/types/Schema'
-import { ElOption } from 'element-plus'
+import { ElInput, ElInputNumber, ElOption, ElSelect } from 'element-plus'
 import { h, ref } from 'vue'
 
 const api = ref<Api>({
@@ -44,10 +44,7 @@ const tableForm = ref<
       itemProps: {
         label: '组件名称'
       },
-      itemComponent: 'ElInput',
-      itemComponentProps: {
-        placeholder: '请输入组件名称'
-      }
+      itemComponent: h(ElInput, { placeholder: '请输入组件名称' })
     }
   },
   sort: {
@@ -63,10 +60,7 @@ const tableForm = ref<
       itemProps: {
         label: '排序'
       },
-      itemComponent: 'ElInputNumber',
-      itemComponentProps: {
-        placeholder: '排序'
-      }
+      itemComponent: h(ElInputNumber, { placeholder: '排序' })
     }
   },
   icon: {
@@ -79,12 +73,7 @@ const tableForm = ref<
       itemProps: {
         label: '图标'
       },
-      itemComponent: 'ElSelect',
-      itemComponentProps: {
-        placeholder: '请选择图标'
-      },
-      itemComponentEvents: undefined,
-      itemComponentSlots: undefined
+      itemComponent: h(ElInput, { placeholder: '请输入图标' })
     }
   },
   status: {
@@ -106,17 +95,16 @@ const tableForm = ref<
       itemProps: {
         label: '状态'
       },
-      itemComponent: 'ElSelect',
-      itemComponentProps: {
-        placeholder: '请选择状态'
-      },
-      itemComponentEvents: undefined,
-      itemComponentSlots: {
-        default: [
-          h(ElOption, { label: '启用', value: 1 }),
-          h(ElOption, { label: '停用', value: 0 })
-        ]
-      },
+      itemComponent: h(
+        ElSelect,
+        { placeholder: '请选择状态' },
+        {
+          default: () => [
+            h(ElOption, { value: 1, label: '启用' }),
+            h(ElOption, { value: 0, label: '停用' })
+          ]
+        }
+      ),
       importFormatter(value) {
         return value === '启用' ? 1 : 0
       }
@@ -144,10 +132,7 @@ const tableForm = ref<
       itemProps: {
         label: '路径'
       },
-      itemComponent: 'ElInput',
-      itemComponentProps: {
-        placeholder: '请输入路径'
-      }
+      itemComponent: h(ElInput, { placeholder: '请输入路径' })
     }
   },
   component: {
@@ -163,10 +148,7 @@ const tableForm = ref<
       itemProps: {
         label: '组件'
       },
-      itemComponent: 'ElInput',
-      itemComponentProps: {
-        placeholder: '请输入组件'
-      }
+      itemComponent: h(ElInput, { placeholder: '请输入组件' })
     }
   },
   menuType: {
@@ -188,17 +170,17 @@ const tableForm = ref<
       itemProps: {
         label: '类型'
       },
-      itemComponent: 'ElSelect',
-      itemComponentProps: {
-        placeholder: '请选择类型'
-      },
-      itemComponentSlots: {
-        default: [
-          h(ElOption, { label: '一级菜单', value: 0 }),
-          h(ElOption, { label: '二级菜单', value: 1 }),
-          h(ElOption, { label: '权限', value: 2 })
-        ]
-      },
+      itemComponent: h(
+        ElSelect,
+        { placeholder: '请选择类型' },
+        {
+          default: () => [
+            h(ElOption, { label: '一级菜单', value: 0 }),
+            h(ElOption, { label: '二级菜单', value: 1 }),
+            h(ElOption, { label: '权限', value: 2 })
+          ]
+        }
+      ),
       importFormatter(value) {
         return value == '一级菜单' ? 0 : value == '二级菜单' ? 1 : 2
       }
@@ -215,10 +197,7 @@ const tableForm = ref<
       itemProps: {
         label: '权限'
       },
-      itemComponent: 'ElInput',
-      itemComponentProps: {
-        placeholder: '请输入权限'
-      }
+      itemComponent: h(ElInput, { placeholder: '请输入权限' })
     }
   },
   keepalive: {
@@ -240,13 +219,16 @@ const tableForm = ref<
       itemProps: {
         label: '缓存'
       },
-      itemComponent: 'ElSelect',
-      itemComponentProps: {
-        placeholder: '请选择是否缓存'
-      },
-      itemComponentSlots: {
-        default: [h(ElOption, { label: '是', value: 1 }), h(ElOption, { label: '否', value: 0 })]
-      },
+      itemComponent: h(
+        ElSelect,
+        { placeholder: '请选择缓存' },
+        {
+          default: () => [
+            h(ElOption, { label: '是', value: 1 }),
+            h(ElOption, { label: '否', value: 0 })
+          ]
+        }
+      ),
       importFormatter(value) {
         return value === '是' ? 1 : 0
       }

@@ -10,12 +10,12 @@
 import schemaForm from '@/components/schemaForm/schemaForm.vue'
 import type { SchemaFormInstance } from '@/components/schemaForm/types'
 import type SchemaForm from '@/components/schemaForm/types'
-import { ElOption } from 'element-plus'
+import { ElInput, ElOption, ElSelect } from 'element-plus'
 import { h, ref } from 'vue'
 
 type Form = {
   input: unknown
-  select: unknown
+  select?: unknown
 }
 const formRef = ref<SchemaFormInstance>()
 
@@ -33,41 +33,36 @@ const form = ref<SchemaForm<Form>>({
       props: {
         label: '输入框'
       },
-      component: 'ElInput',
-      componentProps: {
-        placeholder: '请输入'
+      vIf(model) {
+        console.log('🚀 ~ vIf ~ model:', model)
+        return model.select != '1'
       },
-      componentEvents: {
-        change(value: any) {
-          console.log('🚀 ~ value:', value)
+      component: h(ElInput, {
+        placeholder: '请输入',
+        onChange(value) {
+          console.log('🚀 ~ component:h ~ value:', value)
         }
-      }
+      })
     },
     select: {
       props: {
         label: '选择框'
       },
-      component: 'ElSelect',
-      componentProps: {
-        options: [
-          {
-            value: '1',
-            label: '选项1'
-          },
-          {
-            value: '2',
-            label: '选项2'
+      component: h(
+        ElSelect,
+        {
+          placeholder: '请选择',
+          onChange(value) {
+            console.log('🚀 ~ component:h ~ value:', value)
           }
-        ]
-      },
-      componentEvents: {
-        change(value: any) {
-          console.log('🚀 ~ value:', value)
+        },
+        {
+          default: () => [
+            h(ElOption, { value: '1', label: '1' }),
+            h(ElOption, { value: '2', label: '2' })
+          ]
         }
-      },
-      componentSlots: {
-        default: [h(ElOption, { value: '1', label: '1' }), h(ElOption, { value: '2', label: '2' })]
-      }
+      )
     }
   },
   buttons: [

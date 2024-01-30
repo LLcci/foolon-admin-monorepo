@@ -98,12 +98,12 @@ import type { FormModel } from '@/types'
 import schemaForm from '../schemaForm/schemaForm.vue'
 import schemaTable from '@/components/schemaTable/schemaTable.vue'
 import type SchemaTableForm from './types'
-import { computed, h, nextTick, ref } from 'vue'
+import { computed, h, nextTick, ref, type VNode } from 'vue'
 import type SchemaForm from '@/components/schemaForm/types'
 import type SchemaTable from '@/components/schemaTable/types'
 import type { Pagination } from '@/components/schemaTable/types'
 import { ElMessage, type FormRules, type UploadRequestOptions } from 'element-plus'
-import type { FormItemCompanents, SchemaFormInstance } from '@/components/schemaForm/types'
+import type { SchemaFormInstance } from '@/components/schemaForm/types'
 import type { Api } from './types'
 import { tableDelete, tableExport, tableId, tableList, tableSave } from './api'
 import { has, omit } from 'lodash-es'
@@ -229,10 +229,7 @@ const searForm = computed(() => {
     if (props.tableForm[key].form.searchFormShow) {
       formProps.formItems[key] = {
         props: props.tableForm[key].form.itemProps,
-        component: props.tableForm[key].form.itemComponent as FormItemCompanents,
-        componentProps: props.tableForm[key].form.itemComponentProps,
-        componentEvents: props.tableForm[key].form.itemComponentEvents,
-        componentSlots: props.tableForm[key].form.itemComponentSlots
+        component: props.tableForm[key].form.itemComponent as VNode
       }
     }
   }
@@ -265,10 +262,8 @@ const editForm = computed(() => {
     if (props.tableForm[key].form.editFormShow) {
       formProps.formItems[key] = {
         props: props.tableForm[key].form.itemProps,
-        component: props.tableForm[key].form.itemComponent as FormItemCompanents,
-        componentProps: props.tableForm[key].form.itemComponentProps,
-        componentEvents: props.tableForm[key].form.itemComponentEvents,
-        componentSlots: props.tableForm[key].form.itemComponentSlots
+        component: props.tableForm[key].form.itemComponent as VNode,
+        vIf: props.tableForm[key].form.editFormVIf
       }
     }
   }

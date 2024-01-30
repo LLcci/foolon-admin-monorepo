@@ -32,9 +32,8 @@
 <script setup lang="ts">
 import type { Pagination } from './types'
 import type SchemaTable from './types'
-import type { FormModel } from '@/types/index'
 
-const props = defineProps<{ table: SchemaTable<FormModel> }>()
+const props = defineProps<{ table: SchemaTable<any> }>()
 
 const pagination = defineModel<Pagination>({
   required: true

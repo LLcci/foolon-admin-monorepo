@@ -1,11 +1,8 @@
 import type { FormModel } from '@/types'
 import type { TableColumnInstance } from 'element-plus'
-import type {
-  FormItemProps,
-  FormItemCompanents,
-  FormItemCompanentsProps
-} from '@/components/schemaForm/types'
+import type { FormItemProps } from '@/components/schemaForm/types'
 import type { FormItemRule } from 'element-plus'
+import type { VNode } from 'vue'
 
 export type SchemaTableForm<T extends FormModel> = Record<
   keyof T,
@@ -47,21 +44,15 @@ export type SchemaTableForm<T extends FormModel> = Record<
        */
       itemProps?: FormItemProps
       /**
+       * 编辑表单v-if
+       * @param value 当前参数值
+       * @returns boolean
+       */
+      editFormVIf?: (value: T) => boolean
+      /**
        * 表单项目组件
        */
-      itemComponent?: FormItemCompanents
-      /**
-       * 表单项目组件props
-       */
-      itemComponentProps?: FormItemCompanentsProps
-      /**
-       * 表单项目组件事件
-       */
-      itemComponentEvents?: FormItemCompanentsEvents
-      /**
-       * 表单项目组件插槽
-       */
-      itemComponentSlots?: Record<string, VNode[]>
+      itemComponent?: VNode
       /**
        * 导入数据格式化
        * @param value 当前参数值
