@@ -1,6 +1,10 @@
 <template>
   <el-container class="min-h-screen safe-area">
-    <el-header height="fit-content(height)" class="bg-$el-color-primary color-$el-color-white">
+    <el-header
+      ref="headerRef"
+      height="fit-content(height)"
+      class="bg-$el-color-primary color-$el-color-white"
+    >
       <el-row align="middle" justify="space-between">
         <el-col :span="useSystem().orientation == 'Landscape' ? 5 : 15">
           <div
@@ -98,59 +102,66 @@
         width="200px"
         v-if="useSystem().orientation == 'Landscape'"
       >
-        <el-menu :default-active="route.path" :collapse="isCollapse" router @select="handleSelect">
-          <el-menu-item index="/">
-            <el-icon><House /></el-icon>
-            <template #title>
-              <span>首页</span>
-            </template>
-          </el-menu-item>
-          <el-sub-menu index="/sys">
-            <template #title>
-              <el-icon><Setting /></el-icon>
-              <span>系统设置</span>
-            </template>
-            <el-menu-item index="/sys/menu">
-              <el-icon><Operation /></el-icon>
+        <el-scrollbar :height="menuHeight">
+          <el-menu
+            :default-active="route.path"
+            :collapse="isCollapse"
+            router
+            @select="handleSelect"
+          >
+            <el-menu-item index="/">
+              <el-icon><House /></el-icon>
               <template #title>
-                <span>菜单管理</span>
+                <span>首页</span>
               </template>
             </el-menu-item>
-            <el-menu-item index="/sys/role">
-              <el-icon><Lock /></el-icon>
+            <el-sub-menu index="/sys">
               <template #title>
-                <span>角色管理</span>
+                <el-icon><Setting /></el-icon>
+                <span>系统设置</span>
               </template>
-            </el-menu-item>
-            <el-menu-item index="/sys/user">
-              <el-icon><User /></el-icon>
+              <el-menu-item index="/sys/menu">
+                <el-icon><Operation /></el-icon>
+                <template #title>
+                  <span>菜单管理</span>
+                </template>
+              </el-menu-item>
+              <el-menu-item index="/sys/role">
+                <el-icon><Lock /></el-icon>
+                <template #title>
+                  <span>角色管理</span>
+                </template>
+              </el-menu-item>
+              <el-menu-item index="/sys/user">
+                <el-icon><User /></el-icon>
+                <template #title>
+                  <span>用户管理</span>
+                </template>
+              </el-menu-item>
+            </el-sub-menu>
+            <el-sub-menu index="/demo">
               <template #title>
-                <span>用户管理</span>
+                <el-icon><DataLine /></el-icon>
+                <span>组件Demo</span>
               </template>
-            </el-menu-item>
-          </el-sub-menu>
-          <el-sub-menu index="/demo">
-            <template #title>
-              <el-icon><DataLine /></el-icon>
-              <span>组件Demo</span>
-            </template>
-            <el-menu-item index="/demo/schemaFormDemo">
-              <template #title>
-                <span>简单表单Demo</span>
-              </template>
-            </el-menu-item>
-            <el-menu-item index="/demo/schemaTableDemo">
-              <template #title>
-                <span>简单表格Demo</span>
-              </template>
-            </el-menu-item>
-            <el-menu-item index="/demo/schemaTableFormDemo">
-              <template #title>
-                <span>简单表格表格Demo</span>
-              </template>
-            </el-menu-item>
-          </el-sub-menu>
-        </el-menu>
+              <el-menu-item index="/demo/schemaFormDemo">
+                <template #title>
+                  <span>简单表单Demo</span>
+                </template>
+              </el-menu-item>
+              <el-menu-item index="/demo/schemaTableDemo">
+                <template #title>
+                  <span>简单表格Demo</span>
+                </template>
+              </el-menu-item>
+              <el-menu-item index="/demo/schemaTableFormDemo">
+                <template #title>
+                  <span>简单表格表格Demo</span>
+                </template>
+              </el-menu-item>
+            </el-sub-menu>
+          </el-menu>
+        </el-scrollbar>
       </el-aside>
       <el-container>
         <el-header height="fit-content(height)">
@@ -251,9 +262,11 @@ import { RouterView, useRoute, useRouter } from 'vue-router'
 import { useDark, useToggle } from '@vueuse/core'
 import { SwitchButton, Setting } from '@element-plus/icons-vue'
 import defaultAvatar from '@/assets/defaultAvatar.svg'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import type { TabPaneName } from 'element-plus'
 import { useSystem } from '@/stores/useSystem'
+import { useElementSize } from '@vueuse/core'
+import { useWindowSize } from '@vueuse/core'
 
 const title = ref(import.meta.env.VITE_APP_NAME)
 
@@ -313,6 +326,13 @@ const handleTabsEdit = (targetName: TabPaneName | undefined, action: 'remove' | 
     }
   }
 }
+
+const headerRef = ref()
+const { height: headerHeight } = useElementSize(headerRef)
+const { height: windowHeight } = useWindowSize()
+const menuHeight = computed(() => {
+  return `${windowHeight.value - headerHeight.value}px`
+})
 
 const handleSelect = (index: string) => {}
 
