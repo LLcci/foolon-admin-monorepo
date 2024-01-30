@@ -12,7 +12,7 @@
         <div class="w-xl mt-10">
           <el-tabs>
             <el-tab-pane label="密码登录">
-              <el-form :model="formData" ref="formRef" :rules="rules">
+              <el-form :model="formData" ref="formRef" :rules="rules" @keyup.enter="onSubmit">
                 <el-form-item prop="username">
                   <el-input v-model="formData.username" placeholder="用户名"></el-input>
                 </el-form-item>

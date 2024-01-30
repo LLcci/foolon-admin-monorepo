@@ -95,7 +95,7 @@
     <el-container>
       <el-aside
         class="border-r-1px border-r-solid border-r-$el-border-color shadow-lg"
-        width="fit-content(width)"
+        width="200px"
         v-if="useSystem().orientation == 'Landscape'"
       >
         <el-menu :default-active="route.path" :collapse="isCollapse" router @select="handleSelect">

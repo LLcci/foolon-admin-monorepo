@@ -1,16 +1,10 @@
 <template>
-  <el-table v-bind="props.table.props" v-loading="props.table.props.loading">
-    <template
-      v-for="(slotItem, slotItemIndex) in props.table.slots"
-      :key="slotItemIndex"
-      #[slotItemIndex]
-    >
-      <component
-        v-for="(slotItemComponent, slotItemComponentIndex) in slotItem"
-        :key="slotItemComponentIndex"
-        :is="slotItemComponent"
-      ></component>
-    </template>
+  <el-table
+    v-bind="props.table.props"
+    v-loading="props.table.props.loading"
+    v-on="{ ...props.table.events }"
+  >
+    <el-table-column v-if="props.table.props.showSelection" type="selection"> </el-table-column>
     <el-table-column
       v-for="(column, index) in props.table.columns"
       :key="index"

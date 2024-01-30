@@ -38,6 +38,7 @@ import {
   ElTreeSelect,
   ElOption
 } from 'element-plus'
+import { permissions } from './hooks/useDirectives'
 
 socket.connect()
 
@@ -67,5 +68,7 @@ app.component('ElOption', ElOption)
 
 app.use(createPinia())
 app.use(router)
+
+app.directive('permissions', permissions)
 
 app.mount('#app')

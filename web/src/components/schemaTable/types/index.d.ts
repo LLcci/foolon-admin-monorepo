@@ -21,16 +21,19 @@ export default interface SchemaTable<T extends FormModel> {
    */
   props: Partial<Omit<TableProps<T>, 'data'>> & {
     data: T[]
+    /**
+     * 是否显示表格加载中
+     */
     loading?: boolean
+    /**
+     * 是否显示多选框
+     */
+    showSelection?: boolean
   }
   /**
    * 表格事件,https://element-plus.org/zh-CN/component/table.html#table-%E4%BA%8B%E4%BB%B6
    */
   events?: Record<string, (...arg: any[]) => any>
-  /**
-   * 表格插槽,https://element-plus.org/zh-CN/component/table.html#table-%E6%8F%92%E6%A7%BD
-   */
-  slots?: Record<string, VNode[]>
   /**
    * key:数据类型key,value:表格列属性,https://element-plus.org/zh-CN/component/table.html#table-column-%E5%B1%9E%E6%80%A7
    */

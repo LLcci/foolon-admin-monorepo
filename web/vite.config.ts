@@ -19,6 +19,7 @@ const loder_pxtovw = pxtovw({
   fontViewportUnit: 'vw',
   allowMediaQuery: true,
   enableLandscape: true,
+  selectorBlacklist: [new RegExp('.el-')],
   //@ts-ignore
   landscapeUnit: 'vw',
   landscapeViewportWidth: 1920

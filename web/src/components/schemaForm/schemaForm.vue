@@ -56,7 +56,7 @@
 </template>
 <script setup lang="ts">
 import type SchemaForm from './types/'
-import { type PropType, defineModel, defineProps, ref, defineEmits, defineExpose } from 'vue'
+import { type PropType, defineModel, ref } from 'vue'
 import { type FormInstance } from 'element-plus'
 import type { FormModel } from '@/types/index'
 

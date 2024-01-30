@@ -2,20 +2,8 @@
 https://docs.nestjs.com/controllers#controllers
 */
 
+import { Body, Controller, Get, Post, Query, Request } from '@nestjs/common';
 import {
-  Body,
-  Controller,
-  FileTypeValidator,
-  Get,
-  ParseFilePipe,
-  Post,
-  Query,
-  Request,
-  UploadedFile,
-  UseInterceptors,
-} from '@nestjs/common';
-import {
-  ApiConsumes,
   ApiHeader,
   ApiOkResponse,
   ApiOperation,
@@ -26,9 +14,6 @@ import { MenuPageListDto, MenuSaveDto } from './menu.dto';
 import { PageResultDto } from '@/common/class/response.dto';
 import { MenuEntity } from './menu.entity';
 import { DeleteResult } from 'typeorm';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { extname } from 'path';
 
 @ApiTags('菜单管理')
 @ApiHeader({
@@ -49,7 +34,12 @@ export class MenuController {
     type: PageResultDto<MenuEntity>,
   })
   async getMenuPageList(@Body() menuPageListDto: MenuPageListDto) {
-    return await this.menuService.getMenuPageList(menuPageListDto);
+    const list = await this.menuService.getMenuList(menuPageListDto);
+    return new PageResultDto<MenuEntity>(
+      list,
+      menuPageListDto.currentPage,
+      menuPageListDto.pageSize,
+    );
   }
 
   @Post('list')
@@ -106,41 +96,5 @@ export class MenuController {
   })
   deleteMenuById(@Body('id') id: string[]) {
     return this.menuService.deleteMenuById(id);
-  }
-
-  @Post('import')
-  @ApiOperation({
-    summary: '导入菜单',
-  })
-  @ApiConsumes('multipart/form-data')
-  @UseInterceptors(
-    FileInterceptor('file', {
-      storage: diskStorage({
-        destination: './upload/menu/',
-        filename: (req, file, cb) => {
-          const uniqueSuffix =
-            Date.now() + '-' + Math.round(Math.random() * 1e9);
-          const filename =
-            'menu' + '-' + uniqueSuffix + extname(file.originalname);
-          cb(null, filename);
-        },
-      }),
-    }),
-  )
-  async importMenu(
-    @UploadedFile(
-      new ParseFilePipe({
-        validators: [
-          new FileTypeValidator({
-            fileType:
-              'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet|application/vnd.ms-excel',
-          }),
-        ],
-        fileIsRequired: true,
-      }),
-    )
-    file: Express.Multer.File,
-  ) {
-    console.log('🚀 ~ MenuController ~ file:', file);
   }
 }

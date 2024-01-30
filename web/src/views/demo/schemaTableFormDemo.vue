@@ -14,8 +14,7 @@ const api = ref<Api>({
   id: '/sys/menu/id',
   save: '/sys/menu/save',
   delete: '/sys/menu/delete',
-  list: '/sys/menu/list',
-  import: '/sys/menu/import'
+  list: '/sys/menu/list'
 })
 
 const tableForm = ref<
@@ -29,7 +28,7 @@ const tableForm = ref<
     },
     form: {
       searchFormShow: false,
-      editFormShow: true
+      editFormShow: false
     }
   },
   name: {
@@ -95,6 +94,9 @@ const tableForm = ref<
       align: 'center',
       formatter(row, column, cellValue) {
         return cellValue === 1 ? '启用' : '停用'
+      },
+      exportFormatter(value) {
+        return value === 1 ? '启用' : '停用'
       }
     },
     form: {
@@ -114,6 +116,9 @@ const tableForm = ref<
           h(ElOption, { label: '启用', value: 1 }),
           h(ElOption, { label: '停用', value: 0 })
         ]
+      },
+      importFormatter(value) {
+        return value === '启用' ? 1 : 0
       }
     }
   },
@@ -171,6 +176,9 @@ const tableForm = ref<
       align: 'center',
       formatter(row, column, cellValue) {
         return cellValue === 0 ? '一级菜单' : cellValue === 1 ? '二级菜单' : '权限'
+      },
+      exportFormatter(value) {
+        return value === 0 ? '一级菜单' : value === 1 ? '二级菜单' : '权限'
       }
     },
     form: {
@@ -190,6 +198,9 @@ const tableForm = ref<
           h(ElOption, { label: '二级菜单', value: 1 }),
           h(ElOption, { label: '权限', value: 2 })
         ]
+      },
+      importFormatter(value) {
+        return value == '一级菜单' ? 0 : value == '二级菜单' ? 1 : 2
       }
     }
   },
@@ -200,7 +211,7 @@ const tableForm = ref<
     form: {
       searchFormShow: false,
       editFormShow: true,
-      formRule: [{ required: true, message: '请输入权限' }],
+      formRule: [{ required: false, message: '请输入权限' }],
       itemProps: {
         label: '权限'
       },
@@ -217,6 +228,9 @@ const tableForm = ref<
       align: 'center',
       formatter(row, column, cellValue) {
         return cellValue === 1 ? '是' : '否'
+      },
+      exportFormatter(value) {
+        return value === 1 ? '是' : '否'
       }
     },
     form: {
@@ -224,7 +238,7 @@ const tableForm = ref<
       editFormShow: true,
       formRule: [{ required: true, message: '请选择缓存' }],
       itemProps: {
-        label: '是否缓存'
+        label: '缓存'
       },
       itemComponent: 'ElSelect',
       itemComponentProps: {
@@ -232,6 +246,9 @@ const tableForm = ref<
       },
       itemComponentSlots: {
         default: [h(ElOption, { label: '是', value: 1 }), h(ElOption, { label: '否', value: 0 })]
+      },
+      importFormatter(value) {
+        return value === '是' ? 1 : 0
       }
     }
   }
