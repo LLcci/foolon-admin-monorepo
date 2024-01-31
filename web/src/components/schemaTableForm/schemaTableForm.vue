@@ -110,7 +110,7 @@ import { has, omit } from 'lodash-es'
 import { utils, writeFileXLSX, read } from 'xlsx'
 
 const props = defineProps<{
-  tableForm: SchemaTableForm<FormModel>
+  tableForm: SchemaTableForm<any>
   api: Api
 }>()
 
