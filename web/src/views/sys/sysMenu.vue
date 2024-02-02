@@ -167,7 +167,13 @@ const tableForm = ref<
       itemProps: {
         label: '路径'
       },
-      itemComponent: h(ElInput, { placeholder: '请输入路径' })
+      itemComponent: h(ElInput, { placeholder: '请输入路径' }),
+      editFormVIf(value) {
+        if (value.menuType == 2) {
+          return false
+        }
+        return true
+      }
     }
   },
   component: {
