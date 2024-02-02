@@ -10,7 +10,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { MenuService } from './menu.service';
-import { MenuPageListDto, MenuSaveDto } from './menu.dto';
+import { MenuPageListDto, MenuSaveDto, MenuTree } from './menu.dto';
 import { PageResultDto } from '@/common/class/response.dto';
 import { MenuEntity } from './menu.entity';
 import { DeleteResult } from 'typeorm';
@@ -35,8 +35,10 @@ export class MenuController {
   })
   async getMenuPageList(@Body() menuPageListDto: MenuPageListDto) {
     const list = await this.menuService.getMenuList(menuPageListDto);
-    return new PageResultDto<MenuEntity>(
-      list,
+    const menuTree = Array.of<MenuTree>();
+    this.menuService.getMenuTree(menuTree, list, null);
+    return new PageResultDto<MenuTree>(
+      menuTree,
       menuPageListDto.currentPage,
       menuPageListDto.pageSize,
     );

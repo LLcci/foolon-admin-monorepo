@@ -39,6 +39,7 @@ declare module 'vue' {
     ElTabs: typeof import('element-plus/es')['ElTabs']
     ElText: typeof import('element-plus/es')['ElText']
     ElUpload: typeof import('element-plus/es')['ElUpload']
+    IconSelect: typeof import('./src/components/iconSelect/iconSelect.vue')['default']
     MainLayout: typeof import('./src/components/layout/mainLayout.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

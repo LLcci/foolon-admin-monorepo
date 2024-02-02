@@ -149,7 +149,9 @@ const table = computed(() => {
     props: {
       data: tableData.value?.records ? tableData.value.records : [],
       loading: tableLoading.value,
-      showSelection: true
+      showSelection: true,
+      rowKey: 'id',
+      defaultExpandAll: true
     },
     columns: {},
     actionsProps: {

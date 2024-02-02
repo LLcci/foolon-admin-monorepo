@@ -3,7 +3,7 @@ https://docs.nestjs.com/providers#services
 */
 
 import { Injectable } from '@nestjs/common';
-import { MenuPageListDto } from './menu.dto';
+import { MenuPageListDto, MenuTree } from './menu.dto';
 import { MenuEntity } from './menu.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like, Repository } from 'typeorm';
@@ -37,5 +37,23 @@ export class MenuService {
 
   async deleteMenuById(id: string[]) {
     return await this.menuRepository.delete(id);
+  }
+
+  async getMenuTree(menuTree: MenuTree[], list: MenuEntity[], temp: MenuTree) {
+    list?.forEach((item) => {
+      const tree: MenuTree = { ...item, children: [] };
+      const temPid = item.parentId;
+      if (!temp && !item.parentId) {
+        menuTree.push(tree);
+        if (list.filter((i) => i.parentId === item.id).length) {
+          this.getMenuTree(menuTree, list, tree);
+        }
+      } else if (temp && item.parentId && temPid == temp.id) {
+        temp.children.push(tree);
+        if (list.filter((i) => i.parentId === item.id).length) {
+          this.getMenuTree(menuTree, list, tree);
+        }
+      }
+    });
   }
 }

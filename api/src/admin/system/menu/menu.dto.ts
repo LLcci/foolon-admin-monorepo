@@ -20,3 +20,7 @@ export class MenuSaveDto {
   @IsArray({ message: '菜单列表不能为空' })
   list: MenuEntity[];
 }
+
+export class MenuTree extends MenuEntity {
+  children: MenuTree[];
+}
