@@ -13,6 +13,8 @@ import fs from 'fs';
 import compression from 'compression';
 import express from 'express';
 import { RedisIoAdapter } from './socket/RedisIoAdapter';
+import expressListRoutes from 'express-list-routes';
+import { RedisService } from './global/redis/redis.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -51,8 +53,7 @@ async function bootstrap() {
       .build();
     const documents = SwaggerModule.createDocument(app, options);
     SwaggerModule.setup('swagger-api', app, documents);
-    const document = SwaggerModule.createDocument(app, options);
-    fs.writeFileSync('./swagger-spec.json', JSON.stringify(document));
+    fs.writeFileSync('./swagger-spec.json', JSON.stringify(documents));
   }
   app.enableCors({ origin: '*' });
   await app.listen(process.env.SERVER_PORT, '0.0.0.0');
@@ -62,5 +63,11 @@ async function bootstrap() {
   if (process.env.NODE_ENV != 'production') {
     logger.log(`api文档地址: ${serverUrl}/swagger-api`);
   }
+  const server = app.getHttpServer();
+  const routes = expressListRoutes(server._events.request._router)
+    .map((item) => item.path.replace(/\\/g, '/'))
+    .filter((item) => !item.includes('/swagger-api'));
+  const redis = app.get(RedisService);
+  redis.client.set(`${process.env.REDIS_PREFIX}routes`, routes.join(','));
 }
 bootstrap();

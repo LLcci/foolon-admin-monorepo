@@ -22,27 +22,37 @@ export class MenuEntity extends BaseEntity {
   @IsOptional()
   parentId: string;
 
-  @Column({ name: 'name', nullable: true, comment: '菜单名称' })
-  @ApiProperty({ required: true, description: '菜单名称' })
-  @IsNotEmpty({ message: '菜单名称不能为空' })
-  @IsString({ message: '菜单名称必须是字符串' })
+  @Column({ name: 'name', nullable: true, comment: '名称' })
+  @ApiProperty({
+    required: true,
+    description: '名称:类型为菜单时必填',
+    nullable: true,
+  })
+  @IsNotEmpty({ message: '名称不能为空' })
+  @IsString({ message: '名称必须是字符串' })
   @IsOptional()
   name: string;
 
   @Column({ name: 'path', nullable: true, comment: '菜单路径' })
-  @ApiProperty({ required: true, description: '菜单路径' })
+  @ApiProperty({
+    required: false,
+    description: '路由页面时必填',
+  })
   @IsNotEmpty({ message: '菜单路径不能为空' })
   @IsString({ message: '菜单路径必须是字符串' })
   path: string;
 
   @Column({ name: 'component', nullable: true, comment: '组件路径' })
-  @ApiProperty({ required: true, description: '组件路径' })
+  @ApiProperty({
+    required: false,
+    description: '路由页面时必填',
+  })
   @IsNotEmpty({ message: '组件路径不能为空' })
   @IsString({ message: '组件路径必须是字符串' })
   component: string;
 
   @Column({ name: 'icon', nullable: true, comment: '菜单图标' })
-  @ApiProperty({ required: true, description: '菜单图标' })
+  @ApiProperty({ required: false })
   @IsNotEmpty({ message: '菜单图标不能为空' })
   @IsString({ message: '组件名称必须是字符串' })
   @IsOptional()
@@ -51,11 +61,11 @@ export class MenuEntity extends BaseEntity {
   @Column({
     name: 'menu_type',
     type: 'tinyint',
-    comment: '菜单类型:0-一级菜单,1-二级菜单,2-权限',
+    comment: '菜单类型:0-一级菜单,1-子菜单,2-权限',
   })
   @ApiProperty({
     required: true,
-    description: '菜单类型:0-一级菜单,1-二级菜单,2-权限',
+    description: '菜单类型:0-一级菜单,1-子菜单,2-权限',
   })
   @IsNotEmpty({ message: '菜单类型不能为空' })
   @IsNumber({}, { message: '菜单类型必须是数字' })
@@ -63,7 +73,10 @@ export class MenuEntity extends BaseEntity {
   menuType: number;
 
   @Column({ name: 'perms', nullable: true, comment: '权限' })
-  @ApiProperty({ required: true, description: '权限' })
+  @ApiProperty({
+    required: false,
+    description: '类型为权限时必填',
+  })
   @IsNotEmpty({ message: '权限不能为空' })
   @IsString({ message: '权限必须是字符串' })
   @IsOptional()
@@ -101,6 +114,7 @@ export class MenuEntity extends BaseEntity {
     required: true,
     default: 1,
     description: '是否启用:0-停用,1-启用',
+    nullable: true,
   })
   @IsNotEmpty({ message: '是否启用不能为空' })
   @IsNumber({}, { message: '是否启用必须是数字' })

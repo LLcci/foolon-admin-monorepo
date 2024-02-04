@@ -1,5 +1,5 @@
 {
-  "name": "foolon-admin",
+  "name": "api",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -38,6 +38,7 @@
     "compression": "^1.7.4",
     "cross-env": "^7.0.3",
     "dayjs": "^1.11.10",
+    "express-list-routes": "^1.1.9",
     "lodash": "^4.17.21",
     "mysql2": "^3.6.5",
     "nanoid": "3",

@@ -123,7 +123,7 @@ const pagination = ref<Pagination>({
 /**
  * 搜索表单数据
  */
-const searchFormModel = ref<FormModel>({})
+const searchFormModel = defineModel<Record<string, any>>('searchFormModel', { required: true })
 const searchFormQuery = computed(() => {
   return {
     ...searchFormModel.value,
@@ -245,7 +245,7 @@ const editFormRef = ref<SchemaFormInstance>()
 /**
  * 编辑表单数据
  */
-const editFormModel = ref<FormModel>({})
+const editFormModel = defineModel<Record<string, any>>('editFormModel', { required: true })
 /**
  * 编辑表单配置
  */

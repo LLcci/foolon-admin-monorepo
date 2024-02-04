@@ -1,5 +1,10 @@
 <template>
-  <schemaTableForm :table-form="tableForm" :api="api"></schemaTableForm>
+  <schemaTableForm
+    v-model:search-form-model="searchFormModel"
+    v-model:edit-form-model="editFormModel"
+    :table-form="tableForm"
+    :api="api"
+  ></schemaTableForm>
 </template>
 <script setup lang="ts">
 import schemaTableForm from '@/components/schemaTableForm/schemaTableForm.vue'
@@ -28,6 +33,27 @@ const api = ref<Api>({
   save: '/sys/menu/save',
   delete: '/sys/menu/delete',
   list: '/sys/menu/list'
+})
+
+const searchFormModel = ref<
+  paths['/admin/sys/menu/page']['post']['requestBody']['content']['application/json']
+>({
+  name: null,
+  status: null
+})
+
+const editFormModel = ref<
+  paths['/admin/sys/menu/save']['post']['requestBody']['content']['application/json']['list'][0]
+>({
+  name: null,
+  path: '',
+  component: '',
+  icon: '',
+  menuType: 0,
+  perms: '',
+  sort: 0,
+  keepalive: 1,
+  status: 1
 })
 
 const tableForm = ref<
@@ -61,13 +87,13 @@ const tableForm = ref<
         {
           default: () => [
             h(ElRadio, { label: 0 }, { default: () => '一级菜单' }),
-            h(ElRadio, { label: 1 }, { default: () => '二级菜单' }),
+            h(ElRadio, { label: 1 }, { default: () => '子菜单' }),
             h(ElRadio, { label: 2 }, { default: () => '权限' })
           ]
         }
       ),
       importFormatter(value) {
-        return value == '一级菜单' ? 0 : value == '二级菜单' ? 1 : 2
+        return value == '一级菜单' ? 0 : value == '子菜单' ? 1 : 2
       }
     }
   },
@@ -110,25 +136,9 @@ const tableForm = ref<
       itemProps: {
         label: '图标'
       },
-      itemComponent: h(IconSelect)
-    }
-  },
-  perms: {
-    table: {
-      show: true,
-      label: '权限',
-      align: 'center'
-    },
-    form: {
-      searchFormShow: false,
-      editFormShow: true,
-      formRule: [{ required: true, message: '请输入权限' }],
-      itemProps: {
-        label: '权限'
-      },
-      itemComponent: h(ElInput, { placeholder: '请输入权限' }),
+      itemComponent: h(IconSelect),
       editFormVIf(value) {
-        if (value.menuType != 2) {
+        if (value.menuType == 2) {
           return false
         }
         return true
@@ -163,11 +173,17 @@ const tableForm = ref<
     form: {
       searchFormShow: false,
       editFormShow: true,
-      formRule: [{ required: true, message: '请输入路径' }],
       itemProps: {
         label: '路径'
       },
-      itemComponent: h(ElInput, { placeholder: '请输入路径' }),
+      itemComponent: h(ElInput, {
+        placeholder: '请输入路径',
+        onInput(value) {
+          if (value && !value.startsWith('/')) {
+            editFormModel.value.path = '/' + value
+          }
+        }
+      }),
       editFormVIf(value) {
         if (value.menuType == 2) {
           return false
@@ -185,14 +201,42 @@ const tableForm = ref<
     form: {
       searchFormShow: false,
       editFormShow: true,
-      formRule: [{ required: true, message: '请输入组件' }],
+      formRule: [{ message: '请输入组件' }],
       itemProps: {
         label: '组件'
       },
       itemComponent: h(ElTreeSelect, {
-        placeholder: '请选择父级菜单',
+        placeholder: '请选择组件',
         data: componentsTree
-      })
+      }),
+      editFormVIf(value) {
+        if (value.menuType == 2) {
+          return false
+        }
+        return true
+      }
+    }
+  },
+  perms: {
+    table: {
+      show: true,
+      label: '权限',
+      align: 'center'
+    },
+    form: {
+      searchFormShow: false,
+      editFormShow: true,
+      formRule: [{ required: true, message: '请输入权限' }],
+      itemProps: {
+        label: '权限'
+      },
+      itemComponent: h(ElInput, { placeholder: '请输入权限' }),
+      editFormVIf(value) {
+        if (value.menuType != 2) {
+          return false
+        }
+        return true
+      }
     }
   },
   keepalive: {
