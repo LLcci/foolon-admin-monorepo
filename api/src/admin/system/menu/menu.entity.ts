@@ -1,6 +1,12 @@
 import { BaseEntity } from '@/common/entity/base.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('sys_menu')
@@ -24,9 +30,8 @@ export class MenuEntity extends BaseEntity {
 
   @Column({ name: 'name', nullable: true, comment: '名称' })
   @ApiProperty({
-    required: true,
+    required: false,
     description: '名称:类型为菜单时必填',
-    nullable: true,
   })
   @IsNotEmpty({ message: '名称不能为空' })
   @IsString({ message: '名称必须是字符串' })
@@ -52,7 +57,7 @@ export class MenuEntity extends BaseEntity {
   component: string;
 
   @Column({ name: 'icon', nullable: true, comment: '菜单图标' })
-  @ApiProperty({ required: false })
+  @ApiProperty({ required: false, description: '菜单图标' })
   @IsNotEmpty({ message: '菜单图标不能为空' })
   @IsString({ message: '组件名称必须是字符串' })
   @IsOptional()
@@ -69,18 +74,17 @@ export class MenuEntity extends BaseEntity {
   })
   @IsNotEmpty({ message: '菜单类型不能为空' })
   @IsNumber({}, { message: '菜单类型必须是数字' })
-  @IsOptional()
   menuType: number;
 
-  @Column({ name: 'perms', nullable: true, comment: '权限' })
+  @Column('simple-array', { name: 'perms', nullable: true, comment: '权限' })
   @ApiProperty({
     required: false,
     description: '类型为权限时必填',
   })
   @IsNotEmpty({ message: '权限不能为空' })
-  @IsString({ message: '权限必须是字符串' })
+  @IsArray({ message: '权限必须是数组' })
   @IsOptional()
-  perms: string;
+  perms: string[];
 
   @Column({ name: 'sort', comment: '排序', default: 1 })
   @ApiProperty({ required: true, description: '排序' })
@@ -95,7 +99,7 @@ export class MenuEntity extends BaseEntity {
     comment: '是否缓存:0-不缓存,1-缓存',
   })
   @ApiProperty({
-    required: true,
+    required: false,
     default: 1,
     description: '是否缓存:0-不缓存,1-缓存',
   })
@@ -111,10 +115,9 @@ export class MenuEntity extends BaseEntity {
   })
   @Index()
   @ApiProperty({
-    required: true,
+    required: false,
     default: 1,
     description: '是否启用:0-停用,1-启用',
-    nullable: true,
   })
   @IsNotEmpty({ message: '是否启用不能为空' })
   @IsNumber({}, { message: '是否启用必须是数字' })

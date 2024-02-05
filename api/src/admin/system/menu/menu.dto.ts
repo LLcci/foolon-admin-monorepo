@@ -17,7 +17,9 @@ export class MenuSaveDto {
     type: MenuEntity,
     isArray: true,
   })
-  @IsArray({ message: '菜单列表不能为空' })
+  @IsArray({
+    message: '菜单列表格式不正确',
+  })
   list: MenuEntity[];
 }
 

@@ -5,32 +5,11 @@
         <component :is="item.component" v-model="formModel[index as string]"> </component>
       </el-form-item>
     </template>
-    <el-form-item v-if="props.form.buttons">
-      <el-button
-        v-for="(item, index) in props.form.buttons"
-        :class="{
-          'ml-3': index > 0
-        }"
-        v-bind="item.props"
-        v-on="{ ...item.events }"
-        :key="index"
-      >
-        <template
-          v-for="(slotItem, slotItemIndex) in item.slots"
-          :key="slotItemIndex"
-          #[slotItemIndex]
-        >
-          <component
-            v-for="(slotItemComponent, slotItemComponentIndex) in slotItem"
-            :key="slotItemComponentIndex"
-            :is="slotItemComponent"
-          ></component>
-        </template>
-      </el-button>
-    </el-form-item>
-    <el-form-item v-else>
-      <el-button type="primary" @click="handleSubmit">提交</el-button>
-      <el-button @click="resetForm">重置</el-button>
+    <el-form-item>
+      <slot>
+        <el-button type="primary" @click="handleSubmit">提交</el-button>
+        <el-button @click="resetForm">重置</el-button>
+      </slot>
     </el-form-item>
   </el-form>
 </template>

@@ -64,10 +64,12 @@ async function bootstrap() {
     logger.log(`api文档地址: ${serverUrl}/swagger-api`);
   }
   const server = app.getHttpServer();
-  const routes = expressListRoutes(server._events.request._router)
+  const routes = expressListRoutes(server._events.request._router, {
+    logger() {},
+  })
     .map((item) => item.path.replace(/\\/g, '/'))
     .filter((item) => !item.includes('/swagger-api'));
   const redis = app.get(RedisService);
-  redis.client.set(`${process.env.REDIS_PREFIX}routes`, routes.join(','));
+  redis.setRoutes(routes.join(','));
 }
 bootstrap();

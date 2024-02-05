@@ -38,15 +38,14 @@ export class AdminGuard implements CanActivate {
     if (!request.headers.authorization) {
       throw new UnauthorizedException('未登录，请进行登录');
     }
-    const redisUserIv = await this.redisService.client.get(
-      `${process.env.REDIS_TOKEN_PREFIX}${token}`,
-    );
+    const redisUserIv = await this.redisService.getToken(token);
     if (!redisUserIv) {
       throw new UnauthorizedException('登录已过期，请重新登录');
     }
     const payload = await this.jwtService.verifyAsync(token, {
       secret: process.env.JWT_SECRET,
     });
+    //todo 使用socket校验用户信息是否修改
     const userIv = await this.redisService.client.get(
       `${process.env.REDIS_USERID_PREFIX}${payload.id}`,
     );

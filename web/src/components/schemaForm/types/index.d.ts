@@ -4,7 +4,7 @@ import type {
   FormRules
 } from 'element-plus'
 import type { VNode } from 'vue'
-import type { FormModel, ButtonItem } from '@/types/index'
+import type { FormModel } from '@/types/index'
 
 /**
  *
@@ -53,10 +53,6 @@ export default interface SchemaForm<T extends FormModel> {
    * 表单项目及对应的组件
    */
   formItems: FormItems<T>
-  /**
-   * 按钮组,不传默认显示提交和重置按钮
-   */
-  buttons?: ButtonItem[]
 }
 
 export type SchemaFormInstance = InstanceType<typeof import('../schemaForm.vue').default>

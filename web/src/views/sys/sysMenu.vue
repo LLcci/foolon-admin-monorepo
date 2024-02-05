@@ -2,6 +2,8 @@
   <schemaTableForm
     v-model:search-form-model="searchFormModel"
     v-model:edit-form-model="editFormModel"
+    @on-table-save-success="menuListFetch"
+    :table-props="tableProps"
     :table-form="tableForm"
     :api="api"
   ></schemaTableForm>
@@ -20,12 +22,13 @@ import {
   ElRadio,
   ElRadioGroup,
   ElSelect,
-  ElTreeSelect
+  ElTreeSelect,
+  type TableInstance
 } from 'element-plus'
 import { h, ref, resolveComponent } from 'vue'
-import { useMenuList } from './api'
+import { useInterfaceRoutes, useMenuList } from './api'
 import { useComponents } from '@/hooks/useVite'
-const { componentsTree } = useComponents()
+const { components } = useComponents()
 
 const api = ref<Api>({
   page: '/sys/menu/page',
@@ -37,23 +40,19 @@ const api = ref<Api>({
 
 const searchFormModel = ref<
   paths['/admin/sys/menu/page']['post']['requestBody']['content']['application/json']
->({
-  name: null,
-  status: null
-})
+>({})
 
 const editFormModel = ref<
   paths['/admin/sys/menu/save']['post']['requestBody']['content']['application/json']['list'][0]
 >({
-  name: null,
-  path: '',
-  component: '',
-  icon: '',
   menuType: 0,
-  perms: '',
-  sort: 0,
   keepalive: 1,
-  status: 1
+  status: 1,
+  sort: 0
+})
+
+const tableProps = ref<TableInstance['$props']>({
+  showOverflowTooltip: true
 })
 
 const tableForm = ref<
@@ -83,7 +82,17 @@ const tableForm = ref<
       },
       itemComponent: h(
         ElRadioGroup,
-        { placeholder: '请选择类型' },
+        {
+          placeholder: '请选择类型',
+          onChange(value) {
+            editFormModel.value = {
+              menuType: value as number,
+              keepalive: 1,
+              status: 1,
+              sort: 0
+            }
+          }
+        },
         {
           default: () => [
             h(ElRadio, { label: 0 }, { default: () => '一级菜单' }),
@@ -161,6 +170,53 @@ const tableForm = ref<
           return true
         }
         return false
+      },
+      importFormatter(value) {
+        if (value) {
+          return menuList.value?.find((item) => item.name == value)?.id
+        }
+        return value
+      }
+    }
+  },
+  component: {
+    table: {
+      show: true,
+      label: '组件',
+      align: 'center'
+    },
+    form: {
+      searchFormShow: false,
+      editFormShow: true,
+      formRule: [{ message: '请输入组件' }],
+      itemProps: {
+        label: '组件'
+      },
+      itemComponent: h(
+        ElSelect,
+        {
+          placeholder: '请选择组件',
+          clearable: true,
+          filterable: true,
+          onChange(value: string) {
+            editFormModel.value.path = ''
+            if (value) {
+              editFormModel.value.path = value.replace(/.vue/, '')
+            }
+          }
+        },
+        {
+          default: () =>
+            components.map((item) => {
+              return h(ElOption, { value: item, label: item })
+            })
+        }
+      ),
+      editFormVIf(value) {
+        if (value.menuType == 2) {
+          return false
+        }
+        return true
       }
     }
   },
@@ -192,45 +248,25 @@ const tableForm = ref<
       }
     }
   },
-  component: {
-    table: {
-      show: true,
-      label: '组件',
-      align: 'center'
-    },
-    form: {
-      searchFormShow: false,
-      editFormShow: true,
-      formRule: [{ message: '请输入组件' }],
-      itemProps: {
-        label: '组件'
-      },
-      itemComponent: h(ElTreeSelect, {
-        placeholder: '请选择组件',
-        data: componentsTree
-      }),
-      editFormVIf(value) {
-        if (value.menuType == 2) {
-          return false
-        }
-        return true
-      }
-    }
-  },
   perms: {
     table: {
       show: true,
       label: '权限',
-      align: 'center'
+      align: 'center',
+      exportFormatter(value) {
+        if (value) {
+          return value.join(',')
+        }
+        return value
+      }
     },
     form: {
       searchFormShow: false,
       editFormShow: true,
-      formRule: [{ required: true, message: '请输入权限' }],
+      formRule: [{ required: true, message: '请选择权限' }],
       itemProps: {
         label: '权限'
       },
-      itemComponent: h(ElInput, { placeholder: '请输入权限' }),
       editFormVIf(value) {
         if (value.menuType != 2) {
           return false
@@ -325,10 +361,19 @@ const tableForm = ref<
   }
 })
 
-const { data: menuList, onFetchResponse: onMenuListResponse } = useMenuList()
+const {
+  data: menuList,
+  execute: menuListFetch,
+  onFetchResponse: onMenuListResponse
+} = useMenuList()
 onMenuListResponse(() => {
   const options: any[] = []
-  getMenuTree(options, menuList.value)
+  getMenuTree(
+    options,
+    menuList.value?.filter(
+      (item) => item.menuType != 2
+    ) as paths['/admin/sys/menu/list']['post']['responses']['200']['content']['application/json']
+  )
   tableForm.value.parentId.form.itemComponent = h(ElTreeSelect, {
     placeholder: '请选择父级菜单',
     data: options,
@@ -362,5 +407,24 @@ const getMenuTree = (
     }
   })
 }
+
+const { data: interfaceRoutes, onFetchResponse: onInterfaceRoutesResponse } = useInterfaceRoutes()
+onInterfaceRoutesResponse(() => {
+  tableForm.value.perms.form.itemComponent = h(
+    ElSelect,
+    {
+      placeholder: '请选择权限',
+      clearable: true,
+      filterable: true,
+      multiple: true
+    },
+    {
+      default: () =>
+        interfaceRoutes.value?.map((item) => {
+          return h(ElOption, { value: item, label: item })
+        })
+    }
+  )
+})
 </script>
 <style lang="scss" scoped></style>

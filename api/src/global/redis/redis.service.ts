@@ -21,4 +21,42 @@ export class RedisService implements OnModuleInit {
     await this.client.connect();
     this.logger.log('redis连接成功');
   }
+
+  async setRoutes(routes: string) {
+    return await this.client.set(`${process.env.REDIS_PREFIX}routes`, routes);
+  }
+
+  async getRoutes() {
+    return (await this.client.get(`${process.env.REDIS_PREFIX}routes`)).split(
+      ',',
+    );
+  }
+
+  async setCode(codeId: string, text: string) {
+    return await this.client.set(
+      `${process.env.REDIS_CODE_PREFIX}${codeId}`,
+      text,
+      {
+        EX: Number(process.env.REDIS_CODE_EX),
+      },
+    );
+  }
+
+  async getCode(codeId: string) {
+    return await this.client.get(`${process.env.REDIS_CODE_PREFIX}${codeId}`);
+  }
+
+  async setToken(token: string, userIv: string) {
+    return await this.client.set(
+      `${process.env.REDIS_TOKEN_PREFIX}${token}`,
+      userIv,
+      {
+        EX: Number(process.env.REDIS_TOKEN_EX),
+      },
+    );
+  }
+
+  async getToken(token: string) {
+    return await this.client.get(`${process.env.REDIS_TOKEN_PREFIX}${token}`);
+  }
 }

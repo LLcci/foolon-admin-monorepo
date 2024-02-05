@@ -1,5 +1,8 @@
 <template>
-  <schemaForm ref="searchFormRef" v-model="searchFormModel" :form="searForm"> </schemaForm>
+  <schemaForm ref="searchFormRef" v-model="searchFormModel" :form="searForm">
+    <el-button type="primary" v-permissions="props.api.page" @click="handleSearch">查询</el-button>
+    <el-button type="default" v-permissions="props.api.page" @click="handleReset">重置</el-button>
+  </schemaForm>
   <div class="mt flex justify-between">
     <div class="flex">
       <el-button
@@ -79,6 +82,7 @@
         v-model="editFormModel"
         :form="editForm"
       >
+        <div></div>
       </schemaForm>
       <template #footer>
         <el-button @click="() => (dialogVisible = false)">取消</el-button>
@@ -98,11 +102,17 @@ import type { FormModel } from '@/types'
 import schemaForm from '../schemaForm/schemaForm.vue'
 import schemaTable from '@/components/schemaTable/schemaTable.vue'
 import type SchemaTableForm from './types'
-import { computed, h, nextTick, ref, type VNode } from 'vue'
+import { computed, nextTick, ref, type VNode } from 'vue'
 import type SchemaForm from '@/components/schemaForm/types'
 import type SchemaTable from '@/components/schemaTable/types'
 import type { Pagination } from '@/components/schemaTable/types'
-import { ElMessage, type FormRules, type UploadRequestOptions } from 'element-plus'
+import {
+  ElMessage,
+  type FormProps,
+  type FormRules,
+  type TableColumnInstance,
+  type UploadRequestOptions
+} from 'element-plus'
 import type { SchemaFormInstance } from '@/components/schemaForm/types'
 import type { Api } from './types'
 import { tableDelete, tableExport, tableId, tableList, tableSave } from './api'
@@ -111,8 +121,19 @@ import { utils, writeFileXLSX, read } from 'xlsx'
 
 const props = defineProps<{
   tableForm: SchemaTableForm<any>
+  tableProps?: TableColumnInstance['$props']
+  searchFormProps?: Partial<FormProps>
+  editFormProps?: Partial<FormProps>
   api: Api
 }>()
+
+const emits = defineEmits([
+  'onTableListSuccess',
+  'onTableSaveSuccess',
+  'onTableDeleteSuccess',
+  'onTableExportSuccess',
+  'onTableIdSuccess'
+])
 
 const pagination = ref<Pagination>({
   pageSize: 10,
@@ -138,6 +159,7 @@ const {
 } = tableList(props.api.page, searchFormQuery)
 tableListFetch()
 tableListOnFetchResponse(() => {
+  emits('onTableListSuccess')
   pagination.value.total = tableData.value?.total || 0
 })
 /**
@@ -161,8 +183,8 @@ const table = computed(() => {
     },
     pagination: {
       events: {
-        change: () => {
-          tableListFetch()
+        change: async () => {
+          await tableListFetch()
         }
       }
     },
@@ -177,6 +199,7 @@ const table = computed(() => {
       tableProps.columns[key] = props.tableForm[key]?.table
     }
   }
+  Object.assign(tableProps.props, props.tableProps)
   return tableProps
 })
 
@@ -190,42 +213,7 @@ const searchFormRef = ref<SchemaFormInstance>()
 const searForm = computed(() => {
   const formProps: SchemaForm<FormModel> = {
     props: { inline: true },
-    formItems: {},
-    buttons: [
-      {
-        props: {
-          type: 'primary'
-        },
-        slots: {
-          default: [h('span', '查询')]
-        },
-        events: {
-          async click() {
-            try {
-              await searchFormRef.value?.formRef?.validate()
-              await tableListFetch()
-            } catch (error) {
-              console.log(error)
-            }
-          }
-        }
-      },
-      {
-        props: {
-          type: 'default'
-        },
-        slots: {
-          default: [h('span', '重置')]
-        },
-        events: {
-          async click() {
-            searchFormRef.value?.formRef?.resetFields()
-            pagination.value.currentPage = 1
-            pagination.value.pageSize = 10
-          }
-        }
-      }
-    ]
+    formItems: {}
   }
   for (const key in props.tableForm) {
     if (props.tableForm[key].form.searchFormShow) {
@@ -235,8 +223,22 @@ const searForm = computed(() => {
       }
     }
   }
+  Object.assign(formProps.props, props.searchFormProps)
   return formProps
 })
+const handleSearch = async () => {
+  try {
+    await searchFormRef.value?.formRef?.validate()
+    await tableListFetch()
+  } catch (error) {
+    console.log(error)
+  }
+}
+const handleReset = () => {
+  searchFormRef.value?.formRef?.resetFields()
+  pagination.value.currentPage = 1
+  pagination.value.pageSize = 10
+}
 
 /**
  * 编辑表单
@@ -255,8 +257,7 @@ const editForm = computed(() => {
       labelWidth: 100,
       labelSuffix: '：'
     },
-    formItems: {},
-    buttons: []
+    formItems: {}
   }
   const rulues: FormRules<FormModel> = {}
   for (const key in props.tableForm) {
@@ -270,6 +271,7 @@ const editForm = computed(() => {
     }
   }
   formProps.props.rules = rulues
+  Object.assign(formProps.props, props.editFormProps)
   return formProps
 })
 
@@ -295,14 +297,23 @@ const handleDialog = async (title: '新增' | '编辑' | '查看', form: FormMod
   }
   await nextTick()
   editFormRef.value?.formRef?.resetFields()
+  editFormModel.value.id = undefined
   if (title === '编辑' || title === '查看') {
     const { data } = await tableId(props.api.id, form.id)
+    emits('onTableIdSuccess')
     Object.assign(editFormModel.value, data.value)
   }
 }
 
-const { isFetching: saveLoading, execute: tableSaveFetch } = tableSave(props.api.save, {
+const {
+  isFetching: saveLoading,
+  execute: tableSaveFetch,
+  onFetchResponse: tableSaveOnFetchResponse
+} = tableSave(props.api.save, {
   list: [editFormModel.value]
+})
+tableSaveOnFetchResponse(() => {
+  emits('onTableSaveSuccess')
 })
 const handleEdit = async () => {
   try {
@@ -323,6 +334,7 @@ const handleDelete = async (value: FormModel) => {
   try {
     tableLoading.value = true
     await tableDelete(props.api.delete, { id: [value.id] })
+    emits('onTableDeleteSuccess')
     await tableListFetch()
     ElMessage.success('删除成功')
   } catch (error) {
@@ -336,6 +348,7 @@ const handleMultipleDelete = async (value: FormModel[]) => {
   try {
     tableLoading.value = true
     await tableDelete(props.api.delete, { id: value.map((item) => item.id) })
+    emits('onTableDeleteSuccess')
     await tableListFetch()
     ElMessage.success('删除成功')
   } catch (error) {
@@ -356,6 +369,7 @@ const {
 const handleExport = async () => {
   try {
     await tableExportFetch(true)
+    emits('onTableExportSuccess')
     const exportDataSheet: FormModel[] = []
     if (exportData.value?.length) {
       exportData.value.forEach((item) => {

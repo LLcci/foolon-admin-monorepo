@@ -23,7 +23,7 @@ export class MenuService {
           : undefined,
         status: menuPageListDto.status,
       },
-      order: { createTime: 'DESC', sort: 'ASC' },
+      order: { parentId: 'ASC', sort: 'ASC' },
     });
   }
 

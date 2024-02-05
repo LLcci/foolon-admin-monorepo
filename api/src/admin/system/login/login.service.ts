@@ -22,9 +22,7 @@ export class LoginService {
   ) {}
 
   async login(loginDto: LoginDto) {
-    const redisCode = await this.redisService.client.get(
-      `${process.env.REDIS_CODE_PREFIX}${loginDto.codeId}`,
-    );
+    const redisCode = await this.redisService.getCode(loginDto.codeId);
     if (!redisCode) {
       throw '验证码已过期';
     }
@@ -47,13 +45,8 @@ export class LoginService {
     }
     const payload = { id: user.id };
     const token = await this.jwtService.signAsync(payload);
-    await this.redisService.client.set(
-      `${process.env.REDIS_TOKEN_PREFIX}${token}`,
-      user.iv,
-      {
-        EX: Number(process.env.REDIS_TOKEN_EX),
-      },
-    );
+    await this.redisService.setToken(token, user.iv);
+    //todo 使用socket校验用户信息是否修改
     await this.redisService.client.set(
       `${process.env.REDIS_USERID_PREFIX}${user.id}`,
       user.iv,
@@ -78,13 +71,7 @@ export class LoginService {
       )}`,
       id: nanoid(),
     };
-    await this.redisService.client.set(
-      `${process.env.REDIS_CODE_PREFIX}${result.id}`,
-      svg.text,
-      {
-        EX: Number(process.env.REDIS_CODE_EX),
-      },
-    );
+    await this.redisService.setCode(result.id, svg.text);
     return result;
   }
 }

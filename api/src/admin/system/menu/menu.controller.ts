@@ -14,6 +14,7 @@ import { MenuPageListDto, MenuSaveDto, MenuTree } from './menu.dto';
 import { PageResultDto } from '@/common/class/response.dto';
 import { MenuEntity } from './menu.entity';
 import { DeleteResult } from 'typeorm';
+import { RedisService } from '@/global/redis/redis.service';
 
 @ApiTags('菜单管理')
 @ApiHeader({
@@ -23,7 +24,10 @@ import { DeleteResult } from 'typeorm';
 })
 @Controller('menu')
 export class MenuController {
-  constructor(private readonly menuService: MenuService) {}
+  constructor(
+    private readonly menuService: MenuService,
+    private readonly redisService: RedisService,
+  ) {}
 
   @Post('page')
   @ApiOperation({
@@ -96,7 +100,20 @@ export class MenuController {
     description: 'id删除菜单',
     type: DeleteResult,
   })
-  deleteMenuById(@Body('id') id: string[]) {
-    return this.menuService.deleteMenuById(id);
+  async deleteMenuById(@Body('id') id: string[]) {
+    return await this.menuService.deleteMenuById(id);
+  }
+
+  @Get('routes')
+  @ApiOperation({
+    summary: '获取路由',
+  })
+  @ApiOkResponse({
+    description: '获取路由',
+    type: String,
+    isArray: true,
+  })
+  async getRoutes() {
+    return await this.redisService.getRoutes();
   }
 }
