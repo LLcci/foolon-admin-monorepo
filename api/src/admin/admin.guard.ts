@@ -3,6 +3,7 @@
 https://docs.nestjs.com/guards#guards
 */
 
+import { AUTHORIZE } from '@/common/constants';
 import { RedisService } from '@/global/redis/redis.service';
 import {
   Injectable,
@@ -10,6 +11,7 @@ import {
   ExecutionContext,
   UnauthorizedException,
 } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 
@@ -18,23 +20,18 @@ export class AdminGuard implements CanActivate {
   constructor(
     private readonly jwtService: JwtService,
     private readonly redisService: RedisService,
+    private readonly reflector: Reflector,
   ) {}
-  /**
-   * 不进行登录校验的接口地址
-   */
-  private readonly fillters = [
-    // 用户登录
-    '/admin/sys/login',
-    // 获取验证码
-    '/admin/sys/login/code',
-  ];
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest();
-    const token = this.extractTokenFromHeader(request);
-    if (this.fillters.includes(request.url)) {
+    if (this.reflector.get(AUTHORIZE, context.getClass())) {
       return true;
     }
+    if (this.reflector.get(AUTHORIZE, context.getHandler())) {
+      return true;
+    }
+    const request = context.switchToHttp().getRequest();
+    const token = this.extractTokenFromHeader(request);
     if (!request.headers.authorization) {
       throw new UnauthorizedException('未登录，请进行登录');
     }

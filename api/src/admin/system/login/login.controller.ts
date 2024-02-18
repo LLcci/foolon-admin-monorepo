@@ -7,7 +7,9 @@ import { LoginService } from '@/admin/system/login/login.service';
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Code, Token } from './login.class';
+import { Authorize } from '@/common/decorator/authorize.decorator';
 
+@Authorize()
 @ApiTags('登录')
 @Controller('login')
 export class LoginController {
