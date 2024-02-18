@@ -85,11 +85,22 @@ const tableForm = ref<
         {
           placeholder: '请选择类型',
           onChange(value) {
-            editFormModel.value = {
-              menuType: value as number,
-              keepalive: 1,
-              status: 1,
-              sort: 0
+            switch (value) {
+              case 0:
+                editFormModel.value.parentId = undefined
+                editFormModel.value.perms = undefined
+                break
+              case 1:
+                editFormModel.value.perms = undefined
+                break
+              case 2:
+                editFormModel.value.name = undefined
+                editFormModel.value.icon = undefined
+                editFormModel.value.path = undefined
+                editFormModel.value.component = undefined
+                break
+              default:
+                break
             }
           }
         },
