@@ -10,7 +10,7 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: () => import('@/views/login/indexLogin.vue'),
+      component: () => import('@/views/login/IndexLogin.vue'),
       meta: {
         title: `${import.meta.env.VITE_APP_TITLE}-登录`
       }
@@ -18,11 +18,11 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import('@/components/layout/mainLayout.vue'),
+      component: () => import('@/components/layout/MainLayout.vue'),
       children: [
         {
           path: '/',
-          component: () => import('@/views/home/indexHome.vue'),
+          component: () => import('@/views/home/IndexHome.vue'),
           meta: {
             title: `${import.meta.env.VITE_APP_TITLE}-首页`
           }
@@ -30,23 +30,18 @@ const router = createRouter({
         {
           path: '/sys/menu',
           name: 'menu',
-          component: () => import('@/views/sys/sysMenu.vue')
+          component: () => import('@/views/sys/SysMenu.vue')
         },
 
         {
           path: '/demo/schemaFormDemo',
           name: 'schemaFormDemo',
-          component: () => import('@/views/demo/schemaFormDemo.vue')
+          component: () => import('@/views/demo/SchemaFormDemo.vue')
         },
         {
           path: '/demo/schemaTableDemo',
           name: 'schemaTableDemo',
-          component: () => import('@/views/demo/schemaTableDemo.vue')
-        },
-        {
-          path: '/demo/schemaTableFormDemo',
-          name: 'schemaTableFormDemo',
-          component: () => import('@/views/demo/schemaTableFormDemo.vue')
+          component: () => import('@/views/demo/SchemaTableDemo.vue')
         }
       ]
     }

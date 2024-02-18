@@ -7,7 +7,7 @@
   ></schemaForm>
 </template>
 <script setup lang="ts">
-import schemaForm from '@/components/schemaForm/schemaForm.vue'
+import schemaForm from '@/components/schemaForm/SchemaForm.vue'
 import type { SchemaFormInstance } from '@/components/schemaForm/types'
 import type SchemaForm from '@/components/schemaForm/types'
 import { ElInput, ElOption, ElSelect } from 'element-plus'

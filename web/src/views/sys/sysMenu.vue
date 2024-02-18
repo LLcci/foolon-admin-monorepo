@@ -9,10 +9,10 @@
   ></schemaTableForm>
 </template>
 <script setup lang="ts">
-import schemaTableForm from '@/components/schemaTableForm/schemaTableForm.vue'
+import schemaTableForm from '@/components/schemaTableForm/SchemaTableForm.vue'
 import type { Api } from '@/components/schemaTableForm/types'
 import type SchemaTableForm from '@/components/schemaTableForm/types'
-import IconSelect from '@/components/iconSelect/iconSelect.vue'
+import IconSelect from '@/components/iconSelect/IconSelect.vue'
 import type { paths } from '@/types/Schema'
 import {
   ElIcon,

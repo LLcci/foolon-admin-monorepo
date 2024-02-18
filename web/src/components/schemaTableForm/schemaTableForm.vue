@@ -99,8 +99,8 @@
 </template>
 <script setup lang="ts">
 import type { FormModel } from '@/types'
-import schemaForm from '../schemaForm/schemaForm.vue'
-import schemaTable from '@/components/schemaTable/schemaTable.vue'
+import schemaForm from '@/components/schemaForm/SchemaForm.vue'
+import schemaTable from '@/components/schemaTable/SchemaTable.vue'
 import type SchemaTableForm from './types'
 import { computed, nextTick, ref, type VNode } from 'vue'
 import type SchemaForm from '@/components/schemaForm/types'

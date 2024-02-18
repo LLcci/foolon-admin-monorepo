@@ -39,13 +39,13 @@ declare module 'vue' {
     ElTabs: typeof import('element-plus/es')['ElTabs']
     ElText: typeof import('element-plus/es')['ElText']
     ElUpload: typeof import('element-plus/es')['ElUpload']
-    IconSelect: typeof import('./src/components/iconSelect/iconSelect.vue')['default']
-    MainLayout: typeof import('./src/components/layout/mainLayout.vue')['default']
+    IconSelect: typeof import('./src/components/iconSelect/IconSelect.vue')['default']
+    MainLayout: typeof import('./src/components/layout/MainLayout.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    SchemaForm: typeof import('./src/components/schemaForm/schemaForm.vue')['default']
-    SchemaTable: typeof import('./src/components/schemaTable/schemaTable.vue')['default']
-    SchemaTableForm: typeof import('./src/components/schemaTableForm/schemaTableForm.vue')['default']
+    SchemaForm: typeof import('./src/components/schemaForm/SchemaForm.vue')['default']
+    SchemaTable: typeof import('./src/components/schemaTable/SchemaTable.vue')['default']
+    SchemaTableForm: typeof import('./src/components/schemaTableForm/SchemaTableForm.vue')['default']
   }
   export interface ComponentCustomProperties {
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']

@@ -7,7 +7,7 @@
   </schemaTable>
 </template>
 <script setup lang="ts">
-import schemaTable from '@/components/schemaTable/schemaTable.vue'
+import schemaTable from '@/components/schemaTable/SchemaTable.vue'
 import type { Pagination } from '@/components/schemaTable/types'
 import type SchemaTable from '@/components/schemaTable/types'
 import { ref } from 'vue'
