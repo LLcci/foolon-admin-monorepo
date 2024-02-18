@@ -13,6 +13,11 @@
     <ElDialog v-model="dialogVisible" title="选择图标">
       <el-scrollbar height="400px">
         <el-row>
+          <el-col :span="24">
+            <el-input v-model="searchValue" placeholder="请输入图标名称查询" clearable></el-input>
+          </el-col>
+        </el-row>
+        <el-row class="mt">
           <el-col
             v-for="[key, component] in iconList"
             :key="key"
@@ -43,7 +48,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { markRaw, ref } from 'vue'
+import { computed, ref } from 'vue'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 const icon = defineModel({
@@ -51,7 +56,13 @@ const icon = defineModel({
   type: String
 })
 
-const iconList = markRaw(Object.entries(ElementPlusIconsVue))
+const searchValue = ref('')
+
+const iconList = computed(() => {
+  return Object.entries(ElementPlusIconsVue).filter(([key]) => {
+    return searchValue.value ? key.toLowerCase().includes(searchValue.value.toLowerCase()) : true
+  })
+})
 
 const dialogVisible = ref(false)
 
