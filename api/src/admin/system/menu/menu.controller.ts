@@ -2,7 +2,7 @@
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { Body, Controller, Get, Post, Query, Request } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import {
   ApiHeader,
   ApiOkResponse,
@@ -15,6 +15,7 @@ import { PageResultDto } from '@/common/class/response.dto';
 import { MenuEntity } from './menu.entity';
 import { DeleteResult } from 'typeorm';
 import { RedisService } from '@/global/redis/redis.service';
+import { User } from '@/common/decorator/user.decorator';
 
 @ApiTags('菜单管理')
 @ApiHeader({
@@ -70,12 +71,15 @@ export class MenuController {
     type: MenuEntity,
     isArray: true,
   })
-  async saveMenu(@Body() menu: MenuSaveDto, @Request() req) {
+  async saveMenu(
+    @Body() menu: MenuSaveDto,
+    @User() user: { id: string; iv: string },
+  ) {
     menu.list.forEach((item) => {
       if (!item.id) {
-        item.createUserId = req.user.id;
+        item.createUserId = user.id;
       }
-      item.updateUserId = req.user.id;
+      item.updateUserId = user.id;
     });
     return await this.menuService.saveMenu(menu.list);
   }
