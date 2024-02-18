@@ -102,7 +102,7 @@ import type { FormModel } from '@/types'
 import schemaForm from '@/components/schemaForm/SchemaForm.vue'
 import schemaTable from '@/components/schemaTable/SchemaTable.vue'
 import type SchemaTableForm from './types'
-import { computed, nextTick, ref, type VNode } from 'vue'
+import { computed, nextTick, ref, toRaw, type VNode } from 'vue'
 import type SchemaForm from '@/components/schemaForm/types'
 import type SchemaTable from '@/components/schemaTable/types'
 import type { Pagination } from '@/components/schemaTable/types'
@@ -279,6 +279,9 @@ const editForm = computed(() => {
  * 弹框
  */
 const dialogVisible = ref(false)
+
+const _editFormModel = toRaw({ ...editFormModel.value })
+
 /**
  * 弹框标题
  */
@@ -297,32 +300,26 @@ const handleDialog = async (title: '新增' | '编辑' | '查看', form: FormMod
   }
   await nextTick()
   editFormRef.value?.formRef?.resetFields()
-  editFormModel.value.id = undefined
+  editFormModel.value = { ..._editFormModel }
   if (title === '编辑' || title === '查看') {
     const { data } = await tableId(props.api.id, form.id)
     emits('onTableIdSuccess')
     Object.assign(editFormModel.value, data.value)
   }
 }
-
-const {
-  isFetching: saveLoading,
-  execute: tableSaveFetch,
-  onFetchResponse: tableSaveOnFetchResponse
-} = tableSave(props.api.save, {
-  list: [editFormModel.value]
-})
-tableSaveOnFetchResponse(() => {
-  emits('onTableSaveSuccess')
-})
+const saveLoading = ref(false)
 const handleEdit = async () => {
   try {
+    saveLoading.value = true
     await editFormRef.value?.formRef?.validate()
-    await tableSaveFetch(true)
+    await tableSave(props.api.save, { list: [editFormModel.value] }).execute(true)
+    emits('onTableSaveSuccess')
+    await tableListFetch(true)
     dialogVisible.value = false
-    await tableListFetch()
   } catch (error) {
     console.log(error)
+  } finally {
+    saveLoading.value = false
   }
 }
 
