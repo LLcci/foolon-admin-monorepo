@@ -29,7 +29,7 @@ export class MenuService {
 
   async saveMenu(menu: MenuEntity[]) {
     for (const item of menu) {
-      if (!item.id) {
+      if (!item.id && item.path) {
         const exist = await this.menuRepository.find({
           where: { path: item.path },
         });
@@ -44,7 +44,14 @@ export class MenuService {
   }
 
   async deleteMenuById(id: string[]) {
-    return await this.menuRepository.delete(id);
+    const allChildMenuList: MenuEntity[] = [];
+    for (const item of id) {
+      await this.getAllChildMenu(allChildMenuList, item);
+    }
+    return await this.menuRepository.delete([
+      ...id,
+      ...allChildMenuList.map((item) => item.id),
+    ]);
   }
 
   async getMenuTree(menuTree: MenuTree[], list: MenuEntity[], temp: MenuTree) {
@@ -63,5 +70,15 @@ export class MenuService {
         }
       }
     });
+  }
+
+  async getAllChildMenu(allChildMenuList: MenuEntity[], id: string) {
+    const list = await this.menuRepository.find({ where: { parentId: id } });
+    if (list.length) {
+      allChildMenuList.push(...list);
+      for (const item of list) {
+        await this.getAllChildMenu(allChildMenuList, item.id);
+      }
+    }
   }
 }
