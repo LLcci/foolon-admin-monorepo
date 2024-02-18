@@ -4,7 +4,7 @@ import type { paths } from '@/types/Schema'
 export const useMenuList = () => {
   return useFetch<
     paths['/admin/sys/menu/list']['post']['responses']['200']['content']['application/json']
-  >('/sys/menu/list', { immediate: true }).post()
+  >('/sys/menu/list').post()
 }
 
 export const useInterfaceRoutes = () => {
