@@ -28,6 +28,14 @@ export class MenuService {
   }
 
   async saveMenu(menu: MenuEntity[]) {
+    for (const item of menu) {
+      if (!item.id) {
+        const exist = await this.menuRepository.find({
+          where: { path: item.path },
+        });
+        if (exist.length) throw `${item.path} 菜单路径已存在`;
+      }
+    }
     return await this.menuRepository.save(menu);
   }
 
