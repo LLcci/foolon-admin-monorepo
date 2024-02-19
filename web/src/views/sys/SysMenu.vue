@@ -125,17 +125,11 @@ const tableForm = ref<
     form: {
       searchFormShow: true,
       editFormShow: true,
-      formRule: [{ required: true, message: '请输入组件名称' }],
+      formRule: [{ required: true, message: '请输入名称' }],
       itemProps: {
         label: '名称'
       },
-      itemComponent: h(ElInput, { placeholder: '请输入组件名称' }),
-      editFormVIf(value) {
-        if (value.menuType == 2) {
-          return false
-        }
-        return true
-      }
+      itemComponent: h(ElInput, { placeholder: '请输入名称' })
     }
   },
   icon: {
