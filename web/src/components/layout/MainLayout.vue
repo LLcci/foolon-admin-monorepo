@@ -106,53 +106,52 @@
           <el-menu
             :default-active="route.path"
             :collapse="isCollapse"
-            class="w-50"
             router
             @select="handleSelect"
           >
             <el-menu-item index="/">
               <el-icon><House /></el-icon>
               <template #title>
-                <span>首页</span>
+                <span class="w-30 overflow-hidden text-nowrap text-ellipsis">首页</span>
               </template>
             </el-menu-item>
             <el-sub-menu index="/sys">
               <template #title>
                 <el-icon><Setting /></el-icon>
-                <span>系统设置</span>
+                <span class="w-30 overflow-hidden text-nowrap text-ellipsis">系统设置</span>
               </template>
               <el-menu-item index="/sys/menu">
                 <el-icon><Operation /></el-icon>
                 <template #title>
-                  <span>菜单管理</span>
+                  <span class="w-30 overflow-hidden text-nowrap text-ellipsis">菜单管理</span>
                 </template>
               </el-menu-item>
               <el-menu-item index="/sys/role">
                 <el-icon><Lock /></el-icon>
                 <template #title>
-                  <span>角色管理</span>
+                  <span class="w-30 overflow-hidden text-nowrap text-ellipsis">角色管理</span>
                 </template>
               </el-menu-item>
               <el-menu-item index="/sys/user">
                 <el-icon><User /></el-icon>
                 <template #title>
-                  <span>用户管理</span>
+                  <span class="w-30 overflow-hidden text-nowrap text-ellipsis">用户管理</span>
                 </template>
               </el-menu-item>
             </el-sub-menu>
             <el-sub-menu index="/demo">
               <template #title>
                 <el-icon><DataLine /></el-icon>
-                <span>组件Demo</span>
+                <span class="w-30 overflow-hidden text-nowrap text-ellipsis">组件Demo</span>
               </template>
               <el-menu-item index="/demo/schemaFormDemo">
                 <template #title>
-                  <span>简单表单Demo</span>
+                  <span class="w-30 overflow-hidden text-nowrap text-ellipsis">简单表单Demo</span>
                 </template>
               </el-menu-item>
               <el-menu-item index="/demo/schemaTableDemo">
                 <template #title>
-                  <span>简单表格Demo</span>
+                  <span class="w-30 overflow-hidden text-nowrap text-ellipsis">简单表格Demo</span>
                 </template>
               </el-menu-item>
             </el-sub-menu>
