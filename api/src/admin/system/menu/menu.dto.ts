@@ -21,7 +21,10 @@ export class MenuSaveDto {
   @IsArray({
     message: '菜单列表格式不正确',
   })
-  @ValidateNested({ each: true })
+  @ValidateNested({
+    each: true,
+    message: '菜单列表格式不正确',
+  })
   @Type(() => MenuEntity)
   list: MenuEntity[];
 }
