@@ -99,13 +99,14 @@
     <el-container>
       <el-aside
         class="border-r-1px border-r-solid border-r-$el-border-color shadow-lg"
-        width="200px"
+        width="fit-content(width)"
         v-if="useSystem().orientation == 'Landscape'"
       >
         <el-scrollbar :height="menuHeight">
           <el-menu
             :default-active="route.path"
             :collapse="isCollapse"
+            class="w-50"
             router
             @select="handleSelect"
           >
