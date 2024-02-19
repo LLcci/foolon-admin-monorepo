@@ -369,6 +369,42 @@ const tableForm = ref<
       },
       itemComponent: h(ElInputNumber, { placeholder: '排序' })
     }
+  },
+  createTime: {
+    table: {
+      show: false
+    },
+    form: {
+      searchFormShow: false,
+      editFormShow: false
+    }
+  },
+  updateTime: {
+    table: {
+      show: false
+    },
+    form: {
+      searchFormShow: false,
+      editFormShow: false
+    }
+  },
+  createUserId: {
+    table: {
+      show: false
+    },
+    form: {
+      searchFormShow: false,
+      editFormShow: false
+    }
+  },
+  updateUserId: {
+    table: {
+      show: false
+    },
+    form: {
+      searchFormShow: false,
+      editFormShow: false
+    }
   }
 })
 

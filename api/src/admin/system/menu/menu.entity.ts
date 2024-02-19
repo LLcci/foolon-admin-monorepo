@@ -45,6 +45,7 @@ export class MenuEntity extends BaseEntity {
   })
   @IsNotEmpty({ message: '菜单路径不能为空' })
   @IsString({ message: '菜单路径必须是字符串' })
+  @IsOptional()
   path: string;
 
   @Column({ name: 'component', nullable: true, comment: '组件路径' })
@@ -54,6 +55,7 @@ export class MenuEntity extends BaseEntity {
   })
   @IsNotEmpty({ message: '组件路径不能为空' })
   @IsString({ message: '组件路径必须是字符串' })
+  @IsOptional()
   component: string;
 
   @Column({ name: 'icon', nullable: true, comment: '菜单图标' })

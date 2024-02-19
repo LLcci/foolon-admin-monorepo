@@ -47,6 +47,7 @@ export type webhooks = Record<string, never>
 export interface components {
   schemas: {
     CreateUserDto: {
+      createUserId?: string
       /** @description 用户名 */
       username: string
       /** @description 密码 */
@@ -101,6 +102,12 @@ export interface components {
     }
     PageResultDto: Record<string, never>
     MenuEntity: {
+      /** Format: date-time */
+      createTime?: string
+      /** Format: date-time */
+      updateTime?: string
+      createUserId?: string
+      updateUserId?: string
       /** @description 菜单id,新增时不需要传,更新时需要传 */
       id?: string
       /** @description 父菜单id */
