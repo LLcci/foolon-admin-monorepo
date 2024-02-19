@@ -12,6 +12,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as svgCaptcha from 'svg-captcha';
 import { nanoid } from 'nanoid';
+import { REDIS_USERID_PREFIX } from '@/common/constants/redis.constants';
 @Injectable()
 export class LoginService {
   constructor(
@@ -29,9 +30,7 @@ export class LoginService {
     if (loginDto.code != redisCode) {
       throw '验证码错误';
     }
-    this.redisService.client.del(
-      `${process.env.REDIS_CODE_PREFIX}${loginDto.codeId}`,
-    );
+    await this.redisService.deleteCode(loginDto.codeId);
     let user = new UserEntity();
     user = await this.userRepository.findOne({
       where: { username: loginDto.username },
@@ -48,7 +47,7 @@ export class LoginService {
     await this.redisService.setToken(token, user.iv);
     //todo 使用socket校验用户信息是否修改
     await this.redisService.client.set(
-      `${process.env.REDIS_USERID_PREFIX}${user.id}`,
+      `${REDIS_USERID_PREFIX}${user.id}`,
       user.iv,
     );
     return {

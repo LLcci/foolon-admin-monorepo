@@ -1,5 +1,6 @@
 import { createCipheriv, randomBytes, scrypt } from 'crypto';
 import { promisify } from 'util';
+import { PSW_KEY } from '@/common/constants/password.constants';
 
 /**
  * 密码加密
@@ -9,11 +10,7 @@ import { promisify } from 'util';
 export default async function encrypt(password: string) {
   const iv = randomBytes(16);
   const salt = randomBytes(16);
-  const key = (await promisify(scrypt)(
-    process.env.PSW_KEY,
-    salt,
-    32,
-  )) as Buffer;
+  const key = (await promisify(scrypt)(PSW_KEY, salt, 32)) as Buffer;
   const cipher = createCipheriv('aes-256-ctr', key, iv);
   const encryptedPassword = Buffer.concat([
     cipher.update(password),

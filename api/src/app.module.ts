@@ -7,6 +7,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { ElasticsearchModule } from '@/global/elasticsearch/elasticsearch.module';
 import { RedisModule } from '@/global/redis/redis.module';
 import { LoggerModule } from '@/global/logger/logger.module';
+import { JWT_SECRET } from '@/common/constants/token.constants';
 
 @Module({
   imports: [
@@ -34,7 +35,7 @@ import { LoggerModule } from '@/global/logger/logger.module';
     }),
     JwtModule.register({
       global: true,
-      secret: process.env.JWT_SECRET,
+      secret: JWT_SECRET,
     }),
     RedisModule.forRoot({
       url: `redis://:${process.env.REDIS_PASSWORD}@${process.env.REDIS_HOST}:${process.env.REDIS_PORT}/${process.env.REDIS_DB}`,

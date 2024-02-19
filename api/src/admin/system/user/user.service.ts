@@ -9,6 +9,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import encrypt from '@/common/utils/encrypt';
 import { RedisService } from '@/global/redis/redis.service';
+import { REDIS_USERID_PREFIX } from '@/common/constants/redis.constants';
 
 @Injectable()
 export class UserService {
@@ -34,10 +35,7 @@ export class UserService {
     createUserDto.salt = salt;
     createUserDto.iv = iv;
     const user = await this.userRepository.save(createUserDto);
-    await this.redisService.client.set(
-      `${process.env.REDIS_USERID_PREFIX}${user.id}`,
-      iv,
-    );
+    await this.redisService.client.set(`${REDIS_USERID_PREFIX}${user.id}`, iv);
     return user;
   }
 }

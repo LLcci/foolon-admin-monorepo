@@ -2,6 +2,13 @@
 https://docs.nestjs.com/providers#services
 */
 
+import {
+  REDIS_CODE_EX,
+  REDIS_CODE_PREFIX,
+  REDIS_ROUTE_PREFIX,
+  REDIS_TOKEN_EX,
+  REDIS_TOKEN_PREFIX,
+} from '@/common/constants/redis.constants';
 import { LoggerService } from '@/global/logger/logger.service';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { RedisClientOptions, createClient, RedisClientType } from 'redis';
@@ -23,40 +30,34 @@ export class RedisService implements OnModuleInit {
   }
 
   async setRoutes(routes: string) {
-    return await this.client.set(`${process.env.REDIS_PREFIX}routes`, routes);
+    return await this.client.set(REDIS_ROUTE_PREFIX, routes);
   }
 
   async getRoutes() {
-    return (await this.client.get(`${process.env.REDIS_PREFIX}routes`)).split(
-      ',',
-    );
+    return (await this.client.get(REDIS_ROUTE_PREFIX)).split(',');
   }
 
   async setCode(codeId: string, text: string) {
-    return await this.client.set(
-      `${process.env.REDIS_CODE_PREFIX}${codeId}`,
-      text,
-      {
-        EX: Number(process.env.REDIS_CODE_EX),
-      },
-    );
+    return await this.client.set(`${REDIS_CODE_PREFIX}${codeId}`, text, {
+      EX: Number(REDIS_CODE_EX),
+    });
   }
 
   async getCode(codeId: string) {
-    return await this.client.get(`${process.env.REDIS_CODE_PREFIX}${codeId}`);
+    return await this.client.get(`${REDIS_CODE_PREFIX}${codeId}`);
+  }
+
+  async deleteCode(codeId: string) {
+    return await this.client.del(`${REDIS_CODE_PREFIX}${codeId}`);
   }
 
   async setToken(token: string, userIv: string) {
-    return await this.client.set(
-      `${process.env.REDIS_TOKEN_PREFIX}${token}`,
-      userIv,
-      {
-        EX: Number(process.env.REDIS_TOKEN_EX),
-      },
-    );
+    return await this.client.set(`${REDIS_TOKEN_PREFIX}${token}`, userIv, {
+      EX: Number(REDIS_TOKEN_EX),
+    });
   }
 
   async getToken(token: string) {
-    return await this.client.get(`${process.env.REDIS_TOKEN_PREFIX}${token}`);
+    return await this.client.get(`${REDIS_TOKEN_PREFIX}${token}`);
   }
 }

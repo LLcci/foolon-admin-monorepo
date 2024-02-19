@@ -3,7 +3,8 @@
 https://docs.nestjs.com/guards#guards
 */
 
-import { AUTHORIZE } from '@/common/constants';
+import { AUTHORIZE, JWT_SECRET } from '@/common/constants/token.constants';
+import { REDIS_USERID_PREFIX } from '@/common/constants/redis.constants';
 import { RedisService } from '@/global/redis/redis.service';
 import {
   Injectable,
@@ -40,11 +41,11 @@ export class AdminGuard implements CanActivate {
       throw new UnauthorizedException('登录已过期，请重新登录');
     }
     const payload = await this.jwtService.verifyAsync(token, {
-      secret: process.env.JWT_SECRET,
+      secret: JWT_SECRET,
     });
     //todo 使用socket校验用户信息是否修改
     const userIv = await this.redisService.client.get(
-      `${process.env.REDIS_USERID_PREFIX}${payload.id}`,
+      `${REDIS_USERID_PREFIX}${payload.id}`,
     );
     if (userIv !== redisUserIv) {
       throw new UnauthorizedException('密码已修改，请重新登录');

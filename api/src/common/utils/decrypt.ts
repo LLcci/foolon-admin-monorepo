@@ -1,5 +1,6 @@
 import { createDecipheriv, scrypt } from 'crypto';
 import { promisify } from 'util';
+import { PSW_KEY } from '@/common/constants/password.constants';
 
 /**
  * 密码解密
@@ -14,7 +15,7 @@ export default async function decrypt(
   encryptedPassword: string,
 ): Promise<string> {
   const key = (await promisify(scrypt)(
-    process.env.PSW_KEY,
+    PSW_KEY,
     Buffer.from(salt, 'hex'),
     32,
   )) as Buffer;
