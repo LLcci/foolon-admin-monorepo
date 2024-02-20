@@ -84,6 +84,10 @@ export type Api = {
    */
   save: string
   /**
+   * 导入
+   */
+  import: string
+  /**
    * 删除
    */
   delete: string

@@ -22,7 +22,7 @@
         @click="handleExport"
         >导出</el-button
       >
-      <el-upload class="ml" v-permissions="props.api.save" :http-request="handleImport">
+      <el-upload class="ml" v-permissions="props.api.import" :http-request="handleImport">
         <el-button type="primary" plain icon="Upload">导入</el-button>
         <template #tip>
           <el-button type="primary" text icon="Download" @click="handleExportTemplate"
@@ -312,7 +312,7 @@ const handleEdit = async () => {
   try {
     saveLoading.value = true
     await editFormRef.value?.formRef?.validate()
-    await tableSave(props.api.save, { list: [editFormModel.value] }).execute(true)
+    await tableSave(props.api.save, editFormModel.value).execute(true)
     emits('onTableSaveSuccess')
     await tableListFetch(true)
     dialogVisible.value = false
@@ -434,7 +434,7 @@ const handleImport = async (options: UploadRequestOptions) => {
     }
     importData.push(dataItem)
   }
-  const { execute } = tableSave(props.api.save, { list: importData })
+  const { execute } = tableSave(props.api.import, { list: importData })
   return execute(true).then(() => {
     ElMessage.success('导入成功')
     tableListFetch()

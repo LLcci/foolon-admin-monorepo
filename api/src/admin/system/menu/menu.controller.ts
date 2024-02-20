@@ -2,7 +2,14 @@
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Post,
+  Query,
+} from '@nestjs/common';
 import {
   ApiHeader,
   ApiOkResponse,
@@ -16,6 +23,8 @@ import { MenuEntity } from './menu.entity';
 import { DeleteResult } from 'typeorm';
 import { RedisService } from '@/global/redis/redis.service';
 import { User } from '@/common/decorator/user.decorator';
+import { validate } from 'class-validator';
+import { values } from 'lodash';
 
 @ApiTags('菜单管理')
 @ApiHeader({
@@ -69,19 +78,48 @@ export class MenuController {
   @ApiOkResponse({
     description: '保存菜单',
     type: MenuEntity,
-    isArray: true,
   })
   async saveMenu(
+    @Body() menu: MenuEntity,
+    @User() user: { id: string; iv: string },
+  ) {
+    if (!menu.id) {
+      menu.createUserId = user.id;
+    }
+    menu.updateUserId = user.id;
+    return await this.menuService.saveMenu(menu);
+  }
+
+  @Post('import')
+  @ApiOperation({
+    summary: '导入菜单',
+  })
+  @ApiOkResponse({
+    description: '导入菜单',
+    type: MenuEntity,
+    isArray: true,
+  })
+  async importMenu(
     @Body() menu: MenuSaveDto,
     @User() user: { id: string; iv: string },
   ) {
-    menu.list.forEach((item) => {
-      if (!item.id) {
-        item.createUserId = user.id;
+    for (const index in menu.list) {
+      const menuItem = new MenuEntity();
+      Object.assign(menuItem, menu.list[index]);
+      const res = await validate(menuItem);
+      if (res.length > 0) {
+        let message = `第${Number(index) + 1}条数据格式错误：`;
+        for (const item of res) {
+          message += `${values(item.constraints).join(';')};`;
+        }
+        throw new BadRequestException(message);
       }
-      item.updateUserId = user.id;
-    });
-    return await this.menuService.saveMenu(menu.list);
+      if (!menu.list[index].id) {
+        menu.list[index].createUserId = user.id;
+      }
+      menu.list[index].updateUserId = user.id;
+    }
+    return await this.menuService.importMenu(menu.list);
   }
 
   @Get('id')

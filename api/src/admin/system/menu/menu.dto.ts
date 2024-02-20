@@ -1,8 +1,7 @@
 import { ApiProperty, IntersectionType, PickType } from '@nestjs/swagger';
 import { MenuEntity } from './menu.entity';
 import { PageRequestDto } from '@/common/class/response.dto';
-import { ArrayNotEmpty, IsArray, ValidateNested } from 'class-validator';
-import { Type } from 'class-transformer';
+import { ArrayNotEmpty, IsArray } from 'class-validator';
 
 export class MenuListDto extends PickType(MenuEntity, ['name', 'status']) {}
 
@@ -22,11 +21,6 @@ export class MenuSaveDto {
     message: '菜单列表格式不正确',
   })
   @ArrayNotEmpty({ message: '菜单列表不能为空' })
-  @ValidateNested({
-    each: true,
-    message: '菜单列表格式不正确',
-  })
-  @Type(() => MenuEntity)
   list: MenuEntity[];
 }
 

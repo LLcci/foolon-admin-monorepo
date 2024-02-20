@@ -8,8 +8,14 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
-
+import {
+  Column,
+  Entity,
+  Index,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { RoleEntity } from '../role/role.entity';
 @Entity('sys_menu')
 export class MenuEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
@@ -126,4 +132,7 @@ export class MenuEntity extends BaseEntity {
   @IsEnum([0, 1], { message: '是否启用必须是为 0 | 1 ' })
   @IsOptional()
   status: 0 | 1;
+
+  @ManyToMany(() => RoleEntity, (role) => role.menus)
+  roles: RoleEntity[];
 }

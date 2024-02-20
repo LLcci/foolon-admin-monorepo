@@ -3,6 +3,7 @@
     v-model:search-form-model="searchFormModel"
     v-model:edit-form-model="editFormModel"
     @on-table-save-success="menuListFetch"
+    @on-table-delete-success="menuListFetch"
     :table-props="tableProps"
     :table-form="tableForm"
     :api="api"
@@ -28,12 +29,14 @@ import {
 import { h, ref, resolveComponent } from 'vue'
 import { useInterfaceRoutes, useMenuList } from './api'
 import { useComponents } from '@/hooks/useVite'
+import { useMenuTree } from './hooks/useMenuTree'
 const { components } = useComponents()
 
 const api = ref<Api>({
   page: '/sys/menu/page',
   id: '/sys/menu/id',
   save: '/sys/menu/save',
+  import: '/sys/menu/import',
   delete: '/sys/menu/delete',
   list: '/sys/menu/list'
 })
@@ -43,7 +46,7 @@ const searchFormModel = ref<
 >({})
 
 const editFormModel = ref<
-  paths['/admin/sys/menu/save']['post']['requestBody']['content']['application/json']['list'][0]
+  paths['/admin/sys/menu/save']['post']['requestBody']['content']['application/json']
 >({
   menuType: 0,
   keepalive: 1,
@@ -408,46 +411,13 @@ const {
   onFetchResponse: onMenuListResponse
 } = useMenuList()
 onMenuListResponse(() => {
-  const options: any[] = []
-  getMenuTree(
-    options,
-    menuList.value?.filter(
-      (item) => item.menuType != 2
-    ) as paths['/admin/sys/menu/list']['post']['responses']['200']['content']['application/json']
-  )
+  const options = useMenuTree(menuList.value)
   tableForm.value.parentId.form.itemComponent = h(ElTreeSelect, {
     placeholder: '请选择父级菜单',
     data: options,
     checkStrictly: true
   })
 })
-const getMenuTree = (
-  menuTree: Record<string, any>[],
-  list:
-    | paths['/admin/sys/menu/list']['post']['responses']['200']['content']['application/json']
-    | null,
-  temp?: Record<string, any>
-) => {
-  list?.forEach((item) => {
-    const tree: Record<string, any> = {
-      label: item.name,
-      value: item.id,
-      children: []
-    }
-    const temPid = item.parentId
-    if (!temp && !item.parentId) {
-      menuTree.push(tree)
-      if (list.filter((i) => i.parentId === item.id).length) {
-        getMenuTree(menuTree, list, tree)
-      }
-    } else if (temp && item.parentId && temPid == temp.value) {
-      temp.children.push(tree)
-      if (list.filter((i) => i.parentId === item.id).length) {
-        getMenuTree(menuTree, list, tree)
-      }
-    }
-  })
-}
 
 const { data: interfaceRoutes, onFetchResponse: onInterfaceRoutesResponse } = useInterfaceRoutes()
 onInterfaceRoutesResponse(() => {

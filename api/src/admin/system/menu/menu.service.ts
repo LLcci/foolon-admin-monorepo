@@ -6,7 +6,7 @@ import { Injectable } from '@nestjs/common';
 import { MenuPageListDto, MenuTree } from './menu.dto';
 import { MenuEntity } from './menu.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Like, Repository } from 'typeorm';
+import { In, Like, Repository } from 'typeorm';
 
 @Injectable()
 export class MenuService {
@@ -27,7 +27,17 @@ export class MenuService {
     });
   }
 
-  async saveMenu(menu: MenuEntity[]) {
+  async saveMenu(menu: MenuEntity) {
+    if (menu.path) {
+      const exist = await this.menuRepository.find({
+        where: { path: menu.path },
+      });
+      if (exist.length) throw `${menu.path} 菜单路径已存在`;
+    }
+    return await this.menuRepository.save(menu);
+  }
+
+  async importMenu(menu: MenuEntity[]) {
     for (const item of menu) {
       if (!item.id && item.path) {
         const exist = await this.menuRepository.find({
@@ -41,6 +51,10 @@ export class MenuService {
 
   async getMenuById(id: string) {
     return await this.menuRepository.findOne({ where: { id } });
+  }
+
+  async getMenusById(ids: string[]) {
+    return await this.menuRepository.find({ where: { id: In(ids) } });
   }
 
   async deleteMenuById(id: string[]) {
