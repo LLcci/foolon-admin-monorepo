@@ -2,14 +2,7 @@
 https://docs.nestjs.com/controllers#controllers
 */
 
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Get,
-  Post,
-  Query,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import {
   ApiHeader,
   ApiOkResponse,
@@ -23,8 +16,7 @@ import { MenuEntity } from './menu.entity';
 import { DeleteResult } from 'typeorm';
 import { RedisService } from '@/global/redis/redis.service';
 import { User } from '@/common/decorator/user.decorator';
-import { validate } from 'class-validator';
-import { values } from 'lodash';
+import validateArrObj from '@/common/utils/validateArrObj';
 
 @ApiTags('菜单管理')
 @ApiHeader({
@@ -103,21 +95,12 @@ export class MenuController {
     @Body() menu: MenuSaveDto,
     @User() user: { id: string; iv: string },
   ) {
-    for (const index in menu.list) {
-      const menuItem = new MenuEntity();
-      Object.assign(menuItem, menu.list[index]);
-      const res = await validate(menuItem);
-      if (res.length > 0) {
-        let message = `第${Number(index) + 1}条数据格式错误：`;
-        for (const item of res) {
-          message += `${values(item.constraints).join(';')};`;
-        }
-        throw new BadRequestException(message);
+    await validateArrObj(menu.list, MenuEntity);
+    for (const item of menu.list) {
+      if (!item.id) {
+        item.createUserId = user.id;
       }
-      if (!menu.list[index].id) {
-        menu.list[index].createUserId = user.id;
-      }
-      menu.list[index].updateUserId = user.id;
+      item.updateUserId = user.id;
     }
     return await this.menuService.importMenu(menu.list);
   }
