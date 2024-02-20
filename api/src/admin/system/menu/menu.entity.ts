@@ -2,6 +2,7 @@ import { BaseEntity } from '@/common/entity/base.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsArray,
+  IsEnum,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -75,8 +76,8 @@ export class MenuEntity extends BaseEntity {
     description: '菜单类型:0-一级菜单,1-子菜单,2-权限',
   })
   @IsNotEmpty({ message: '菜单类型不能为空' })
-  @IsNumber({}, { message: '菜单类型必须是数字' })
-  menuType: number;
+  @IsEnum([0, 1, 2], { message: '菜单类型必须是为 0 | 1 | 2' })
+  menuType: 0 | 1 | 2;
 
   @Column('simple-array', { name: 'perms', nullable: true, comment: '权限' })
   @ApiProperty({
@@ -106,8 +107,8 @@ export class MenuEntity extends BaseEntity {
     description: '是否缓存:0-不缓存,1-缓存',
   })
   @IsNotEmpty({ message: '是否缓存不能为空' })
-  @IsNumber({}, { message: '是否缓存必须是数字' })
-  keepalive: number;
+  @IsEnum([0, 1], { message: '是否缓存必须是为 0 | 1 ' })
+  keepalive: 0 | 1;
 
   @Column({
     name: 'status',
@@ -122,7 +123,7 @@ export class MenuEntity extends BaseEntity {
     description: '是否启用:0-停用,1-启用',
   })
   @IsNotEmpty({ message: '是否启用不能为空' })
-  @IsNumber({}, { message: '是否启用必须是数字' })
+  @IsEnum([0, 1], { message: '是否启用必须是为 0 | 1 ' })
   @IsOptional()
-  status: number;
+  status: 0 | 1;
 }
