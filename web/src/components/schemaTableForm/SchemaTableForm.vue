@@ -299,7 +299,6 @@ const handleDialog = async (title: '新增' | '编辑' | '查看', form: FormMod
     Object.assign(editForm.value.props, { disabled: true })
   }
   await nextTick()
-  editFormRef.value?.formRef?.resetFields()
   editFormModel.value = { ..._editFormModel }
   if (title === '编辑' || title === '查看') {
     const { data } = await tableId(props.api.id, form.id)

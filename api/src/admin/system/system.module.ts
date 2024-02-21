@@ -12,10 +12,18 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { MenuEntity } from './menu/menu.entity';
 import { MenuController } from './menu/menu.controller';
 import { MenuService } from './menu/menu.service';
+import { RoleEntity } from './role/role.entity';
+import { RoleController } from './role/role.controller';
+import { RoleService } from './role/role.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity, MenuEntity])],
-  controllers: [UserController, LoginController, MenuController],
-  providers: [LoginService, UserService, MenuService],
+  imports: [TypeOrmModule.forFeature([UserEntity, MenuEntity, RoleEntity])],
+  controllers: [
+    UserController,
+    LoginController,
+    MenuController,
+    RoleController,
+  ],
+  providers: [LoginService, UserService, MenuService, RoleService],
 })
 export class SystemModule {}

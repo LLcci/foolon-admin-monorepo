@@ -97,7 +97,6 @@ const tableForm = ref<
                 editFormModel.value.perms = undefined
                 break
               case 2:
-                editFormModel.value.name = undefined
                 editFormModel.value.icon = undefined
                 editFormModel.value.path = undefined
                 editFormModel.value.component = undefined
@@ -411,7 +410,11 @@ const {
   onFetchResponse: onMenuListResponse
 } = useMenuList()
 onMenuListResponse(() => {
-  const options = useMenuTree(menuList.value)
+  const options = useMenuTree(
+    menuList.value?.filter(
+      (item) => item.menuType != 2
+    ) as paths['/admin/sys/menu/list']['post']['responses']['200']['content']['application/json']
+  )
   tableForm.value.parentId.form.itemComponent = h(ElTreeSelect, {
     placeholder: '请选择父级菜单',
     data: options,

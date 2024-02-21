@@ -28,6 +28,10 @@ export interface paths {
     /** 保存菜单 */
     post: operations['MenuController_saveMenu']
   }
+  '/admin/sys/menu/import': {
+    /** 导入菜单 */
+    post: operations['MenuController_importMenu']
+  }
   '/admin/sys/menu/id': {
     /** id查询菜单详情 */
     get: operations['MenuController_getMenuById']
@@ -39,6 +43,30 @@ export interface paths {
   '/admin/sys/menu/routes': {
     /** 获取路由 */
     get: operations['MenuController_getRoutes']
+  }
+  '/admin/sys/role/page': {
+    /** 分页角色列表 */
+    post: operations['RoleController_getRolePageList']
+  }
+  '/admin/sys/role/list': {
+    /** 角色列表 */
+    post: operations['RoleController_getRoleList']
+  }
+  '/admin/sys/role/save': {
+    /** 保存角色 */
+    post: operations['RoleController_saveRole']
+  }
+  '/admin/sys/role/import': {
+    /** 导入角色 */
+    post: operations['RoleController_importRole']
+  }
+  '/admin/sys/role/id': {
+    /** id查询角色详情 */
+    get: operations['RoleController_getRoleById']
+  }
+  '/admin/sys/role/delete': {
+    /** id删除角色 */
+    post: operations['RoleController_deleteRoleById']
   }
 }
 
@@ -142,6 +170,69 @@ export interface components {
       list: components['schemas']['MenuEntity'][]
     }
     DeleteResult: Record<string, never>
+    RolePageListDto: {
+      /**
+       * @description 当前页码
+       * @default 1
+       */
+      currentPage?: number
+      /**
+       * @description 页大小
+       * @default 10
+       */
+      pageSize?: number
+      /** @description 角色名称,查询时非必传,新增更新时必传 */
+      name?: string
+      /**
+       * @description 是否启用:0-停用,1-启用
+       * @default 1
+       */
+      status?: number
+    }
+    RoleEntity: {
+      /** Format: date-time */
+      createTime?: string
+      /** Format: date-time */
+      updateTime?: string
+      createUserId?: string
+      updateUserId?: string
+      /** @description 角色id,新增时不需要传,更新时需要传 */
+      id?: string
+      /** @description 角色名称,查询时非必传,新增更新时必传 */
+      name?: string
+      /** @description 角色描述 */
+      description?: string
+      /**
+       * @description 是否启用:0-停用,1-启用
+       * @default 1
+       */
+      status?: number
+    }
+    RoleSaveDto: {
+      /** Format: date-time */
+      createTime?: string
+      /** Format: date-time */
+      updateTime?: string
+      createUserId?: string
+      updateUserId?: string
+      /** @description 角色id,新增时不需要传,更新时需要传 */
+      id?: string
+      /** @description 角色名称,查询时非必传,新增更新时必传 */
+      name?: string
+      /** @description 角色描述 */
+      description?: string
+      /**
+       * @description 是否启用:0-停用,1-启用
+       * @default 1
+       */
+      status?: number
+      /** @description 菜单ID列表 */
+      menuIds?: string[]
+    }
+    RoleImportDto: {
+      /** @description 角色列表 */
+      list: components['schemas']['RoleSaveDto'][]
+    }
   }
   responses: never
   parameters: never
@@ -255,11 +346,33 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': components['schemas']['MenuSaveDto']
+        'application/json': components['schemas']['MenuEntity']
       }
     }
     responses: {
       /** @description 保存菜单 */
+      200: {
+        content: {
+          'application/json': components['schemas']['MenuEntity']
+        }
+      }
+    }
+  }
+  /** 导入菜单 */
+  MenuController_importMenu: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['MenuSaveDto']
+      }
+    }
+    responses: {
+      /** @description 导入菜单 */
       200: {
         content: {
           'application/json': components['schemas']['MenuEntity'][]
@@ -317,6 +430,131 @@ export interface operations {
       200: {
         content: {
           'application/json': string[]
+        }
+      }
+    }
+  }
+  /** 分页角色列表 */
+  RoleController_getRolePageList: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['RolePageListDto']
+      }
+    }
+    responses: {
+      /** @description 分页角色列表 */
+      200: {
+        content: {
+          'application/json': components['schemas']['PageResultDto']
+        }
+      }
+    }
+  }
+  /** 角色列表 */
+  RoleController_getRoleList: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['RolePageListDto']
+      }
+    }
+    responses: {
+      /** @description 角色列表 */
+      200: {
+        content: {
+          'application/json': components['schemas']['RoleEntity'][]
+        }
+      }
+    }
+  }
+  /** 保存角色 */
+  RoleController_saveRole: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['RoleSaveDto']
+      }
+    }
+    responses: {
+      /** @description 保存角色 */
+      200: {
+        content: {
+          'application/json': components['schemas']['RoleEntity']
+        }
+      }
+    }
+  }
+  /** 导入角色 */
+  RoleController_importRole: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['RoleImportDto']
+      }
+    }
+    responses: {
+      /** @description 导入角色 */
+      200: {
+        content: {
+          'application/json': components['schemas']['RoleEntity'][]
+        }
+      }
+    }
+  }
+  /** id查询角色详情 */
+  RoleController_getRoleById: {
+    parameters: {
+      query: {
+        id: string
+      }
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    responses: {
+      /** @description id查询角色详情 */
+      200: {
+        content: {
+          'application/json': components['schemas']['RoleSaveDto']
+        }
+      }
+    }
+  }
+  /** id删除角色 */
+  RoleController_deleteRoleById: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    responses: {
+      /** @description id删除角色 */
+      200: {
+        content: {
+          'application/json': components['schemas']['DeleteResult']
         }
       }
     }
