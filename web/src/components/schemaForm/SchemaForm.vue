@@ -5,7 +5,7 @@
         <component :is="item.component" v-model="formModel[index as string]"> </component>
       </el-form-item>
     </template>
-    <el-form-item>
+    <el-form-item v-if="props.form.props.showButtonSlot">
       <slot>
         <el-button type="primary" @click="handleSubmit">提交</el-button>
         <el-button @click="resetForm">重置</el-button>

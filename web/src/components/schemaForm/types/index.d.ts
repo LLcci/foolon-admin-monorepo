@@ -10,7 +10,14 @@ import type { FormModel } from '@/types/index'
  *
  */
 export type FormProps<T> = Partial<Omit<ElFormProps, 'model' | 'rules'>> & {
+  /**
+   * ElementUI表单规则,https://element-plus.org/zh-CN/component/form.html#form-attributes
+   */
   rules?: FormRules<T>
+  /**
+   * 是否显示按钮插槽
+   */
+  showButtonSlot?: boolean
 }
 
 export type FormItemProps = Partial<Omit<ElFormItemProps, 'prop'>>

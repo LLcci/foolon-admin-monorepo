@@ -1,35 +1,45 @@
 <template>
   <schemaForm ref="searchFormRef" v-model="searchFormModel" :form="searForm">
-    <el-button type="primary" v-permissions="props.api.page" @click="handleSearch">查询</el-button>
-    <el-button type="default" v-permissions="props.api.page" @click="handleReset">重置</el-button>
+    <template #default>
+      <slot name="searchButtons">
+        <el-button type="primary" v-permissions="props.api.page" @click="handleSearch"
+          >查询</el-button
+        >
+        <el-button type="default" v-permissions="props.api.page" @click="handleReset"
+          >重置</el-button
+        >
+      </slot>
+    </template>
   </schemaForm>
   <div class="mt flex justify-between">
     <div class="flex">
-      <el-button
-        type="primary"
-        icon="CirclePlus"
-        v-permissions="props.api.save"
-        @click="handleDialog('新增', {})"
-        >新增</el-button
-      >
-      <el-button
-        class="ml"
-        type="success"
-        plain
-        icon="Download"
-        v-permissions="props.api.list"
-        :loading="exportLoading"
-        @click="handleExport"
-        >导出</el-button
-      >
-      <el-upload class="ml" v-permissions="props.api.import" :http-request="handleImport">
-        <el-button type="primary" plain icon="Upload">导入</el-button>
-        <template #tip>
-          <el-button type="primary" text icon="Download" @click="handleExportTemplate"
-            >导入模板</el-button
-          >
-        </template>
-      </el-upload>
+      <slot name="operationButtons">
+        <el-button
+          type="primary"
+          icon="CirclePlus"
+          v-permissions="props.api.save"
+          @click="handleDialog('新增', {})"
+          >新增</el-button
+        >
+        <el-button
+          class="ml"
+          type="success"
+          plain
+          icon="Download"
+          v-permissions="props.api.list"
+          :loading="exportLoading"
+          @click="handleExport"
+          >导出</el-button
+        >
+        <el-upload class="ml" v-permissions="props.api.import" :http-request="handleImport">
+          <el-button type="primary" plain icon="Upload">导入</el-button>
+          <template #tip>
+            <el-button type="primary" text icon="Download" @click="handleExportTemplate"
+              >导入模板</el-button
+            >
+          </template>
+        </el-upload>
+      </slot>
     </div>
     <div>
       <el-popconfirm title="确定删除？" @confirm="handleMultipleDelete(selectionColumns)">
@@ -48,29 +58,31 @@
   <div class="mt">
     <schemaTable :table="table" v-model="pagination">
       <template #default="scope">
-        <el-button
-          type="success"
-          v-permissions="props.api.id"
-          text
-          size="default"
-          @click="handleDialog('查看', scope.row)"
-          >查看</el-button
-        >
-        <el-button
-          type="primary"
-          v-permissions="props.api.save"
-          text
-          size="default"
-          @click="handleDialog('编辑', scope.row)"
-          >编辑</el-button
-        >
-        <el-popconfirm title="确定删除？" @confirm="handleDelete(scope.row)">
-          <template #reference>
-            <el-button v-permissions="props.api.delete" type="danger" text size="default"
-              >删除</el-button
-            >
-          </template>
-        </el-popconfirm>
+        <slot name="tableButtons" v-bind="scope">
+          <el-button
+            type="success"
+            v-permissions="props.api.id"
+            text
+            size="default"
+            @click="handleDialog('查看', scope.row)"
+            >查看</el-button
+          >
+          <el-button
+            type="primary"
+            v-permissions="props.api.save"
+            text
+            size="default"
+            @click="handleDialog('编辑', scope.row)"
+            >编辑</el-button
+          >
+          <el-popconfirm title="确定删除？" @confirm="handleDelete(scope.row)">
+            <template #reference>
+              <el-button v-permissions="props.api.delete" type="danger" text size="default"
+                >删除</el-button
+              >
+            </template>
+          </el-popconfirm>
+        </slot>
       </template>
     </schemaTable>
   </div>
@@ -82,7 +94,6 @@
         v-model="editFormModel"
         :form="editForm"
       >
-        <div></div>
       </schemaForm>
       <template #footer>
         <el-button @click="() => (dialogVisible = false)">取消</el-button>
@@ -212,7 +223,7 @@ const searchFormRef = ref<SchemaFormInstance>()
  */
 const searForm = computed(() => {
   const formProps: SchemaForm<FormModel> = {
-    props: { inline: true },
+    props: { inline: true, showButtonSlot: true },
     formItems: {}
   }
   for (const key in props.tableForm) {
@@ -439,5 +450,17 @@ const handleImport = async (options: UploadRequestOptions) => {
     tableListFetch()
   })
 }
+
+defineExpose({
+  handleSearch,
+  handleReset,
+  handleDialog,
+  handleExport,
+  handleImport,
+  handleExportTemplate,
+  handleMultipleDelete,
+  handleDelete,
+  handleEdit
+})
 </script>
 <style lang="scss" scoped></style>
