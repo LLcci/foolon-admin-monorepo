@@ -5,7 +5,7 @@ https://docs.nestjs.com/providers#services
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RoleEntity } from './role.entity';
-import { Like, Repository } from 'typeorm';
+import { In, Like, Repository } from 'typeorm';
 import { RolePageListDto } from './role.dto';
 
 @Injectable()
@@ -40,6 +40,12 @@ export class RoleService {
     return await this.roleRepository.findOne({
       where: { id },
       relations: ['menus'],
+    });
+  }
+
+  async getRolesById(id: string[]) {
+    return await this.roleRepository.find({
+      where: { id: In(id) },
     });
   }
 

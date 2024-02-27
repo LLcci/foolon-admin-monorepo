@@ -10,6 +10,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { MenuEntity } from '../menu/menu.entity';
+import { UserEntity } from '../user/user.entity';
 
 @Entity('sys_role')
 export class RoleEntity extends BaseEntity {
@@ -59,4 +60,7 @@ export class RoleEntity extends BaseEntity {
   @IsEnum([0, 1], { message: '是否启用必须是 0 | 1' })
   @IsOptional()
   status: 1 | 0;
+
+  @ManyToMany(() => UserEntity, (user) => user.roles)
+  users: UserEntity[];
 }

@@ -4,9 +4,36 @@
  */
 
 export interface paths {
-  '/admin/sys/user/create': {
-    /** 创建用户 */
-    post: operations['UserController_createUser']
+  '/admin/sys/user/page': {
+    /** 分页用户列表 */
+    post: operations['UserController_getUserPageList']
+  }
+  '/admin/sys/user/list': {
+    /** 用户列表 */
+    post: operations['UserController_getUserList']
+  }
+  '/admin/sys/user/save': {
+    /** 保存用户 */
+    post: operations['UserController_saveUser']
+  }
+  '/admin/sys/user/import': {
+    /** 导入用户 */
+    post: operations['UserController_importUser']
+  }
+  '/admin/sys/user/id': {
+    /** id查询用户详情 */
+    get: operations['UserController_getUserById']
+  }
+  '/admin/sys/user/delete': {
+    /** id删除用户 */
+    post: operations['UserController_deleteUserById']
+  }
+  '/admin/sys/user/upload': {
+    /** 上传头像 */
+    post: operations['UserController_upload']
+  }
+  '/admin/sys/user/deleteAvatar': {
+    get: operations['UserController_deleteAvatar']
   }
   '/admin/sys/login': {
     /** 登录 */
@@ -74,24 +101,83 @@ export type webhooks = Record<string, never>
 
 export interface components {
   schemas: {
-    CreateUserDto: {
+    UserPageListDto: {
+      /**
+       * @description 当前页码
+       * @default 1
+       */
+      currentPage?: number
+      /**
+       * @description 页大小
+       * @default 10
+       */
+      pageSize?: number
+      /** @description 用户账户,查询时非必传,新增更新时必传 */
+      username?: string
+      /** @description 用户名,查询时非必传,新增更新时必传 */
+      realname?: string
+      /** @description 状态:0-无效,1-有效 */
+      status?: number
+    }
+    PageResultDto: Record<string, never>
+    UserEntity: {
+      /** Format: date-time */
+      createTime?: string
+      /** Format: date-time */
+      updateTime?: string
       createUserId?: string
-      /** @description 用户名 */
-      username: string
+      updateUserId?: string
+      /** @description 用户id,新增时不需要传,更新时必传 */
+      id?: string
+      /** @description 用户账户,查询时非必传,新增更新时必传 */
+      username?: string
       /** @description 密码 */
       password: string
-      /** @description 姓名 */
-      realname: string
+      /** @description 用户名,查询时非必传,新增更新时必传 */
+      realname?: string
       /** @description 头像 */
       avatar?: string
       /** @description 邮箱 */
       email?: string
       /** @description 手机号 */
       phone?: string
+      /** @description 状态:0-无效,1-有效 */
+      status?: number
     }
+    UserSaveDto: {
+      /** Format: date-time */
+      createTime?: string
+      /** Format: date-time */
+      updateTime?: string
+      createUserId?: string
+      updateUserId?: string
+      /** @description 用户id,新增时不需要传,更新时必传 */
+      id?: string
+      /** @description 用户账户,查询时非必传,新增更新时必传 */
+      username?: string
+      /** @description 密码 */
+      password: string
+      /** @description 用户名,查询时非必传,新增更新时必传 */
+      realname?: string
+      /** @description 头像 */
+      avatar?: string
+      /** @description 邮箱 */
+      email?: string
+      /** @description 手机号 */
+      phone?: string
+      /** @description 状态:0-无效,1-有效 */
+      status?: number
+      /** @description 角色ids */
+      roleIds?: string[]
+    }
+    UserImportDto: {
+      /** @description 用户列表 */
+      list: components['schemas']['UserSaveDto'][]
+    }
+    DeleteResult: Record<string, never>
     LoginDto: {
-      /** @description 用户名 */
-      username: string
+      /** @description 用户账户,查询时非必传,新增更新时必传 */
+      username?: string
       /** @description 密码 */
       password: string
       /** @description 验证码 */
@@ -128,7 +214,6 @@ export interface components {
        */
       status?: number
     }
-    PageResultDto: Record<string, never>
     MenuEntity: {
       /** Format: date-time */
       createTime?: string
@@ -169,7 +254,6 @@ export interface components {
       /** @description 菜单列表 */
       list: components['schemas']['MenuEntity'][]
     }
-    DeleteResult: Record<string, never>
     RolePageListDto: {
       /**
        * @description 当前页码
@@ -246,8 +330,8 @@ export type $defs = Record<string, never>
 export type external = Record<string, never>
 
 export interface operations {
-  /** 创建用户 */
-  UserController_createUser: {
+  /** 分页用户列表 */
+  UserController_getUserPageList: {
     parameters: {
       header?: {
         /** @description Bearer token */
@@ -256,11 +340,147 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'multipart/form-data': components['schemas']['CreateUserDto']
+        'application/json': components['schemas']['UserPageListDto']
+      }
+    }
+    responses: {
+      /** @description 分页用户列表 */
+      200: {
+        content: {
+          'application/json': components['schemas']['PageResultDto']
+        }
+      }
+    }
+  }
+  /** 用户列表 */
+  UserController_getUserList: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UserPageListDto']
+      }
+    }
+    responses: {
+      /** @description 用户列表 */
+      200: {
+        content: {
+          'application/json': components['schemas']['UserEntity'][]
+        }
+      }
+    }
+  }
+  /** 保存用户 */
+  UserController_saveUser: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UserSaveDto']
+      }
+    }
+    responses: {
+      /** @description 保存用户 */
+      200: {
+        content: {
+          'application/json': components['schemas']['UserEntity']
+        }
+      }
+    }
+  }
+  /** 导入用户 */
+  UserController_importUser: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UserImportDto']
+      }
+    }
+    responses: {
+      /** @description 导入用户 */
+      200: {
+        content: {
+          'application/json': components['schemas']['UserEntity'][]
+        }
+      }
+    }
+  }
+  /** id查询用户详情 */
+  UserController_getUserById: {
+    parameters: {
+      query: {
+        id: string
+      }
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    responses: {
+      /** @description id查询用户详情 */
+      200: {
+        content: {
+          'application/json': components['schemas']['UserSaveDto']
+        }
+      }
+    }
+  }
+  /** id删除用户 */
+  UserController_deleteUserById: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    responses: {
+      /** @description id删除用户 */
+      200: {
+        content: {
+          'application/json': components['schemas']['DeleteResult']
+        }
+      }
+    }
+  }
+  /** 上传头像 */
+  UserController_upload: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
       }
     }
     responses: {
       201: {
+        content: never
+      }
+    }
+  }
+  UserController_deleteAvatar: {
+    parameters: {
+      query: {
+        filename: string
+      }
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    responses: {
+      200: {
         content: never
       }
     }

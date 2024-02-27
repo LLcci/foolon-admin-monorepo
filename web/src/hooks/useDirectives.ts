@@ -13,7 +13,13 @@ export const permissions = {
       '/sys/role/id',
       '/sys/role/save',
       '/sys/role/import',
-      '/sys/role/delete'
+      '/sys/role/delete',
+      '/sys/user/page',
+      '/sys/user/list',
+      '/sys/user/id',
+      '/sys/user/save',
+      '/sys/user/import',
+      '/sys/user/delete'
     ]
     if (!permission.includes(binding.value)) {
       el.parentNode?.removeChild(el)

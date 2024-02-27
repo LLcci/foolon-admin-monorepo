@@ -39,6 +39,7 @@ declare module 'vue' {
     ElTabs: typeof import('element-plus/es')['ElTabs']
     ElText: typeof import('element-plus/es')['ElText']
     ElUpload: typeof import('element-plus/es')['ElUpload']
+    FormImgUpload: typeof import('./src/components/formImgUpload/FormImgUpload.vue')['default']
     FormTree: typeof import('./src/components/formTree/FormTree.vue')['default']
     IconSelect: typeof import('./src/components/iconSelect/IconSelect.vue')['default']
     MainLayout: typeof import('./src/components/layout/MainLayout.vue')['default']

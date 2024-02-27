@@ -87,7 +87,7 @@
     </schemaTable>
   </div>
   <div>
-    <el-dialog v-model="dialogVisible" :title="dialogTitle" width="60%">
+    <el-dialog v-model="dialogVisible" :title="dialogTitle" width="60%" destroy-on-close>
       <schemaForm
         v-loading="saveLoading"
         ref="editFormRef"

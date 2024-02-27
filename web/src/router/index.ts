@@ -38,6 +38,11 @@ const router = createRouter({
           component: () => import('@/views/sys/SysRole.vue')
         },
         {
+          path: '/sys/user',
+          name: 'user',
+          component: () => import('@/views/sys/SysUser.vue')
+        },
+        {
           path: '/demo/schemaFormDemo',
           name: 'schemaFormDemo',
           component: () => import('@/views/demo/SchemaFormDemo.vue')
