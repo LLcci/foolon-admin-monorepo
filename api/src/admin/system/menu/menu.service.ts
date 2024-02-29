@@ -7,12 +7,15 @@ import { MenuPageListDto, MenuTree } from './menu.dto';
 import { MenuEntity } from './menu.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Like, Repository } from 'typeorm';
+import { RoleEntity } from '../role/role.entity';
 
 @Injectable()
 export class MenuService {
   constructor(
     @InjectRepository(MenuEntity)
     private readonly menuRepository: Repository<MenuEntity>,
+    @InjectRepository(RoleEntity)
+    private readonly roleRepository: Repository<RoleEntity>,
   ) {}
 
   async getMenuList(menuPageListDto: MenuPageListDto) {
@@ -58,6 +61,16 @@ export class MenuService {
   }
 
   async deleteMenuById(id: string[]) {
+    const roles = await this.roleRepository
+      .createQueryBuilder('role')
+      .leftJoinAndSelect('role.menus', 'menu')
+      .where('menu.id in (:...ids)', { ids: id })
+      .getMany();
+    if (roles.length) {
+      throw `${roles
+        .map((item) => item.name)
+        .join(',')}角色已绑定该菜单，无法删除`;
+    }
     const allChildMenuList: MenuEntity[] = [];
     for (const item of id) {
       await this.getAllChildMenu(allChildMenuList, item);

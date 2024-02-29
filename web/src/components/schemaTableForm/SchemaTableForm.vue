@@ -340,12 +340,12 @@ const handleEdit = async () => {
 const handleDelete = async (value: FormModel) => {
   try {
     tableLoading.value = true
-    await tableDelete(props.api.delete, { id: [value.id] })
+    await tableDelete(props.api.delete, { id: [value.id] }).execute(true)
     emits('onTableDeleteSuccess')
     await tableListFetch()
     ElMessage.success('删除成功')
   } catch (error) {
-    console.log(error)
+    console.error(error)
   } finally {
     tableLoading.value = false
   }
@@ -354,12 +354,12 @@ const handleDelete = async (value: FormModel) => {
 const handleMultipleDelete = async (value: FormModel[]) => {
   try {
     tableLoading.value = true
-    await tableDelete(props.api.delete, { id: value.map((item) => item.id) })
+    await tableDelete(props.api.delete, { id: value.map((item) => item.id) }).execute(true)
     emits('onTableDeleteSuccess')
     await tableListFetch()
     ElMessage.success('删除成功')
   } catch (error) {
-    console.log(error)
+    console.error(error)
   } finally {
     tableLoading.value = false
   }
