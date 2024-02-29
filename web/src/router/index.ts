@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import { ElNotification } from 'element-plus'
+import { useUser } from '@/stores/useUser'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -62,10 +63,10 @@ router.beforeEach((to, from, next) => {
   if (to.meta.title) {
     document.title = to.meta.title as string
   }
-  if (to.path == '/login' && localStorage.getItem('token')) {
+  if (to.path == '/login' && useUser().token) {
     return next({ path: '/', replace: true })
   }
-  if (to.path != '/login' && !localStorage.getItem('token')) {
+  if (to.path != '/login' && !useUser().token) {
     ElNotification.error('登录已失效，请重新登录')
     return next({ path: '/login', replace: true })
   }

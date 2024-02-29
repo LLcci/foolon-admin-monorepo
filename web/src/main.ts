@@ -21,6 +21,8 @@ import '@/styles/globalClass.scss'
 import { socket } from './sockets'
 import { permissions } from './hooks/useDirectives'
 
+import { useUser } from './stores/useUser'
+
 socket.connect()
 
 const app = createApp(App)
@@ -30,6 +32,12 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 }
 
 app.use(createPinia())
+useUser().initToken()
+
+if (useUser().token) {
+  await useUser().getPermissions()
+}
+
 app.use(router)
 
 app.directive('permissions', permissions)

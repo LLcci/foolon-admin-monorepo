@@ -16,6 +16,7 @@ import { h, ref } from 'vue'
 import { useRoleList } from './api/role'
 import FormImgUpload from '@/components/formImgUpload/FormImgUpload.vue'
 import { useAvatarDelete } from './api/user'
+import { useUser } from '@/stores/useUser'
 
 const api = ref<Api>({
   page: '/sys/user/page',
@@ -76,7 +77,7 @@ const tableForm = ref<
       itemComponent: h(FormImgUpload, {
         uploadProps: {
           action: `${import.meta.env.VITE_API_URL}/sys/user/upload`,
-          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+          headers: { Authorization: `Bearer ${useUser().token}` },
           name: 'avatarFile',
           'on-error': (err) => {
             ElMessage.error(JSON.parse(err.message).message)

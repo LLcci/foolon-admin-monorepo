@@ -1,8 +1,13 @@
+import { useFetch } from '@/hooks/useFetch'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 export const useUser = defineStore('user', () => {
   const token = ref<string | null>(null)
+
+  function initToken() {
+    token.value = localStorage.getItem('token')
+  }
 
   function setToken(value: string) {
     localStorage.setItem('token', value)
@@ -14,9 +19,15 @@ export const useUser = defineStore('user', () => {
     token.value = null
   }
 
+  function getPermissions() {
+    return useFetch('/sys/permission').get()
+  }
+
   return {
     token,
+    initToken,
     setToken,
-    delToken
+    delToken,
+    getPermissions
   }
 })
