@@ -19,12 +19,12 @@ import { useAvatarDelete } from './api/user'
 import { useUser } from '@/stores/useUser'
 
 const api = ref<Api>({
-  page: '/sys/user/page',
-  list: '/sys/user/list',
-  id: '/sys/user/id',
-  save: '/sys/user/save',
-  import: '/sys/user/import',
-  delete: '/sys/user/delete'
+  page: '/admin/sys/user/page',
+  list: '/admin/sys/user/list',
+  id: '/admin/sys/user/id',
+  save: '/admin/sys/user/save',
+  import: '/admin/sys/user/import',
+  delete: '/admin/sys/user/delete'
 })
 
 const searchFormModel = ref<
@@ -76,7 +76,7 @@ const tableForm = ref<
       },
       itemComponent: h(FormImgUpload, {
         uploadProps: {
-          action: `${import.meta.env.VITE_API_URL}/sys/user/upload`,
+          action: `${import.meta.env.VITE_API_URL}/admin/sys/user/upload`,
           headers: { Authorization: `Bearer ${useUser().token}` },
           name: 'avatarFile',
           'on-error': (err) => {

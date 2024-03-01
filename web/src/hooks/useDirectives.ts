@@ -1,27 +1,8 @@
+import { useUser } from '@/stores/useUser'
+
 export const permissions = {
   mounted(el: HTMLElement, binding: { value: string }) {
-    // todo 获取用户权限
-    const permission = [
-      '/sys/menu/page',
-      '/sys/menu/id',
-      '/sys/menu/save',
-      '/sys/menu/import',
-      '/sys/menu/delete',
-      '/sys/menu/list',
-      '/sys/role/page',
-      '/sys/role/list',
-      '/sys/role/id',
-      '/sys/role/save',
-      '/sys/role/import',
-      '/sys/role/delete',
-      '/sys/user/page',
-      '/sys/user/list',
-      '/sys/user/id',
-      '/sys/user/save',
-      '/sys/user/import',
-      '/sys/user/delete'
-    ]
-    if (!permission.includes(binding.value)) {
+    if (!useUser().userPerms.includes(binding.value)) {
       el.parentNode?.removeChild(el)
     }
   }

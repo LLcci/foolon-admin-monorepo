@@ -33,12 +33,12 @@ import { useMenuTree } from './hooks/useMenuTree'
 const { components } = useComponents()
 
 const api = ref<Api>({
-  page: '/sys/menu/page',
-  id: '/sys/menu/id',
-  save: '/sys/menu/save',
-  import: '/sys/menu/import',
-  delete: '/sys/menu/delete',
-  list: '/sys/menu/list'
+  page: '/admin/sys/menu/page',
+  id: '/admin/sys/menu/id',
+  save: '/admin/sys/menu/save',
+  import: '/admin/sys/menu/import',
+  delete: '/admin/sys/menu/delete',
+  list: '/admin/sys/menu/list'
 })
 
 const searchFormModel = ref<

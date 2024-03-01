@@ -18,7 +18,7 @@ const router = createRouter({
     },
     {
       path: '/',
-      name: 'home',
+      name: 'main',
       component: () => import('@/components/layout/MainLayout.vue'),
       children: [
         {
@@ -27,31 +27,6 @@ const router = createRouter({
           meta: {
             title: `${import.meta.env.VITE_APP_TITLE}-首页`
           }
-        },
-        {
-          path: '/sys/menu',
-          name: 'menu',
-          component: () => import('@/views/sys/SysMenu.vue')
-        },
-        {
-          path: '/sys/role',
-          name: 'role',
-          component: () => import('@/views/sys/SysRole.vue')
-        },
-        {
-          path: '/sys/user',
-          name: 'user',
-          component: () => import('@/views/sys/SysUser.vue')
-        },
-        {
-          path: '/demo/schemaFormDemo',
-          name: 'schemaFormDemo',
-          component: () => import('@/views/demo/SchemaFormDemo.vue')
-        },
-        {
-          path: '/demo/schemaTableDemo',
-          name: 'schemaTableDemo',
-          component: () => import('@/views/demo/SchemaTableDemo.vue')
         }
       ]
     }

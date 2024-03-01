@@ -16,7 +16,7 @@ watch(modelValue, () => {
 })
 
 const handleChange = () => {
-  modelValue.value = tree.value?.getCheckedNodes().map((item) => item.value)
+  modelValue.value = tree.value?.getCheckedNodes(false, true).map((item) => item.value)
 }
 </script>
 <style lang="scss" scoped></style>

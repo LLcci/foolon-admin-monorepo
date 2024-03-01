@@ -5,9 +5,61 @@
     <link rel="icon" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>Foolon Admin</title>
+    <style>
+      .loading {
+        width: 100px;
+        height: 100px;
+        position: absolute;
+        left: 50%;
+        margin-left: -50px;
+        top: 50%;
+        margin-top: -50px;
+        background-image: linear-gradient(to top, #a18cd1 0%, #fbc2eb 100%);
+        border-radius: 50%;
+        animation: load 2s linear infinite;
+      }
+      @keyframes load {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      .loading::before {
+        content: '';
+        position: absolute;
+        width: 90px;
+        height: 90px;
+        background-color: #ffffff;
+        border-radius: 50%;
+        margin-left: 5px;
+        margin-top: 5px;
+      }
+      .loading::after {
+        width: 100px;
+        height: 60px;
+        content: '';
+        position: absolute;
+        background-color: #ffffff;
+      }
+      .loadingText {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        margin-left: -30px;
+        margin-top: -10px;
+        background-image: -webkit-linear-gradient(top, #a18cd1 0%, #fbc2eb 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    </style>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+      <div class="loading"></div>
+      <p class="loadingText">Loading...</p>
+    </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

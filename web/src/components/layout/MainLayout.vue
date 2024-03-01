@@ -115,46 +115,7 @@
                 <span class="w-30 overflow-hidden text-nowrap text-ellipsis">首页</span>
               </template>
             </el-menu-item>
-            <el-sub-menu index="/sys">
-              <template #title>
-                <el-icon><Setting /></el-icon>
-                <span class="w-30 overflow-hidden text-nowrap text-ellipsis">系统设置</span>
-              </template>
-              <el-menu-item index="/sys/menu">
-                <el-icon><Operation /></el-icon>
-                <template #title>
-                  <span class="w-30 overflow-hidden text-nowrap text-ellipsis">菜单管理</span>
-                </template>
-              </el-menu-item>
-              <el-menu-item index="/sys/role">
-                <el-icon><Lock /></el-icon>
-                <template #title>
-                  <span class="w-30 overflow-hidden text-nowrap text-ellipsis">角色管理</span>
-                </template>
-              </el-menu-item>
-              <el-menu-item index="/sys/user">
-                <el-icon><User /></el-icon>
-                <template #title>
-                  <span class="w-30 overflow-hidden text-nowrap text-ellipsis">用户管理</span>
-                </template>
-              </el-menu-item>
-            </el-sub-menu>
-            <el-sub-menu index="/demo">
-              <template #title>
-                <el-icon><DataLine /></el-icon>
-                <span class="w-30 overflow-hidden text-nowrap text-ellipsis">组件Demo</span>
-              </template>
-              <el-menu-item index="/demo/schemaFormDemo">
-                <template #title>
-                  <span class="w-30 overflow-hidden text-nowrap text-ellipsis">简单表单Demo</span>
-                </template>
-              </el-menu-item>
-              <el-menu-item index="/demo/schemaTableDemo">
-                <template #title>
-                  <span class="w-30 overflow-hidden text-nowrap text-ellipsis">简单表格Demo</span>
-                </template>
-              </el-menu-item>
-            </el-sub-menu>
+            <UserMenuTree :user-menu-tree="useUser().userMenuTree"></UserMenuTree>
           </el-menu>
         </el-scrollbar>
       </el-aside>
@@ -197,53 +158,14 @@
     </el-container>
   </el-container>
   <el-drawer v-model="drawer" title="菜单" direction="ltr" size="100%">
-    <el-menu :default-active="route.path" router>
+    <el-menu :default-active="route.path" @select="() => (drawer = false)" router>
       <el-menu-item index="/">
         <el-icon><House /></el-icon>
         <template #title>
           <span>首页</span>
         </template>
       </el-menu-item>
-      <el-sub-menu index="/sys">
-        <template #title>
-          <el-icon><Setting /></el-icon>
-          <span>系统设置</span>
-        </template>
-        <el-menu-item index="/sys/menu">
-          <el-icon><Operation /></el-icon>
-          <template #title>
-            <span>菜单管理</span>
-          </template>
-        </el-menu-item>
-        <el-menu-item index="/sys/role">
-          <el-icon><Lock /></el-icon>
-          <template #title>
-            <span>角色管理</span>
-          </template>
-        </el-menu-item>
-        <el-menu-item index="/sys/user">
-          <el-icon><User /></el-icon>
-          <template #title>
-            <span>用户管理</span>
-          </template>
-        </el-menu-item>
-      </el-sub-menu>
-      <el-sub-menu index="/demo">
-        <template #title>
-          <el-icon><DataLine /></el-icon>
-          <span>组件Demo</span>
-        </template>
-        <el-menu-item index="/demo/schemaFormDemo">
-          <template #title>
-            <span>简单表单Demo</span>
-          </template>
-        </el-menu-item>
-        <el-menu-item index="/demo/schemaTableDemo">
-          <template #title>
-            <span>简单表格Demo</span>
-          </template>
-        </el-menu-item>
-      </el-sub-menu>
+      <UserMenuTree :user-menu-tree="useUser().userMenuTree"></UserMenuTree>
     </el-menu>
   </el-drawer>
 </template>
@@ -257,6 +179,8 @@ import type { TabPaneName } from 'element-plus'
 import { useSystem } from '@/stores/useSystem'
 import { useElementSize } from '@vueuse/core'
 import { useWindowSize } from '@vueuse/core'
+import UserMenuTree from '../userMenuTree/UserMenuTree.vue'
+import { useUser } from '@/stores/useUser'
 
 const title = ref(import.meta.env.VITE_APP_NAME)
 

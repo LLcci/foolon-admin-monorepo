@@ -34,11 +34,11 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 app.use(createPinia())
 useUser().initToken()
 
+app.use(router)
+
 if (useUser().token) {
   await useUser().getPermissions()
 }
-
-app.use(router)
 
 app.directive('permissions', permissions)
 

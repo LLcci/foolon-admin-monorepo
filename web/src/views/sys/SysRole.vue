@@ -19,12 +19,12 @@ import { useMenuTree } from './hooks/useMenuTree'
 import FormTree from '@/components/formTree/FormTree.vue'
 
 const api = ref<Api>({
-  page: '/sys/role/page',
-  list: '/sys/role/list',
-  id: '/sys/role/id',
-  save: '/sys/role/save',
-  import: '/sys/role/import',
-  delete: '/sys/role/delete'
+  page: '/admin/sys/role/page',
+  list: '/admin/sys/role/list',
+  id: '/admin/sys/role/id',
+  save: '/admin/sys/role/save',
+  import: '/admin/sys/role/import',
+  delete: '/admin/sys/role/delete'
 })
 
 const searchFormModel = ref<
@@ -176,7 +176,8 @@ onMenuListResponse(() => {
     data: options,
     defaultExpandAll: true,
     nodeKey: 'value',
-    showCheckbox: true
+    showCheckbox: true,
+    checkStrictly: true
   })
 })
 </script>

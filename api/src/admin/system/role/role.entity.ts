@@ -40,6 +40,12 @@ export class RoleEntity extends BaseEntity {
   @IsOptional()
   description: string;
 
+  @ApiProperty({
+    readOnly: true,
+    description: '菜单列表',
+    type: MenuEntity,
+    isArray: true,
+  })
   @ManyToMany(() => MenuEntity, (menu) => menu.roles)
   @JoinTable()
   menus: MenuEntity[];

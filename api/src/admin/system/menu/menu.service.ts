@@ -31,7 +31,7 @@ export class MenuService {
   }
 
   async saveMenu(menu: MenuEntity) {
-    if (menu.path) {
+    if (!menu.id && menu.path) {
       const exist = await this.menuRepository.find({
         where: { path: menu.path },
       });

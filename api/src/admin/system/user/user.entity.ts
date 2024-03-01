@@ -34,7 +34,6 @@ export class UserEntity extends BaseEntity {
     required: false,
     description: '用户账户,查询时非必传,新增更新时必传',
   })
-  @IsNotEmpty({ message: '用户账户不能为空' })
   @IsString({ message: '用户账户必须是字符串' })
   @IsOptional()
   username: string;
@@ -50,7 +49,6 @@ export class UserEntity extends BaseEntity {
     required: false,
     description: '用户名,查询时非必传,新增更新时必传',
   })
-  @IsNotEmpty({ message: '用户名不能为空' })
   @IsString({ message: '用户名必须是字符串' })
   @IsOptional()
   realname: string;
@@ -79,6 +77,12 @@ export class UserEntity extends BaseEntity {
   @IsOptional()
   phone: string;
 
+  @ApiProperty({
+    readOnly: true,
+    description: '角色列表',
+    type: RoleEntity,
+    isArray: true,
+  })
   @ManyToMany(() => RoleEntity, (role) => role.users)
   @JoinTable()
   roles: RoleEntity[];

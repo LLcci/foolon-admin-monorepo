@@ -92,6 +92,7 @@ async function onSubmit() {
     formData.codeId = code.value?.id as string
     await goLogin(true)
     useUser().setToken(loginData.value?.token as string)
+    await useUser().getPermissions()
     router.replace('/')
   } catch (error) {
     console.error(error)

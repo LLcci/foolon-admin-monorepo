@@ -30,7 +30,6 @@ export class MenuEntity extends BaseEntity {
 
   @Column({ name: 'parent_id', nullable: true, comment: '父菜单id' })
   @ApiProperty({ required: false, description: '父菜单id' })
-  @IsNotEmpty({ message: '父菜单id不能为空' })
   @IsString({ message: '父菜单id必须是字符串' })
   @IsOptional()
   parentId: string;
@@ -50,7 +49,6 @@ export class MenuEntity extends BaseEntity {
     required: false,
     description: '路由页面时必填',
   })
-  @IsNotEmpty({ message: '菜单路径不能为空' })
   @IsString({ message: '菜单路径必须是字符串' })
   @IsOptional()
   path: string;
@@ -60,14 +58,12 @@ export class MenuEntity extends BaseEntity {
     required: false,
     description: '路由页面时必填',
   })
-  @IsNotEmpty({ message: '组件路径不能为空' })
   @IsString({ message: '组件路径必须是字符串' })
   @IsOptional()
   component: string;
 
   @Column({ name: 'icon', nullable: true, comment: '菜单图标' })
   @ApiProperty({ required: false, description: '菜单图标' })
-  @IsNotEmpty({ message: '菜单图标不能为空' })
   @IsString({ message: '组件名称必须是字符串' })
   @IsOptional()
   icon: string;
@@ -90,7 +86,6 @@ export class MenuEntity extends BaseEntity {
     required: false,
     description: '类型为权限时必填',
   })
-  @IsNotEmpty({ message: '权限不能为空' })
   @IsArray({ message: '权限必须是数组' })
   @IsOptional()
   perms: string[];

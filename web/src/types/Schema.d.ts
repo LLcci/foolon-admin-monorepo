@@ -95,6 +95,10 @@ export interface paths {
     /** id删除角色 */
     post: operations['RoleController_deleteRoleById']
   }
+  '/admin/sys/permission': {
+    /** 获取用户权限 */
+    get: operations['PermissionController_getPermission']
+  }
 }
 
 export type webhooks = Record<string, never>
@@ -120,6 +124,63 @@ export interface components {
       status?: number
     }
     PageResultDto: Record<string, never>
+    MenuEntity: {
+      /** Format: date-time */
+      createTime?: string
+      /** Format: date-time */
+      updateTime?: string
+      createUserId?: string
+      updateUserId?: string
+      /** @description 菜单id,新增时不需要传,更新时需要传 */
+      id?: string
+      /** @description 父菜单id */
+      parentId?: string
+      /** @description 名称:类型为菜单时必填 */
+      name?: string
+      /** @description 路由页面时必填 */
+      path?: string
+      /** @description 路由页面时必填 */
+      component?: string
+      /** @description 菜单图标 */
+      icon?: string
+      /** @description 菜单类型:0-一级菜单,1-子菜单,2-权限 */
+      menuType: number
+      /** @description 类型为权限时必填 */
+      perms?: string[]
+      /** @description 排序 */
+      sort: number
+      /**
+       * @description 是否缓存:0-不缓存,1-缓存
+       * @default 1
+       */
+      keepalive?: number
+      /**
+       * @description 是否启用:0-停用,1-启用
+       * @default 1
+       */
+      status?: number
+    }
+    RoleEntity: {
+      /** Format: date-time */
+      createTime?: string
+      /** Format: date-time */
+      updateTime?: string
+      createUserId?: string
+      updateUserId?: string
+      /** @description 角色id,新增时不需要传,更新时需要传 */
+      id?: string
+      /** @description 角色名称,查询时非必传,新增更新时必传 */
+      name?: string
+      /** @description 角色描述 */
+      description?: string
+      /** @description 菜单列表 */
+      menus: readonly components['schemas']['MenuEntity'][]
+      /**
+       * @description 是否启用:0-停用,1-启用
+       * @default 1
+       */
+      status?: number
+    }
     UserEntity: {
       /** Format: date-time */
       createTime?: string
@@ -141,6 +202,8 @@ export interface components {
       email?: string
       /** @description 手机号 */
       phone?: string
+      /** @description 角色列表 */
+      roles: readonly components['schemas']['RoleEntity'][]
       /** @description 状态:0-无效,1-有效 */
       status?: number
     }
@@ -214,42 +277,6 @@ export interface components {
        */
       status?: number
     }
-    MenuEntity: {
-      /** Format: date-time */
-      createTime?: string
-      /** Format: date-time */
-      updateTime?: string
-      createUserId?: string
-      updateUserId?: string
-      /** @description 菜单id,新增时不需要传,更新时需要传 */
-      id?: string
-      /** @description 父菜单id */
-      parentId?: string
-      /** @description 名称:类型为菜单时必填 */
-      name?: string
-      /** @description 路由页面时必填 */
-      path?: string
-      /** @description 路由页面时必填 */
-      component?: string
-      /** @description 菜单图标 */
-      icon?: string
-      /** @description 菜单类型:0-一级菜单,1-子菜单,2-权限 */
-      menuType: number
-      /** @description 类型为权限时必填 */
-      perms?: string[]
-      /** @description 排序 */
-      sort: number
-      /**
-       * @description 是否缓存:0-不缓存,1-缓存
-       * @default 1
-       */
-      keepalive?: number
-      /**
-       * @description 是否启用:0-停用,1-启用
-       * @default 1
-       */
-      status?: number
-    }
     MenuSaveDto: {
       /** @description 菜单列表 */
       list: components['schemas']['MenuEntity'][]
@@ -267,25 +294,6 @@ export interface components {
       pageSize?: number
       /** @description 角色名称,查询时非必传,新增更新时必传 */
       name?: string
-      /**
-       * @description 是否启用:0-停用,1-启用
-       * @default 1
-       */
-      status?: number
-    }
-    RoleEntity: {
-      /** Format: date-time */
-      createTime?: string
-      /** Format: date-time */
-      updateTime?: string
-      createUserId?: string
-      updateUserId?: string
-      /** @description 角色id,新增时不需要传,更新时需要传 */
-      id?: string
-      /** @description 角色名称,查询时非必传,新增更新时必传 */
-      name?: string
-      /** @description 角色描述 */
-      description?: string
       /**
        * @description 是否启用:0-停用,1-启用
        * @default 1
@@ -775,6 +783,23 @@ export interface operations {
       200: {
         content: {
           'application/json': components['schemas']['DeleteResult']
+        }
+      }
+    }
+  }
+  /** 获取用户权限 */
+  PermissionController_getPermission: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    responses: {
+      /** @description 用户权限 */
+      200: {
+        content: {
+          'application/json': components['schemas']['UserEntity']
         }
       }
     }

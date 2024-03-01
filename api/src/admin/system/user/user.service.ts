@@ -45,10 +45,12 @@ export class UserService {
   async saveUser(userSaveDto: UserSaveDto) {
     const userEntity = await this.userSaveDto2Entity(userSaveDto);
     const user = await this.userRepository.save(userEntity);
+    // todo 使用ws推送用户密码修改
     await this.redisService.client.set(
       `${REDIS_USERID_PREFIX}${user.id}`,
       user.iv,
     );
+    // todo 用户状态修改
     return user;
   }
 
@@ -60,10 +62,12 @@ export class UserService {
     }
     const users = await this.userRepository.save(userEntities);
     for (const item of users) {
+      // todo 使用ws推送用户密码修改
       await this.redisService.client.set(
         `${REDIS_USERID_PREFIX}${item.id}`,
         item.iv,
       );
+      // todo 用户状态修改
     }
     return users;
   }
@@ -102,6 +106,7 @@ export class UserService {
     Object.assign(userEntity, omit(userSaveDto, ['roleIds']));
     userEntity.salt = salt;
     userEntity.iv = iv;
+    userEntity.roles = [];
     if (userSaveDto.roleIds?.length > 0) {
       userEntity.roles = await this.roleService.getRolesById(
         userSaveDto.roleIds,
