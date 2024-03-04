@@ -25,7 +25,7 @@ const router = createRouter({
           path: '/',
           component: () => import('@/views/home/IndexHome.vue'),
           meta: {
-            title: `${import.meta.env.VITE_APP_TITLE}-首页`
+            title: '首页'
           }
         }
       ]
@@ -36,7 +36,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   NProgress.start()
   if (to.meta.title) {
-    document.title = to.meta.title as string
+    document.title = `${import.meta.env.VITE_APP_TITLE}-${to.meta.title}`
   }
   if (to.path == '/login' && useUser().token) {
     return next({ path: '/', replace: true })

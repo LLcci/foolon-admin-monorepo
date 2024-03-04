@@ -37,7 +37,7 @@ useUser().initToken()
 app.use(router)
 
 if (useUser().token) {
-  await useUser().getPermissions()
+  useUser().getPermissions()
 }
 
 app.directive('permissions', permissions)

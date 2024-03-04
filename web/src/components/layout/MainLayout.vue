@@ -55,14 +55,13 @@
           >
             <el-avatar
               :size="useSystem().orientation == 'Landscape' ? 30 : 24"
-              fit="contain"
-              :src="defaultAvatar"
+              :src="useUser().userInfo.avatar ?? defaultAvatar"
             />
             <div
               v-if="useSystem().orientation == 'Landscape'"
               class="max-w-30 ml-2 font-size-base font-bold truncate"
             >
-              火龙果果火龙果果
+              {{ useUser().userInfo.realname }}
             </div>
             <el-dropdown class="ml-2" trigger="click">
               <el-button
@@ -150,7 +149,11 @@
         <el-main>
           <div class="h-full flex">
             <el-card class="flex-1">
-              <RouterView />
+              <router-view v-slot="{ Component }">
+                <keep-alive :include="useUser().userKeepAliveRoutes">
+                  <component :is="Component" />
+                </keep-alive>
+              </router-view>
             </el-card>
           </div>
         </el-main>
@@ -195,20 +198,8 @@ let isCollapse = ref(false)
 let activeTab = ref(route.path)
 let editableTabs = ref([
   {
-    name: '/',
-    label: '首页'
-  },
-  {
-    name: '/sys/menu',
-    label: '菜单管理'
-  },
-  {
-    name: '/sys/role',
-    label: '角色管理'
-  },
-  {
-    name: '/sys/user',
-    label: '用户管理'
+    name: route.path,
+    label: route.meta.title
   }
 ])
 
@@ -236,8 +227,9 @@ const handleTabsEdit = (targetName: TabPaneName | undefined, action: 'remove' | 
         }
       ]
       activeTab.value = '/'
-      router.push('/')
+      return router.push('/')
     }
+    return router.push(activeName)
   }
 }
 
@@ -248,9 +240,20 @@ const menuHeight = computed(() => {
   return `${windowHeight.value - headerHeight.value}px`
 })
 
-const handleSelect = (index: string) => {}
+const handleSelect = (index: string) => {
+  if (!editableTabs.value.find((item) => item.name === index)) {
+    const route = useUser().userRoutes.find((item) => item.path === index)
+    editableTabs.value.push({
+      name: index,
+      label: route?.meta?.title
+    })
+  }
+  activeTab.value = index
+}
 
-const handleTabsChange = (name: TabPaneName) => {}
+const handleTabsChange = (name: TabPaneName) => {
+  router.push(name as string)
+}
 
 let drawer = ref(false)
 </script>

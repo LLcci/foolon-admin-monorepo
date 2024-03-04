@@ -48,7 +48,6 @@ declare module 'vue' {
     SchemaForm: typeof import('./src/components/schemaForm/SchemaForm.vue')['default']
     SchemaTable: typeof import('./src/components/schemaTable/SchemaTable.vue')['default']
     SchemaTableForm: typeof import('./src/components/schemaTableForm/SchemaTableForm.vue')['default']
-    SubMenuTree: typeof import('./src/components/subMenuTree/SubMenuTree.vue')['default']
     UserMenuTree: typeof import('./src/components/userMenuTree/UserMenuTree.vue')['default']
   }
   export interface ComponentCustomProperties {

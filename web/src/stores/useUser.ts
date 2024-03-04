@@ -19,6 +19,7 @@ export const useUser = defineStore(
     userPerms: Ref<string[]>
     userMenuTree: Ref<UserMenuTreeType[]>
     userRoutes: Ref<RouteRecordRaw[]>
+    userKeepAliveRoutes: Ref<string[]>
     initToken: () => void
     setToken: (value: string) => void
     delToken: () => void
@@ -43,6 +44,8 @@ export const useUser = defineStore(
 
     const userRoutes = ref<RouteRecordRaw[]>([])
 
+    const userKeepAliveRoutes = ref<string[]>([])
+
     function initToken() {
       token.value = localStorage.getItem('token')
     }
@@ -64,32 +67,44 @@ export const useUser = defineStore(
         >('/admin/sys/permission').get()
       if (data.value) {
         userInfo.value = data.value
+        userInfo.value.avatar = userInfo.value.avatar
+          ? `${import.meta.env.VITE_AVATAR_URL}/${userInfo.value.avatar}`
+          : undefined
         data.value.roles.forEach((item) => {
           userMenus.value.push(...item.menus.filter((item) => item.menuType != 2))
           item.menus.forEach((item) => {
-            if (item.perms) {
+            if (item.perms?.length) {
+              // 权限
               userPerms.value.push(...item.perms)
             }
-            if (item.menuType != 2 && item.path) {
+            if (item.menuType != 2 && item.path && item.component) {
+              // 子菜单
               const module = import.meta.glob('/src/views/**/*.vue')
               const route: RouteRecordRaw = {
                 path: item.path,
                 name: item.path,
                 component: module[`/src/views${item.component}`],
                 meta: {
-                  title: `${import.meta.env.VITE_APP_TITLE}-${item.name}`
+                  title: item.name
                 }
               }
               userRoutes.value.push(route)
+              if (item.keepalive == 1) {
+                // 缓存菜单
+                const componentName = item.component?.split('.')[0].split('/').at(-1)
+                if (componentName) userKeepAliveRoutes.value.push(componentName)
+              }
             }
           })
         })
+        // 添加路由
         useUser().userRoutes.forEach((route) => {
           router.addRoute('main', route)
           if (router.currentRoute.value.path == route.path) {
             router.replace(route.path)
           }
         })
+        // 菜单数
         getSubMenuTree(userMenuTree.value, userMenus.value)
       }
     }
@@ -129,6 +144,7 @@ export const useUser = defineStore(
       userPerms,
       userMenuTree,
       userRoutes,
+      userKeepAliveRoutes,
       initToken,
       setToken,
       delToken,
