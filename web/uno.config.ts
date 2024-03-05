@@ -13,6 +13,16 @@ import presetRemToPx from '@unocss/preset-rem-to-px'
 
 export default defineConfig({
   shortcuts: [],
+  rules: [
+    [
+      'safe-area',
+      {
+        'padding-bottom': 'constant(safe-area -inset-bottom)',
+        // @ts-ignore
+        'padding-bottom': 'env(safe-area-inset-bottom)'
+      }
+    ]
+  ],
   theme: {
     colors: {
       // ...
