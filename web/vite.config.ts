@@ -47,12 +47,6 @@ export default defineConfig({
   css: {
     postcss: {
       plugins: [loder_pxtovw]
-    },
-    preprocessorOptions: {
-      scss: {
-        implementation: sass
-        // additionalData: `@import "@/styles/variables.scss";` // 引入全局变量文件
-      }
     }
   }
 })
