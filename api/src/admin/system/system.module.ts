@@ -17,6 +17,8 @@ import { RoleController } from './role/role.controller'
 import { RoleService } from './role/role.service'
 import { PermissionController } from './permission/permission.controller'
 import { PermissionService } from './permission/permission.service'
+import { LogoutController } from './logout/logout.controller'
+import { LogoutService } from './logout/logout.service'
 
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity, MenuEntity, RoleEntity])],
@@ -25,8 +27,9 @@ import { PermissionService } from './permission/permission.service'
     LoginController,
     MenuController,
     RoleController,
-    PermissionController
+    PermissionController,
+    LogoutController
   ],
-  providers: [LoginService, UserService, MenuService, RoleService, PermissionService]
+  providers: [LoginService, UserService, MenuService, RoleService, PermissionService, LogoutService]
 })
 export class SystemModule {}

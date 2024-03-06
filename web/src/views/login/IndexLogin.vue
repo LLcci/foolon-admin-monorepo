@@ -85,7 +85,9 @@ const {
   isFetching: loginFetching,
   execute: goLogin
 } = useLogin(formData)
-onLoginError(() => getCode())
+onLoginError(() => {
+  getCode(), formRef.value?.resetFields(['code'])
+})
 async function onSubmit() {
   try {
     await formRef.value?.validate()

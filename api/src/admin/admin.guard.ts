@@ -9,7 +9,7 @@ import { RedisService } from '@/global/redis/redis.service'
 import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
 import { JwtService } from '@nestjs/jwt'
-import { Request } from 'express'
+import extractTokenFromHeader from '@/common/utils/extractTokenFromHeader'
 
 @Injectable()
 export class AdminGuard implements CanActivate {
@@ -27,7 +27,7 @@ export class AdminGuard implements CanActivate {
       return true
     }
     const request = context.switchToHttp().getRequest()
-    const token = this.extractTokenFromHeader(request)
+    const token = extractTokenFromHeader(request)
     if (!request.headers.authorization) {
       throw new UnauthorizedException('未登录，请进行登录')
     }
@@ -45,10 +45,5 @@ export class AdminGuard implements CanActivate {
     }
     request['user'] = payload
     return true
-  }
-
-  private extractTokenFromHeader(request: Request): string | undefined {
-    const [type, token] = request.headers.authorization?.split(' ') ?? []
-    return type === 'Bearer' ? token : undefined
   }
 }

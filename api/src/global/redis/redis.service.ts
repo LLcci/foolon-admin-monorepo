@@ -60,4 +60,8 @@ export class RedisService implements OnModuleInit {
   async getToken(token: string) {
     return await this.client.get(`${REDIS_TOKEN_PREFIX}${token}`)
   }
+
+  async deleteToken(token: string) {
+    return await this.client.del(`${REDIS_TOKEN_PREFIX}${token}`)
+  }
 }

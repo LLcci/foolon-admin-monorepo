@@ -29,7 +29,16 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component)
 }
 
-app.use(createPinia())
+const pinia = createPinia()
+
+pinia.use(({ store }) => {
+  const initialState = JSON.parse(JSON.stringify(store.$state))
+  store.$reset = () => {
+    store.$state = JSON.parse(JSON.stringify(initialState))
+  }
+})
+
+app.use(pinia)
 useUser().initToken()
 
 app.use(router)

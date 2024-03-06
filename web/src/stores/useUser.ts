@@ -35,6 +35,7 @@ export const useUser = defineStore(
     ) => UseFetchReturn<
       paths['/admin/sys/permission/updatePassword']['post']['responses']['200']['content']['application/json']
     >
+    logout: () => UseFetchReturn<unknown>
   } => {
     const token = ref<string | null>(null)
 
@@ -161,6 +162,10 @@ export const useUser = defineStore(
       >('/admin/sys/permission/updatePassword', { immediate: false }).post(data)
     }
 
+    function logout() {
+      return useFetch('/admin/sys/logout', { immediate: false }).get()
+    }
+
     return {
       token,
       userInfo,
@@ -174,7 +179,8 @@ export const useUser = defineStore(
       delToken,
       getPermissions,
       updateUserInfo,
-      updatePassword
+      updatePassword,
+      logout
     }
   }
 )

@@ -83,9 +83,10 @@
               type="primary"
               size="large"
               :icon="SwitchButton"
+              @click="logout"
               >退出登录</el-button
             >
-            <el-button v-else type="primary" size="small"
+            <el-button v-else type="primary" size="small" @click="logout"
               ><el-icon :size="20"><SwitchButton /></el-icon
             ></el-button>
           </div>
@@ -218,7 +219,7 @@ import { useDark, useToggle } from '@vueuse/core'
 import { SwitchButton, Setting } from '@element-plus/icons-vue'
 import defaultAvatar from '@/assets/defaultAvatar.svg'
 import { computed, h, ref } from 'vue'
-import { ElInput, ElMessage, type TabPaneName } from 'element-plus'
+import { ElInput, ElMessage, ElMessageBox, type TabPaneName } from 'element-plus'
 import { useSystem } from '@/stores/useSystem'
 import { useElementSize } from '@vueuse/core'
 import { useWindowSize } from '@vueuse/core'
@@ -515,6 +516,21 @@ const confirmUpdatePassword = async () => {
     console.error(error)
   } finally {
     updatePasswordLoading.value = false
+  }
+}
+
+const logout = async () => {
+  try {
+    await ElMessageBox.confirm('是否退出系统？', 'Warning', {
+      title: '提示',
+      type: 'warning'
+    })
+    await useUser().logout().execute(true)
+    useUser().delToken()
+    useUser().$reset()
+    router.replace('/login')
+  } catch (error) {
+    console.error(error)
   }
 }
 </script>
