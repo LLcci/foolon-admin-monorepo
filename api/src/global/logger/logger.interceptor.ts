@@ -11,9 +11,9 @@ export class LoggerInterceptor implements NestInterceptor {
     const req = context.switchToHttp().getRequest()
 
     this.logger.log(
-      `请求接口: ${req.method} ${req.url} data:${JSON.stringify(
-        req.body
-      )} query:${JSON.stringify(req.query)} params:${JSON.stringify(req.params)}`
+      `请求接口: ${req.method} ${req.url} data:${JSON.stringify(req.body)} query:${JSON.stringify(
+        req.query
+      )} params:${JSON.stringify(req.params)}`
     )
     return next.handle().pipe(
       tap(
