@@ -1,7 +1,19 @@
 <template>
   <div class="h-screen flex items-center justify-center bg-$el-bg-color-page">
-    <el-card class="w-4xl h-xl" shadow="always">
-      <div class="flex items-center flex-col">
+    <el-card
+      :class="{
+        'w-4xl': useSystem().orientation == 'Landscape',
+        'w-xs': useSystem().orientation == 'Portrait'
+      }"
+      shadow="always"
+    >
+      <div
+        class="flex items-center flex-col"
+        :class="{
+          'mb-10': useSystem().orientation == 'Landscape',
+          'mb-5': useSystem().orientation == 'Portrait'
+        }"
+      >
         <div class="mt-4 flex items-center justify-center">
           <img class="w-10" src="/favicon.svg" alt="" />
           <span class="font-size-8 font-bold ml-2">{{ title }}</span>
@@ -9,12 +21,17 @@
         <span class="color-$el-text-color-secondary mt-2">
           {{ description }}
         </span>
-        <div class="w-xl mt-10">
+        <div
+          :class="{
+            'w-xl mt-10': useSystem().orientation == 'Landscape',
+            'w-70 mt-6': useSystem().orientation == 'Portrait'
+          }"
+        >
           <el-tabs>
             <el-tab-pane label="密码登录">
               <el-form :model="formData" ref="formRef" :rules="rules" @keyup.enter="onSubmit">
                 <el-form-item prop="username">
-                  <el-input v-model="formData.username" placeholder="用户名"></el-input>
+                  <el-input v-model="formData.username" placeholder="用户账户"></el-input>
                 </el-form-item>
                 <el-form-item prop="password">
                   <el-input
@@ -54,6 +71,7 @@ import { reactive, ref } from 'vue'
 import { useCode, useLogin } from './api'
 import type { LoginForm } from './types'
 import { useUser } from '@/stores/useUser'
+import { useSystem } from '@/stores/useSystem'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
