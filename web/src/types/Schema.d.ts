@@ -99,6 +99,14 @@ export interface paths {
     /** 获取用户权限 */
     get: operations['PermissionController_getPermission']
   }
+  '/admin/sys/permission/userInfo': {
+    /** 更新用户信息 */
+    post: operations['PermissionController_updateUserInfo']
+  }
+  '/admin/sys/permission/updatePassword': {
+    /** 修改用户密码 */
+    post: operations['PermissionController_updatePassword']
+  }
 }
 
 export type webhooks = Record<string, never>
@@ -324,6 +332,25 @@ export interface components {
     RoleImportDto: {
       /** @description 角色列表 */
       list: components['schemas']['RoleSaveDto'][]
+    }
+    UpdateUserInfoDto: {
+      /** @description 用户名,查询时非必传,新增更新时必传 */
+      realname?: string
+      /** @description 头像 */
+      avatar?: string
+      /** @description 邮箱 */
+      email?: string
+      /** @description 手机号 */
+      phone?: string
+    }
+    UpdateResult: Record<string, never>
+    UpdateUserPasswordDto: {
+      /** @description 原密码 */
+      oldPassword: string
+      /** @description 新密码 */
+      newPassword: string
+      /** @description 确认新密码 */
+      confirmPassword: string
     }
   }
   responses: never
@@ -800,6 +827,50 @@ export interface operations {
       200: {
         content: {
           'application/json': components['schemas']['UserEntity']
+        }
+      }
+    }
+  }
+  /** 更新用户信息 */
+  PermissionController_updateUserInfo: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateUserInfoDto']
+      }
+    }
+    responses: {
+      /** @description 用户信息 */
+      200: {
+        content: {
+          'application/json': components['schemas']['UpdateResult']
+        }
+      }
+    }
+  }
+  /** 修改用户密码 */
+  PermissionController_updatePassword: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateUserPasswordDto']
+      }
+    }
+    responses: {
+      /** @description 修改用户密码 */
+      200: {
+        content: {
+          'application/json': components['schemas']['UpdateResult']
         }
       }
     }

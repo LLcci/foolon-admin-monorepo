@@ -3,59 +3,52 @@
 https://docs.nestjs.com/guards#guards
 */
 
-import { AUTHORIZE, JWT_SECRET } from '@/common/constants/token.constants';
-import { REDIS_USERID_PREFIX } from '@/common/constants/redis.constants';
-import { RedisService } from '@/global/redis/redis.service';
-import {
-  Injectable,
-  CanActivate,
-  ExecutionContext,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
-import { JwtService } from '@nestjs/jwt';
-import { Request } from 'express';
+import { AUTHORIZE, JWT_SECRET } from '@/common/constants/token.constants'
+import { REDIS_USERID_PREFIX } from '@/common/constants/redis.constants'
+import { RedisService } from '@/global/redis/redis.service'
+import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common'
+import { Reflector } from '@nestjs/core'
+import { JwtService } from '@nestjs/jwt'
+import { Request } from 'express'
 
 @Injectable()
 export class AdminGuard implements CanActivate {
   constructor(
     private readonly jwtService: JwtService,
     private readonly redisService: RedisService,
-    private readonly reflector: Reflector,
+    private readonly reflector: Reflector
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     if (this.reflector.get(AUTHORIZE, context.getClass())) {
-      return true;
+      return true
     }
     if (this.reflector.get(AUTHORIZE, context.getHandler())) {
-      return true;
+      return true
     }
-    const request = context.switchToHttp().getRequest();
-    const token = this.extractTokenFromHeader(request);
+    const request = context.switchToHttp().getRequest()
+    const token = this.extractTokenFromHeader(request)
     if (!request.headers.authorization) {
-      throw new UnauthorizedException('未登录，请进行登录');
+      throw new UnauthorizedException('未登录，请进行登录')
     }
-    const redisUserIv = await this.redisService.getToken(token);
+    const redisUserIv = await this.redisService.getToken(token)
     if (!redisUserIv) {
-      throw new UnauthorizedException('登录已过期，请重新登录');
+      throw new UnauthorizedException('登录已过期，请重新登录')
     }
     const payload = await this.jwtService.verifyAsync(token, {
-      secret: JWT_SECRET,
-    });
+      secret: JWT_SECRET
+    })
     //todo 使用socket校验用户信息是否修改
-    const userIv = await this.redisService.client.get(
-      `${REDIS_USERID_PREFIX}${payload.id}`,
-    );
+    const userIv = await this.redisService.client.get(`${REDIS_USERID_PREFIX}${payload.id}`)
     if (userIv !== redisUserIv) {
-      throw new UnauthorizedException('密码已修改，请重新登录');
+      throw new UnauthorizedException('密码已修改，请重新登录')
     }
-    request['user'] = payload;
-    return true;
+    request['user'] = payload
+    return true
   }
 
   private extractTokenFromHeader(request: Request): string | undefined {
-    const [type, token] = request.headers.authorization?.split(' ') ?? [];
-    return type === 'Bearer' ? token : undefined;
+    const [type, token] = request.headers.authorization?.split(' ') ?? []
+    return type === 'Bearer' ? token : undefined
   }
 }

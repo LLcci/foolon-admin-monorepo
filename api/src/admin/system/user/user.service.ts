@@ -2,21 +2,17 @@
 https://docs.nestjs.com/providers#services
 */
 
-import {
-  UserImportDto,
-  UserPageListDto,
-  UserSaveDto,
-} from '@/admin/system/user/user.dto';
-import { UserEntity } from '@/admin/system/user/user.entity';
-import { Injectable } from '@nestjs/common';
-import { Like, Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
-import encrypt from '@/common/utils/encrypt';
-import { RedisService } from '@/global/redis/redis.service';
-import { REDIS_USERID_PREFIX } from '@/common/constants/redis.constants';
-import { RoleService } from '../role/role.service';
-import { omit } from 'lodash';
-import decrypt from '@/common/utils/decrypt';
+import { UserImportDto, UserPageListDto, UserSaveDto } from '@/admin/system/user/user.dto'
+import { UserEntity } from '@/admin/system/user/user.entity'
+import { Injectable } from '@nestjs/common'
+import { Like, Repository } from 'typeorm'
+import { InjectRepository } from '@nestjs/typeorm'
+import encrypt from '@/common/utils/encrypt'
+import { RedisService } from '@/global/redis/redis.service'
+import { REDIS_USERID_PREFIX } from '@/common/constants/redis.constants'
+import { RoleService } from '../role/role.service'
+import { omit } from 'lodash'
+import decrypt from '@/common/utils/decrypt'
 
 @Injectable()
 export class UserService {
@@ -24,65 +20,55 @@ export class UserService {
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
     private readonly redisService: RedisService,
-    private readonly roleService: RoleService,
+    private readonly roleService: RoleService
   ) {}
 
   async getUserList(userPageListDto: UserPageListDto) {
     return await this.userRepository.find({
       where: {
-        username: userPageListDto.username
-          ? Like(`%${userPageListDto.username}%`)
-          : undefined,
-        realname: userPageListDto.realname
-          ? Like(`%${userPageListDto.realname}%`)
-          : undefined,
-        status: userPageListDto.status,
+        username: userPageListDto.username ? Like(`%${userPageListDto.username}%`) : undefined,
+        realname: userPageListDto.realname ? Like(`%${userPageListDto.realname}%`) : undefined,
+        status: userPageListDto.status
       },
-      relations: ['roles'],
-    });
+      relations: ['roles']
+    })
   }
 
   async saveUser(userSaveDto: UserSaveDto) {
-    const userEntity = await this.userSaveDto2Entity(userSaveDto);
-    const user = await this.userRepository.save(userEntity);
-    // todo 使用ws推送用户密码修改
-    await this.redisService.client.set(
-      `${REDIS_USERID_PREFIX}${user.id}`,
-      user.iv,
-    );
+    const userEntity = await this.userSaveDto2Entity(userSaveDto)
+    const user = await this.userRepository.save(userEntity)
+    // todo 使用ws推送用户密码修改，状态修改
+    await this.redisService.client.set(`${REDIS_USERID_PREFIX}${user.id}`, user.iv)
     // todo 用户状态修改
-    return user;
+    return user
   }
 
   async importUser(userImportDto: UserImportDto) {
-    const userEntities: UserEntity[] = [];
+    const userEntities: UserEntity[] = []
     for (const item of userImportDto.list) {
-      const userEntity = await this.userSaveDto2Entity(item);
-      userEntities.push(userEntity);
+      const userEntity = await this.userSaveDto2Entity(item)
+      userEntities.push(userEntity)
     }
-    const users = await this.userRepository.save(userEntities);
+    const users = await this.userRepository.save(userEntities)
     for (const item of users) {
-      // todo 使用ws推送用户密码修改
-      await this.redisService.client.set(
-        `${REDIS_USERID_PREFIX}${item.id}`,
-        item.iv,
-      );
+      // todo 使用ws推送用户密码修改，状态修改
+      await this.redisService.client.set(`${REDIS_USERID_PREFIX}${item.id}`, item.iv)
       // todo 用户状态修改
     }
-    return users;
+    return users
   }
 
   async getUserById(id: string) {
     const user = await this.userRepository.findOne({
       where: { id },
-      relations: ['roles'],
-    });
-    user.password = await decrypt(user.salt, user.iv, user.password);
-    return user;
+      relations: ['roles']
+    })
+    user.password = await decrypt(user.salt, user.iv, user.password)
+    return user
   }
 
   async deleteUserById(id: string[]) {
-    await this.userRepository.delete(id);
+    await this.userRepository.delete(id)
   }
 
   /**
@@ -94,24 +80,22 @@ export class UserService {
     if (
       !userSaveDto.id &&
       (await this.userRepository.findOne({
-        where: { username: userSaveDto.username },
+        where: { username: userSaveDto.username }
       }))
     ) {
-      throw `${userSaveDto.username} 用户账户已存在`;
+      throw `${userSaveDto.username} 用户账户已存在`
     }
     // 加密密码
-    const { iv, salt, encryptedPassword } = await encrypt(userSaveDto.password);
-    userSaveDto.password = encryptedPassword;
-    const userEntity = new UserEntity();
-    Object.assign(userEntity, omit(userSaveDto, ['roleIds']));
-    userEntity.salt = salt;
-    userEntity.iv = iv;
-    userEntity.roles = [];
+    const { iv, salt, encryptedPassword } = await encrypt(userSaveDto.password)
+    userSaveDto.password = encryptedPassword
+    const userEntity = new UserEntity()
+    Object.assign(userEntity, omit(userSaveDto, ['roleIds']))
+    userEntity.salt = salt
+    userEntity.iv = iv
+    userEntity.roles = []
     if (userSaveDto.roleIds?.length > 0) {
-      userEntity.roles = await this.roleService.getRolesById(
-        userSaveDto.roleIds,
-      );
+      userEntity.roles = await this.roleService.getRolesById(userSaveDto.roleIds)
     }
-    return userEntity;
+    return userEntity
   }
 }

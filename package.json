@@ -4,11 +4,18 @@
   "description": "",
   "private": true,
   "scripts": {
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "format": "prettier --write \"api/src/**/*.ts\" \"api/test/**/*.ts\" \"web/src\""
   },
   "keywords": [],
   "author": "",
   "dependencies": {
-    "husky": "^8.0.3"
+    "husky": "^8.0.3",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.3.3"
   }
 }

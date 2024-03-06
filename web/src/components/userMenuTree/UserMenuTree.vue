@@ -23,4 +23,4 @@ import UserMenuTree from './UserMenuTree.vue'
 
 const props = defineProps<{ userMenuTree: UserMenuTreeType[] }>()
 </script>
-<style lang="scss" scoped></style>
+<style scoped></style>

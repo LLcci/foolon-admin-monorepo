@@ -2,9 +2,9 @@
 https://docs.nestjs.com/modules
 */
 
-import { ElasticsearchService } from '@/global/elasticsearch/elasticsearch.service';
-import { LoggerService } from '@/global/logger/logger.service';
-import { DynamicModule, Module } from '@nestjs/common';
+import { ElasticsearchService } from '@/global/elasticsearch/elasticsearch.service'
+import { LoggerService } from '@/global/logger/logger.service'
+import { DynamicModule, Module } from '@nestjs/common'
 
 @Module({})
 export class ElasticsearchModule {
@@ -16,12 +16,12 @@ export class ElasticsearchModule {
       providers: [
         {
           provide: 'CONFIG_OPTIONS',
-          useValue: options,
+          useValue: options
         },
         ElasticsearchService,
-        LoggerService,
+        LoggerService
       ],
-      exports: [ElasticsearchService],
-    };
+      exports: [ElasticsearchService]
+    }
   }
 }

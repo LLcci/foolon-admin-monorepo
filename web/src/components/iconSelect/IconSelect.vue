@@ -78,4 +78,4 @@ const handleClear = () => {
   icon.value = ''
 }
 </script>
-<style lang="scss" scoped></style>
+<style scoped></style>

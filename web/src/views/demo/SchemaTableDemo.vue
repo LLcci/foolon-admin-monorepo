@@ -66,4 +66,4 @@ const handleDelete = (row: TableData) => {
   console.log('🚀 ~ handleDelete ~ row:', row)
 }
 </script>
-<style lang="scss" scoped></style>
+<style scoped></style>

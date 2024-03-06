@@ -19,4 +19,4 @@ const handleChange = () => {
   modelValue.value = tree.value?.getCheckedNodes(false, true).map((item) => item.value)
 }
 </script>
-<style lang="scss" scoped></style>
+<style scoped></style>

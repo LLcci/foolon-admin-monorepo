@@ -1,8 +1,12 @@
 <template>
   <el-form ref="formRef" v-bind="props.form.props" :model="formModel">
     <template v-for="(item, index) in props.form.formItems" :key="index">
-      <el-form-item v-if="item.vIf ? item.vIf(formModel) : true" v-bind="item.props" :prop="index">
-        <component :is="item.component" v-model="formModel[index as string]"> </component>
+      <el-form-item
+        v-if="item?.vIf ? item.vIf(formModel) : true"
+        v-bind="item?.props"
+        :prop="index"
+      >
+        <component :is="item?.component" v-model="formModel[index as string]"> </component>
       </el-form-item>
     </template>
     <el-form-item v-if="props.form.props.showButtonSlot">
@@ -44,4 +48,4 @@ defineExpose({
   formRef
 })
 </script>
-<style lang="scss" scoped></style>
+<style scoped></style>

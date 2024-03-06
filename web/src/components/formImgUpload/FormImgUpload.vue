@@ -117,4 +117,4 @@ const handleDelete = async () => {
   }, 1)
 }
 </script>
-<style lang="scss" scoped></style>
+<style scoped></style>

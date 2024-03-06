@@ -1,5 +1,5 @@
 {
-  "Vue3.3+defineOptions快速生成模板": {
+  "Vue3.3快速生成模板": {
     "scope": "vue",
     "prefix": "Vue3.3+",
     "body": [
@@ -7,14 +7,11 @@
       "\t<div>test</div>",
       "</template>\n",
       "<script setup lang='ts'>",
-      "defineOptions({",
-      "\tname: ''",
-      "})",
       "</script>\n",
       "<style scoped>\n",
       "</style>",
       "$2"
     ],
-    "description": "Vue3.3+defineOptions快速生成模板"
+    "description": "Vue3.3快速生成模板"
   }
 }

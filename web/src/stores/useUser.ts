@@ -2,6 +2,7 @@ import { useFetch } from '@/hooks/useFetch'
 import router from '@/router'
 import type { paths } from '@/types/Schema'
 import type { UserMenuTreeType } from '@/types/UserMenuTree'
+import type { UseFetchReturn } from '@vueuse/core'
 import { defineStore } from 'pinia'
 import { ref, type Ref } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
@@ -24,6 +25,16 @@ export const useUser = defineStore(
     setToken: (value: string) => void
     delToken: () => void
     getPermissions: () => Promise<void>
+    updateUserInfo: (
+      info: paths['/admin/sys/permission/userInfo']['post']['requestBody']['content']['application/json']
+    ) => UseFetchReturn<
+      paths['/admin/sys/permission/userInfo']['post']['responses']['200']['content']['application/json']
+    >
+    updatePassword: (
+      data: paths['/admin/sys/permission/updatePassword']['post']['requestBody']['content']['application/json']
+    ) => UseFetchReturn<
+      paths['/admin/sys/permission/updatePassword']['post']['responses']['200']['content']['application/json']
+    >
   } => {
     const token = ref<string | null>(null)
 
@@ -67,9 +78,6 @@ export const useUser = defineStore(
         >('/admin/sys/permission').get()
       if (data.value) {
         userInfo.value = data.value
-        userInfo.value.avatar = userInfo.value.avatar
-          ? `${import.meta.env.VITE_AVATAR_URL}/${userInfo.value.avatar}`
-          : undefined
         data.value.roles.forEach((item) => {
           userMenus.value.push(...item.menus.filter((item) => item.menuType != 2))
           item.menus.forEach((item) => {
@@ -137,6 +145,22 @@ export const useUser = defineStore(
       })
     }
 
+    function updateUserInfo(
+      info: paths['/admin/sys/permission/userInfo']['post']['requestBody']['content']['application/json']
+    ) {
+      return useFetch<
+        paths['/admin/sys/permission/userInfo']['post']['responses']['200']['content']['application/json']
+      >('/admin/sys/permission/userInfo', { immediate: false }).post(info)
+    }
+
+    function updatePassword(
+      data: paths['/admin/sys/permission/updatePassword']['post']['requestBody']['content']['application/json']
+    ) {
+      return useFetch<
+        paths['/admin/sys/permission/updatePassword']['post']['responses']['200']['content']['application/json']
+      >('/admin/sys/permission/updatePassword', { immediate: false }).post(data)
+    }
+
     return {
       token,
       userInfo,
@@ -148,7 +172,9 @@ export const useUser = defineStore(
       initToken,
       setToken,
       delToken,
-      getPermissions
+      getPermissions,
+      updateUserInfo,
+      updatePassword
     }
   }
 )

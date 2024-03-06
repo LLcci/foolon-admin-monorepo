@@ -1,16 +1,16 @@
-import { LoggerService } from '@/global/logger/logger.service';
-import { RedisService } from './redis.service';
+import { LoggerService } from '@/global/logger/logger.service'
+import { RedisService } from './redis.service'
 /*
 https://docs.nestjs.com/modules
 */
 
-import { DynamicModule, Module } from '@nestjs/common';
-import { RedisClientOptions } from 'redis';
+import { DynamicModule, Module } from '@nestjs/common'
+import { RedisClientOptions } from 'redis'
 
 @Module({
   imports: [],
   controllers: [],
-  providers: [],
+  providers: []
 })
 export class RedisModule {
   static forRoot(options: RedisClientOptions): DynamicModule {
@@ -21,12 +21,12 @@ export class RedisModule {
       providers: [
         {
           provide: 'CONFIG_OPTIONS',
-          useValue: options,
+          useValue: options
         },
         RedisService,
-        LoggerService,
+        LoggerService
       ],
-      exports: [RedisService],
-    };
+      exports: [RedisService]
+    }
   }
 }

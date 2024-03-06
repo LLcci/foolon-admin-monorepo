@@ -64,27 +64,10 @@ const form = ref<SchemaForm<Form>>({
         }
       )
     }
-  },
-  buttons: [
-    {
-      props: {
-        type: 'primary'
-      },
-      slots: {
-        default: [h('span', '提交')]
-      },
-      events: {
-        click() {
-          formRef.value?.formRef?.validate().then(() => {
-            console.log('🚀 ~ res:', formModel.value)
-          })
-        }
-      }
-    }
-  ]
+  }
 })
 function handleSubmit(res: Form) {
   console.log('🚀 ~ res:', res)
 }
 </script>
-<style lang="scss" scoped></style>
+<style scoped></style>

@@ -40,4 +40,4 @@ const pagination = defineModel<Pagination>({
   required: true
 })
 </script>
-<style lang="scss" scoped></style>
+<style scoped></style>
