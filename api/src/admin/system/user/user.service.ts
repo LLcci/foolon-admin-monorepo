@@ -34,21 +34,27 @@ export class UserService {
   }
 
   async saveUser(userSaveDto: UserSaveDto) {
-    const userEntity = await this.userSaveDto2Entity(userSaveDto)
+    const { userEntity, isUpdatePassword } = await this.userSaveDto2Entity(userSaveDto)
     const user = await this.userRepository.save(userEntity)
-    await this.redisService.setUserInfoVersion(user.id, user.iv)
+    if (isUpdatePassword) {
+      await this.redisService.setUserInfoVersion(user.id, user.iv)
+    }
     return user
   }
 
   async importUser(userImportDto: UserImportDto) {
     const userEntities: UserEntity[] = []
+    const updatePasswordList: boolean[] = []
     for (const item of userImportDto.list) {
-      const userEntity = await this.userSaveDto2Entity(item)
+      const { userEntity, isUpdatePassword } = await this.userSaveDto2Entity(item)
       userEntities.push(userEntity)
+      updatePasswordList.push(isUpdatePassword)
     }
     const users = await this.userRepository.save(userEntities)
-    for (const item of users) {
-      await this.redisService.setUserInfoVersion(item.id, item.iv)
+    for (const index in updatePasswordList) {
+      if (updatePasswordList[index]) {
+        await this.redisService.setUserInfoVersion(users[index].id, users[index].iv)
+      }
     }
     return users
   }
@@ -72,13 +78,18 @@ export class UserService {
    * @returns UserEntity
    */
   async userSaveDto2Entity(userSaveDto: UserSaveDto) {
-    if (
-      !userSaveDto.id &&
-      (await this.userRepository.findOne({
-        where: { username: userSaveDto.username }
-      }))
-    ) {
+    const oldUser = await this.userRepository.findOne({
+      where: { username: userSaveDto.username }
+    })
+    if (!userSaveDto.id && oldUser) {
       throw `${userSaveDto.username} 用户账户已存在`
+    }
+    let isUpdatePassword = false
+    if (userSaveDto.id) {
+      const oldPassword = await decrypt(oldUser.salt, oldUser.iv, oldUser.password)
+      if (oldPassword !== userSaveDto.password) {
+        isUpdatePassword = true
+      }
     }
     // 加密密码
     const { iv, salt, encryptedPassword } = await encrypt(userSaveDto.password)
@@ -91,6 +102,6 @@ export class UserService {
     if (userSaveDto.roleIds?.length > 0) {
       userEntity.roles = await this.roleService.getRolesById(userSaveDto.roleIds)
     }
-    return userEntity
+    return { userEntity, isUpdatePassword }
   }
 }
