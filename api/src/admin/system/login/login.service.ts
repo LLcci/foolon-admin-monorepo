@@ -12,7 +12,6 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import * as svgCaptcha from 'svg-captcha'
 import { nanoid } from 'nanoid'
-import { REDIS_USERID_PREFIX } from '@/common/constants/redis.constants'
 @Injectable()
 export class LoginService {
   constructor(
@@ -45,8 +44,7 @@ export class LoginService {
     const payload = { id: user.id }
     const token = await this.jwtService.signAsync(payload)
     await this.redisService.setToken(token, user.iv)
-    //todo 使用socket校验用户信息是否修改，存储id:token
-    await this.redisService.client.set(`${REDIS_USERID_PREFIX}${user.id}`, user.iv)
+    await this.redisService.setUserInfoVersion(user.id, user.iv)
     return {
       token
     }

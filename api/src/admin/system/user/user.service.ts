@@ -9,7 +9,6 @@ import { Like, Repository } from 'typeorm'
 import { InjectRepository } from '@nestjs/typeorm'
 import encrypt from '@/common/utils/encrypt'
 import { RedisService } from '@/global/redis/redis.service'
-import { REDIS_USERID_PREFIX } from '@/common/constants/redis.constants'
 import { RoleService } from '../role/role.service'
 import { omit } from 'lodash'
 import decrypt from '@/common/utils/decrypt'
@@ -37,9 +36,7 @@ export class UserService {
   async saveUser(userSaveDto: UserSaveDto) {
     const userEntity = await this.userSaveDto2Entity(userSaveDto)
     const user = await this.userRepository.save(userEntity)
-    // todo 使用ws推送用户密码修改，状态修改
-    await this.redisService.client.set(`${REDIS_USERID_PREFIX}${user.id}`, user.iv)
-    // todo 用户状态修改
+    await this.redisService.setUserInfoVersion(user.id, user.iv)
     return user
   }
 
@@ -51,9 +48,7 @@ export class UserService {
     }
     const users = await this.userRepository.save(userEntities)
     for (const item of users) {
-      // todo 使用ws推送用户密码修改，状态修改
-      await this.redisService.client.set(`${REDIS_USERID_PREFIX}${item.id}`, item.iv)
-      // todo 用户状态修改
+      await this.redisService.setUserInfoVersion(item.id, item.iv)
     }
     return users
   }

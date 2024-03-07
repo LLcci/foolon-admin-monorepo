@@ -1,3 +1,4 @@
+import router from '@/router'
 import { useUser } from '@/stores/useUser'
 import { createFetch } from '@vueuse/core'
 import { ElNotification, ElMessage } from 'element-plus'
@@ -21,9 +22,10 @@ export const useFetch = createFetch({
       if (ctx.data) {
         const data = JSON.parse(ctx.data)
         if (data.code == 401) {
-          useUser().delToken()
-          window.location.reload()
           ElNotification.error({ message: data.message })
+          useUser().delToken()
+          useUser().$reset()
+          router.replace('/login')
         } else {
           ElMessage.error(data.message)
         }

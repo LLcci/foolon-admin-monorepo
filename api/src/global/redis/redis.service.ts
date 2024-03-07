@@ -7,7 +7,8 @@ import {
   REDIS_CODE_PREFIX,
   REDIS_ROUTE_PREFIX,
   REDIS_TOKEN_EX,
-  REDIS_TOKEN_PREFIX
+  REDIS_TOKEN_PREFIX,
+  REDIS_USERID_PREFIX
 } from '@/common/constants/redis.constants'
 import { LoggerService } from '@/global/logger/logger.service'
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common'
@@ -63,5 +64,13 @@ export class RedisService implements OnModuleInit {
 
   async deleteToken(token: string) {
     return await this.client.del(`${REDIS_TOKEN_PREFIX}${token}`)
+  }
+
+  async setUserInfoVersion(id: string, iv: string) {
+    return await this.client.set(`${REDIS_USERID_PREFIX}${id}`, iv)
+  }
+
+  async getUserInfoVersion(id: string) {
+    return await this.client.get(`${REDIS_USERID_PREFIX}${id}`)
   }
 }

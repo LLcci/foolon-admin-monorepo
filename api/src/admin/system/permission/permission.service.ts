@@ -9,12 +9,14 @@ import { Repository } from 'typeorm'
 import { UpdateUserInfoDto, UpdateUserPasswordDto } from './permission.dto'
 import decrypt from '@/common/utils/decrypt'
 import encrypt from '@/common/utils/encrypt'
+import { RedisService } from '@/global/redis/redis.service'
 
 @Injectable()
 export class PermissionService {
   constructor(
     @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>
+    private readonly userRepository: Repository<UserEntity>,
+    private readonly redisService: RedisService
   ) {}
 
   async getPermission(id: string) {
@@ -51,11 +53,12 @@ export class PermissionService {
       throw '旧密码错误'
     }
     const { iv, salt, encryptedPassword } = await encrypt(updateUserPasswordDto.newPassword)
-    // todo socket 通知用户重新登录
-    return await this.userRepository.update(id, {
+    const newUser = await this.userRepository.update(id, {
       iv: iv,
       salt: salt,
       password: encryptedPassword
     })
+    await this.redisService.setUserInfoVersion(user.id, iv)
+    return newUser
   }
 }

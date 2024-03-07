@@ -27,7 +27,7 @@ export class AdminGuard implements CanActivate {
       return true
     }
     const request = context.switchToHttp().getRequest()
-    const token = extractTokenFromHeader(request)
+    const token = extractTokenFromHeader(request.headers.authorization)
     if (!request.headers.authorization) {
       throw new UnauthorizedException('未登录，请进行登录')
     }
@@ -38,10 +38,9 @@ export class AdminGuard implements CanActivate {
     const payload = await this.jwtService.verifyAsync(token, {
       secret: JWT_SECRET
     })
-    //todo 使用socket校验用户信息是否修改
-    const userIv = await this.redisService.client.get(`${REDIS_USERID_PREFIX}${payload.id}`)
+    const userIv = await this.redisService.getUserInfoVersion(`${REDIS_USERID_PREFIX}${payload.id}`)
     if (userIv !== redisUserIv) {
-      throw new UnauthorizedException('密码已修改，请重新登录')
+      throw new UnauthorizedException('用户信息已修改，请重新登录')
     }
     request['user'] = payload
     return true

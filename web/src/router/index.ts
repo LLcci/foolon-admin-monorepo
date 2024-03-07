@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 //@ts-ignore
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
-import { ElNotification } from 'element-plus'
 import { useUser } from '@/stores/useUser'
 
 const router = createRouter({
@@ -42,7 +41,6 @@ router.beforeEach((to, from, next) => {
     return next({ path: '/', replace: true })
   }
   if (to.path != '/login' && !useUser().token) {
-    ElNotification.error('登录已失效，请重新登录')
     return next({ path: '/login', replace: true })
   }
   next()

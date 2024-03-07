@@ -1,6 +1,4 @@
-import { Request } from 'express'
-
-export default function extractTokenFromHeader(request: Request): string | undefined {
-  const [type, token] = request.headers.authorization?.split(' ') ?? []
+export default function extractTokenFromHeader(authorization?: string): string | undefined {
+  const [type, token] = authorization?.split(' ') ?? []
   return type === 'Bearer' ? token : undefined
 }
