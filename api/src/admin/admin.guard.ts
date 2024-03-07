@@ -39,6 +39,7 @@ export class AdminGuard implements CanActivate {
     })
     const userIv = await this.redisService.getUserInfoVersion(payload.id)
     if (userIv !== redisUserIv) {
+      await this.redisService.deleteToken(token)
       throw new UnauthorizedException('密码已修改，请重新登录')
     }
     request['user'] = payload
