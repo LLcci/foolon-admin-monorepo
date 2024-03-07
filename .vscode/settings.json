@@ -3,5 +3,6 @@
   "npm.packageManager": "pnpm",
   "editor.tabSize": 2,
   "editor.formatOnSave": true,
-  "editor.defaultFormatter": "esbenp.prettier-vscode"
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "todo-tree.tree.scanMode": "workspace only"
 }
