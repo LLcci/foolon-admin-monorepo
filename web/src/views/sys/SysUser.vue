@@ -12,7 +12,7 @@ import schemaTableForm from '@/components/schemaTableForm/SchemaTableForm.vue'
 import type { Api, SchemaTableForm } from '@/components/schemaTableForm/types'
 import type { paths } from '@/types/Schema'
 import { ElAvatar, ElInput, ElMessage, ElOption, ElSelect, type TableInstance } from 'element-plus'
-import { h, ref } from 'vue'
+import { h, ref, watch } from 'vue'
 import { useRoleList } from './api/role'
 import FormImgUpload from '@/components/formImgUpload/FormImgUpload.vue'
 import { useAvatarDelete } from './api/user'
@@ -104,7 +104,9 @@ const tableForm = ref<
       itemProps: {
         label: '用户账户'
       },
-      itemComponent: h(ElInput, { placeholder: '请输入用户账户' })
+      itemComponent: h(ElInput, {
+        placeholder: '请输入用户账户'
+      })
     }
   },
   realname: {
@@ -317,5 +319,20 @@ onRoleListResponse(() => {
     }
   )
 })
+
+watch(
+  editFormModel,
+  (value) => {
+    if (value.id) {
+      tableForm.value.username.form.itemComponent = h(ElInput, {
+        disabled: true,
+        placeholder: '请输入用户账户'
+      })
+    } else {
+      tableForm.value.username.form.itemComponent = h(ElInput, { placeholder: '请输入用户账户' })
+    }
+  },
+  { deep: true }
+)
 </script>
 <style scoped></style>
