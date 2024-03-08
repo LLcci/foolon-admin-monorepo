@@ -232,6 +232,7 @@ import { useAvatarDelete } from '@/views/sys/api/user'
 import type { SchemaFormInstance } from '../schemaForm/types'
 import type { paths } from '@/types/Schema'
 import { omit } from 'lodash-es'
+import { socket } from '@/sockets'
 
 const title = ref(import.meta.env.VITE_APP_NAME)
 
@@ -526,6 +527,9 @@ const logout = async () => {
       type: 'warning'
     })
     await useUser().logout().execute(true)
+    if (socket.connected) {
+      socket.disconnect()
+    }
     useUser().delToken()
     useUser().$reset()
     router.replace('/login')

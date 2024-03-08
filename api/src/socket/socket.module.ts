@@ -2,12 +2,14 @@
 https://docs.nestjs.com/modules
 */
 
-import { Module } from '@nestjs/common'
+import { Global, Module } from '@nestjs/common'
 import { SocketGateway } from './socket.gateway'
 
+@Global()
 @Module({
   imports: [],
   controllers: [],
-  providers: [SocketGateway]
+  providers: [SocketGateway],
+  exports: [SocketGateway]
 })
 export class SocketModule {}

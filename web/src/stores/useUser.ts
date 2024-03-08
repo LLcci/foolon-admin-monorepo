@@ -1,8 +1,10 @@
 import { useFetch } from '@/hooks/useFetch'
 import router from '@/router'
+import { socket } from '@/sockets'
 import type { paths } from '@/types/Schema'
 import type { UserMenuTreeType } from '@/types/UserMenuTree'
 import type { UseFetchReturn } from '@vueuse/core'
+import { uniqBy } from 'lodash-es'
 import { defineStore } from 'pinia'
 import { ref, type Ref } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
@@ -107,14 +109,20 @@ export const useUser = defineStore(
           })
         })
         // 添加路由
-        useUser().userRoutes.forEach((route) => {
+        userRoutes.value = uniqBy(userRoutes.value, 'path')
+        userRoutes.value.forEach((route) => {
           router.addRoute('main', route)
           if (router.currentRoute.value.path == route.path) {
             router.replace(route.path)
           }
         })
         // 菜单数
+        userMenus.value = uniqBy(userMenus.value, 'id')
         getSubMenuTree(userMenuTree.value, userMenus.value)
+        if (!socket.connected) {
+          socket.auth = { token: `Bearer ${token.value}` }
+          socket.connect()
+        }
       }
     }
 

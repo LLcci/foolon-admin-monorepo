@@ -16,12 +16,11 @@ import 'element-plus/theme-chalk/dark/css-vars.css'
 
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
-import { socket } from './sockets'
 import { permissions } from './hooks/useDirectives'
 
 import { useUser } from './stores/useUser'
 
-socket.connect()
+import './sockets'
 
 const app = createApp(App)
 

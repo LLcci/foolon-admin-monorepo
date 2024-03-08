@@ -29,7 +29,7 @@ export class PermissionController {
     type: UserEntity,
     isArray: false
   })
-  async getPermission(@User() user: { id: string; iv: string }) {
+  async getPermission(@User() user: { id: string }) {
     return await this.permissionService.getPermission(user.id)
   }
 
@@ -42,7 +42,7 @@ export class PermissionController {
     type: UpdateResult,
     isArray: false
   })
-  async updateUserInfo(@User() user: { id: string; iv: string }, @Body() info: UpdateUserInfoDto) {
+  async updateUserInfo(@User() user: { id: string }, @Body() info: UpdateUserInfoDto) {
     return await this.permissionService.updateUserInfo(user.id, info)
   }
 
@@ -56,7 +56,7 @@ export class PermissionController {
     isArray: false
   })
   async updatePassword(
-    @User() user: { id: string; iv: string },
+    @User() user: { id: string },
     @Body() updateUserPasswordDto: UpdateUserPasswordDto
   ) {
     return await this.permissionService.updatePassword(user.id, updateUserPasswordDto)

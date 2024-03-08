@@ -65,7 +65,7 @@ export class RoleController {
     description: '保存角色',
     type: RoleEntity
   })
-  async saveRole(@Body() role: RoleSaveDto, @User() user: { id: string; iv: string }) {
+  async saveRole(@Body() role: RoleSaveDto, @User() user: { id: string }) {
     const roleEntity = new RoleEntity()
     const menus = await this.menuService.getMenusById(role.menuIds)
     if (!role.id) {
@@ -86,7 +86,7 @@ export class RoleController {
     type: RoleEntity,
     isArray: true
   })
-  async importRole(@Body() role: RoleImportDto, @User() user: { id: string; iv: string }) {
+  async importRole(@Body() role: RoleImportDto, @User() user: { id: string }) {
     const roleList: RoleEntity[] = []
     await validateArrObj(role.list, RoleSaveDto)
     for (const item of role.list) {

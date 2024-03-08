@@ -10,8 +10,10 @@ import {
   REDIS_TOKEN_PREFIX,
   REDIS_USERID_PREFIX
 } from '@/common/constants/redis.constants'
+import { JWT_SECRET } from '@/common/constants/token.constants'
 import { LoggerService } from '@/global/logger/logger.service'
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common'
+import { JwtService } from '@nestjs/jwt'
 import { RedisClientOptions, createClient, RedisClientType } from 'redis'
 
 @Injectable()
@@ -20,7 +22,8 @@ export class RedisService implements OnModuleInit {
 
   constructor(
     private logger: LoggerService,
-    @Inject('CONFIG_OPTIONS') private options: RedisClientOptions
+    @Inject('CONFIG_OPTIONS') private options: RedisClientOptions,
+    private readonly jwtService: JwtService
   ) {}
 
   async onModuleInit() {
@@ -64,6 +67,21 @@ export class RedisService implements OnModuleInit {
 
   async deleteToken(token: string) {
     return await this.client.del(`${REDIS_TOKEN_PREFIX}${token}`)
+  }
+
+  async checkToken(token: string) {
+    const redisUserIv = await this.getToken(token)
+    if (!redisUserIv) {
+      return { errMsg: '登录已过期，请重新登录' }
+    }
+    const payload = await this.jwtService.verifyAsync<{ id: string }>(token, {
+      secret: JWT_SECRET
+    })
+    const userIv = await this.getUserInfoVersion(payload.id)
+    if (userIv !== redisUserIv) {
+      return { errMsg: '密码已修改，请重新登录' }
+    }
+    return { payload, errMsg: '' }
   }
 
   async setUserInfoVersion(id: string, iv: string) {

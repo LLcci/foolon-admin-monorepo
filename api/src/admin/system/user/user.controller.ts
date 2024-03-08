@@ -75,7 +75,7 @@ export class UserController {
     description: '保存用户',
     type: UserEntity
   })
-  async saveUser(@Body() userSaveDto: UserSaveDto, @User() user: { id: string; iv: string }) {
+  async saveUser(@Body() userSaveDto: UserSaveDto, @User() user: { id: string }) {
     if (!userSaveDto.id) {
       userSaveDto.createUserId = user.id
     }
@@ -92,7 +92,7 @@ export class UserController {
     type: UserEntity,
     isArray: true
   })
-  async importUser(@Body() userImportDto: UserImportDto, @User() user: { id: string; iv: string }) {
+  async importUser(@Body() userImportDto: UserImportDto, @User() user: { id: string }) {
     await validateArrObj(userImportDto.list, UserSaveDto)
     for (const item of userImportDto.list) {
       if (!item.id) {

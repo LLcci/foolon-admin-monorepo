@@ -3,7 +3,7 @@
 https://docs.nestjs.com/guards#guards
 */
 
-import { AUTHORIZE, JWT_SECRET } from '@/common/constants/token.constants'
+import { AUTHORIZE } from '@/common/constants/token.constants'
 import { RedisService } from '@/global/redis/redis.service'
 import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
@@ -30,17 +30,9 @@ export class AdminGuard implements CanActivate {
     if (!request.headers.authorization) {
       throw new UnauthorizedException('未登录，请进行登录')
     }
-    const redisUserIv = await this.redisService.getToken(token)
-    if (!redisUserIv) {
-      throw new UnauthorizedException('登录已过期，请重新登录')
-    }
-    const payload = await this.jwtService.verifyAsync(token, {
-      secret: JWT_SECRET
-    })
-    const userIv = await this.redisService.getUserInfoVersion(payload.id)
-    if (userIv !== redisUserIv) {
-      await this.redisService.deleteToken(token)
-      throw new UnauthorizedException('密码已修改，请重新登录')
+    const { payload, errMsg } = await this.redisService.checkToken(token)
+    if (errMsg) {
+      throw new UnauthorizedException(errMsg)
     }
     request['user'] = payload
     return true

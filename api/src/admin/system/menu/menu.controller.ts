@@ -66,7 +66,7 @@ export class MenuController {
     description: '保存菜单',
     type: MenuEntity
   })
-  async saveMenu(@Body() menu: MenuEntity, @User() user: { id: string; iv: string }) {
+  async saveMenu(@Body() menu: MenuEntity, @User() user: { id: string }) {
     if (!menu.id) {
       menu.createUserId = user.id
     }
@@ -83,7 +83,7 @@ export class MenuController {
     type: MenuEntity,
     isArray: true
   })
-  async importMenu(@Body() menu: MenuSaveDto, @User() user: { id: string; iv: string }) {
+  async importMenu(@Body() menu: MenuSaveDto, @User() user: { id: string }) {
     await validateArrObj(menu.list, MenuEntity)
     for (const item of menu.list) {
       if (!item.id) {
