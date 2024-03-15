@@ -2,7 +2,14 @@
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { UserImportDto, UserPageListDto, UserSaveDto } from '@/admin/system/user/user.dto'
+import {
+  UserImportDto,
+  UserPageListDto,
+  UserCreateDto,
+  UserSelectDto,
+  UserUpdateDto,
+  UpdatePasswordDto
+} from '@/admin/system/user/user.dto'
 import { UserService } from '@/admin/system/user/user.service'
 import { PageResultDto } from '@/common/class/response.dto'
 import { User } from '@/common/decorator/user.decorator'
@@ -26,6 +33,8 @@ import validateArrObj from '@/common/utils/validateArrObj'
 import { omit } from 'lodash'
 import { DeleteResult } from 'typeorm'
 import { compressImg2Webp, deleteFile } from '@/common/utils/file'
+import { RoleService } from '../role/role.service'
+import encrypt from '@/common/utils/encrypt'
 
 @ApiTags('用户管理')
 @ApiHeader({
@@ -35,7 +44,10 @@ import { compressImg2Webp, deleteFile } from '@/common/utils/file'
 })
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly roleService: RoleService
+  ) {}
 
   @Post('page')
   @ApiOperation({
@@ -67,40 +79,68 @@ export class UserController {
     return await this.userService.getUserList(userPageListDto)
   }
 
-  @Post('save')
+  @Post('create')
   @ApiOperation({
-    summary: '保存用户'
+    summary: '创建用户'
   })
-  @ApiOkResponse({
-    description: '保存用户',
-    type: UserEntity
+  async createUser(@Body() userCreateDto: UserCreateDto, @User() user: { id: string }) {
+    userCreateDto.createUserId = user.id
+    userCreateDto.updateUserId = user.id
+    const userEntity = await this.userService.userSaveDto2Entity(userCreateDto)
+    await this.userService.saveUser(userEntity)
+    return '创建用户成功'
+  }
+
+  @Post('update')
+  @ApiOperation({
+    summary: '更新用户'
   })
-  async saveUser(@Body() userSaveDto: UserSaveDto, @User() user: { id: string }) {
-    if (!userSaveDto.id) {
-      userSaveDto.createUserId = user.id
+  async updateUser(@Body() userUpdateDto: UserUpdateDto, @User() user: { id: string }) {
+    userUpdateDto.updateUserId = user.id
+    const userEntity = new UserEntity()
+    Object.assign(userEntity, omit(userUpdateDto, ['roleIds']))
+    userEntity.roles = []
+    if (userUpdateDto.roleIds?.length > 0) {
+      userEntity.roles = await this.roleService.getRolesById(userUpdateDto.roleIds)
     }
-    userSaveDto.updateUserId = user.id
-    return await this.userService.saveUser(userSaveDto)
+    await this.userService.saveUser(userEntity)
+    return '更新用户成功'
+  }
+
+  @Post('password')
+  @ApiOperation({
+    summary: '更新用户密码'
+  })
+  async updatePassword(@Body() updatePasswordDto: UpdatePasswordDto, @User() user: { id: string }) {
+    if (updatePasswordDto.password !== updatePasswordDto.confirmPassword) {
+      throw '两次密码不一致'
+    }
+    const userEntity = new UserEntity()
+    userEntity.id = updatePasswordDto.id
+    userEntity.updateUserId = user.id
+    const { iv, salt, encryptedPassword } = await encrypt(updatePasswordDto.password)
+    userEntity.salt = salt
+    userEntity.iv = iv
+    userEntity.password = encryptedPassword
+    await this.userService.saveUser(userEntity)
+    return '更新用户密码成功'
   }
 
   @Post('import')
   @ApiOperation({
     summary: '导入用户'
   })
-  @ApiOkResponse({
-    description: '导入用户',
-    type: UserEntity,
-    isArray: true
-  })
   async importUser(@Body() userImportDto: UserImportDto, @User() user: { id: string }) {
-    await validateArrObj(userImportDto.list, UserSaveDto)
+    await validateArrObj(userImportDto.list, UserCreateDto)
+    const userEntities: UserEntity[] = []
     for (const item of userImportDto.list) {
-      if (!item.id) {
-        item.createUserId = user.id
-      }
+      item.createUserId = user.id
       item.updateUserId = user.id
+      const userEntity = await this.userService.userSaveDto2Entity(item)
+      userEntities.push(userEntity)
     }
-    return await this.userService.importUser(userImportDto)
+    await this.userService.importUser(userEntities)
+    return '导入用户成功'
   }
 
   @Get('id')
@@ -109,16 +149,16 @@ export class UserController {
   })
   @ApiOkResponse({
     description: 'id查询用户详情',
-    type: UserSaveDto
+    type: UserSelectDto
   })
   async getUserById(@Query('id') id: string) {
     const user = await this.userService.getUserById(id)
-    const userSave = new UserSaveDto()
+    const userSelect = new UserSelectDto()
     if (user.roles.length) {
-      userSave.roleIds = user.roles.map((item) => item.id)
+      userSelect.roleIds = user.roles.map((item) => item.id)
     }
-    Object.assign(userSave, omit(user, ['menus']))
-    return userSave
+    Object.assign(userSelect, omit(user, ['menus']))
+    return userSelect
   }
 
   @Post('delete')

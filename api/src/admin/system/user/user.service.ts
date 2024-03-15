@@ -2,7 +2,7 @@
 https://docs.nestjs.com/providers#services
 */
 
-import { UserImportDto, UserPageListDto, UserSaveDto } from '@/admin/system/user/user.dto'
+import { UserPageListDto, UserCreateDto } from '@/admin/system/user/user.dto'
 import { UserEntity } from '@/admin/system/user/user.entity'
 import { Injectable } from '@nestjs/common'
 import { Like, Repository } from 'typeorm'
@@ -11,7 +11,6 @@ import encrypt from '@/common/utils/encrypt'
 import { RedisService } from '@/global/redis/redis.service'
 import { RoleService } from '../role/role.service'
 import { omit } from 'lodash'
-import decrypt from '@/common/utils/decrypt'
 
 @Injectable()
 export class UserService {
@@ -24,47 +23,33 @@ export class UserService {
 
   async getUserList(userPageListDto: UserPageListDto) {
     return await this.userRepository.find({
+      select: ['id', 'username', 'realname', 'avatar', 'email', 'phone', 'status', 'roles'],
       where: {
         username: userPageListDto.username ? Like(`%${userPageListDto.username}%`) : undefined,
         realname: userPageListDto.realname ? Like(`%${userPageListDto.realname}%`) : undefined,
         status: userPageListDto.status
       },
-      relations: ['roles']
+      relations: ['roles'],
+      order: {
+        createTime: 'DESC'
+      }
     })
   }
 
-  async saveUser(userSaveDto: UserSaveDto) {
-    const { userEntity, isUpdatePassword } = await this.userSaveDto2Entity(userSaveDto)
-    const user = await this.userRepository.save(userEntity)
-    if (isUpdatePassword) {
-      await this.redisService.setUserInfoVersion(user.id, user.iv)
-    }
-    return user
+  async saveUser(userEntity: UserEntity) {
+    return await this.userRepository.save(userEntity)
   }
 
-  async importUser(userImportDto: UserImportDto) {
-    const userEntities: UserEntity[] = []
-    const updatePasswordList: boolean[] = []
-    for (const item of userImportDto.list) {
-      const { userEntity, isUpdatePassword } = await this.userSaveDto2Entity(item)
-      userEntities.push(userEntity)
-      updatePasswordList.push(isUpdatePassword)
-    }
-    const users = await this.userRepository.save(userEntities)
-    for (const index in updatePasswordList) {
-      if (updatePasswordList[index]) {
-        await this.redisService.setUserInfoVersion(users[index].id, users[index].iv)
-      }
-    }
-    return users
+  async importUser(userEntities: UserEntity[]) {
+    return await this.userRepository.save(userEntities)
   }
 
   async getUserById(id: string) {
     const user = await this.userRepository.findOne({
+      select: ['id', 'username', 'realname', 'avatar', 'email', 'phone', 'status', 'roles'],
       where: { id },
       relations: ['roles']
     })
-    user.password = await decrypt(user.salt, user.iv, user.password)
     return user
   }
 
@@ -74,34 +59,27 @@ export class UserService {
 
   /**
    * 将userSaveDto转为UserEntity
-   * @param userSaveDto UserSaveDto
+   * @param UserCreateDto UserCreateDto
    * @returns UserEntity
    */
-  async userSaveDto2Entity(userSaveDto: UserSaveDto) {
+  async userSaveDto2Entity(userCreateDto: UserCreateDto) {
     const oldUser = await this.userRepository.findOne({
-      where: { username: userSaveDto.username }
+      where: { username: userCreateDto.username }
     })
-    if (!userSaveDto.id && oldUser) {
-      throw `${userSaveDto.username} 用户账户已存在`
-    }
-    let isUpdatePassword = false
-    if (userSaveDto.id) {
-      const oldPassword = await decrypt(oldUser.salt, oldUser.iv, oldUser.password)
-      if (oldPassword !== userSaveDto.password) {
-        isUpdatePassword = true
-      }
+    if (oldUser) {
+      throw `${userCreateDto.username} 用户账户已存在`
     }
     // 加密密码
-    const { iv, salt, encryptedPassword } = await encrypt(userSaveDto.password)
-    userSaveDto.password = encryptedPassword
+    const { iv, salt, encryptedPassword } = await encrypt(userCreateDto.password)
+    userCreateDto.password = encryptedPassword
     const userEntity = new UserEntity()
-    Object.assign(userEntity, omit(userSaveDto, ['roleIds']))
+    Object.assign(userEntity, omit(userCreateDto, ['roleIds']))
     userEntity.salt = salt
     userEntity.iv = iv
     userEntity.roles = []
-    if (userSaveDto.roleIds?.length > 0) {
-      userEntity.roles = await this.roleService.getRolesById(userSaveDto.roleIds)
+    if (userCreateDto.roleIds?.length > 0) {
+      userEntity.roles = await this.roleService.getRolesById(userCreateDto.roleIds)
     }
-    return { userEntity, isUpdatePassword }
+    return userEntity
   }
 }
