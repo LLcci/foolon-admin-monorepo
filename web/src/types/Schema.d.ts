@@ -12,9 +12,17 @@ export interface paths {
     /** 用户列表 */
     post: operations['UserController_getUserList']
   }
-  '/admin/sys/user/save': {
-    /** 保存用户 */
-    post: operations['UserController_saveUser']
+  '/admin/sys/user/create': {
+    /** 创建用户 */
+    post: operations['UserController_createUser']
+  }
+  '/admin/sys/user/update': {
+    /** 更新用户 */
+    post: operations['UserController_updateUser']
+  }
+  '/admin/sys/user/password': {
+    /** 更新用户密码 */
+    post: operations['UserController_updatePassword']
   }
   '/admin/sys/user/import': {
     /** 导入用户 */
@@ -106,6 +114,10 @@ export interface paths {
   '/admin/sys/permission/updatePassword': {
     /** 修改用户密码 */
     post: operations['PermissionController_updatePassword']
+  }
+  '/admin/sys/logout': {
+    /** 登出 */
+    get: operations['LogoutController_logout']
   }
 }
 
@@ -215,15 +227,13 @@ export interface components {
       /** @description 状态:0-无效,1-有效 */
       status?: number
     }
-    UserSaveDto: {
+    UserCreateDto: {
       /** Format: date-time */
       createTime?: string
       /** Format: date-time */
       updateTime?: string
       createUserId?: string
       updateUserId?: string
-      /** @description 用户id,新增时不需要传,更新时必传 */
-      id?: string
       /** @description 用户账户,查询时非必传,新增更新时必传 */
       username?: string
       /** @description 密码 */
@@ -241,9 +251,63 @@ export interface components {
       /** @description 角色ids */
       roleIds?: string[]
     }
+    UserUpdateDto: {
+      /** Format: date-time */
+      createTime?: string
+      /** Format: date-time */
+      updateTime?: string
+      createUserId?: string
+      updateUserId?: string
+      /** @description 用户id,新增时不需要传,更新时必传 */
+      id?: string
+      /** @description 用户名,查询时非必传,新增更新时必传 */
+      realname?: string
+      /** @description 头像 */
+      avatar?: string
+      /** @description 邮箱 */
+      email?: string
+      /** @description 手机号 */
+      phone?: string
+      /** @description 状态:0-无效,1-有效 */
+      status?: number
+      /** @description 角色ids */
+      roleIds?: string[]
+    }
+    UpdatePasswordDto: {
+      /** @description 用户id */
+      id: string
+      /** @description 密码 */
+      password: string
+      /** @description 确认密码 */
+      confirmPassword: string
+    }
     UserImportDto: {
       /** @description 用户列表 */
-      list: components['schemas']['UserSaveDto'][]
+      list: components['schemas']['UserCreateDto'][]
+    }
+    UserSelectDto: {
+      /** Format: date-time */
+      createTime?: string
+      /** Format: date-time */
+      updateTime?: string
+      createUserId?: string
+      updateUserId?: string
+      /** @description 用户id,新增时不需要传,更新时必传 */
+      id?: string
+      /** @description 用户账户,查询时非必传,新增更新时必传 */
+      username?: string
+      /** @description 用户名,查询时非必传,新增更新时必传 */
+      realname?: string
+      /** @description 头像 */
+      avatar?: string
+      /** @description 邮箱 */
+      email?: string
+      /** @description 手机号 */
+      phone?: string
+      /** @description 状态:0-无效,1-有效 */
+      status?: number
+      /** @description 角色ids */
+      roleIds?: string[]
     }
     DeleteResult: Record<string, never>
     LoginDto: {
@@ -409,8 +473,8 @@ export interface operations {
       }
     }
   }
-  /** 保存用户 */
-  UserController_saveUser: {
+  /** 创建用户 */
+  UserController_createUser: {
     parameters: {
       header?: {
         /** @description Bearer token */
@@ -419,15 +483,50 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': components['schemas']['UserSaveDto']
+        'application/json': components['schemas']['UserCreateDto']
       }
     }
     responses: {
-      /** @description 保存用户 */
-      200: {
-        content: {
-          'application/json': components['schemas']['UserEntity']
-        }
+      201: {
+        content: never
+      }
+    }
+  }
+  /** 更新用户 */
+  UserController_updateUser: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UserUpdateDto']
+      }
+    }
+    responses: {
+      201: {
+        content: never
+      }
+    }
+  }
+  /** 更新用户密码 */
+  UserController_updatePassword: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdatePasswordDto']
+      }
+    }
+    responses: {
+      201: {
+        content: never
       }
     }
   }
@@ -445,11 +544,8 @@ export interface operations {
       }
     }
     responses: {
-      /** @description 导入用户 */
-      200: {
-        content: {
-          'application/json': components['schemas']['UserEntity'][]
-        }
+      201: {
+        content: never
       }
     }
   }
@@ -468,7 +564,7 @@ export interface operations {
       /** @description id查询用户详情 */
       200: {
         content: {
-          'application/json': components['schemas']['UserSaveDto']
+          'application/json': components['schemas']['UserSelectDto']
         }
       }
     }
@@ -872,6 +968,15 @@ export interface operations {
         content: {
           'application/json': components['schemas']['UpdateResult']
         }
+      }
+    }
+  }
+  /** 登出 */
+  LogoutController_logout: {
+    responses: {
+      /** @description 登出 */
+      200: {
+        content: never
       }
     }
   }
