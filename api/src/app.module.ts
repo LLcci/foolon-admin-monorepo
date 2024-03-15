@@ -11,16 +11,17 @@ import { JWT_SECRET } from '@/common/constants/token.constants'
 
 @Module({
   imports: [
-    SocketModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: [`.env.${process.env.NODE_ENV}`, '.env']
     }),
     LoggerModule,
-    AdminModule,
-    ElasticsearchModule.forRoot({
-      node: process.env.ES_HOST,
-      apiKey: process.env.ES_APIKEY
+    JwtModule.register({
+      global: true,
+      secret: JWT_SECRET
+    }),
+    RedisModule.forRoot({
+      url: `redis://:${process.env.REDIS_PASSWORD}@${process.env.REDIS_HOST}:${process.env.REDIS_PORT}/${process.env.REDIS_DB}`
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
@@ -33,13 +34,12 @@ import { JWT_SECRET } from '@/common/constants/token.constants'
       logging: true,
       synchronize: process.env.NODE_ENV == 'production' ? false : true
     }),
-    JwtModule.register({
-      global: true,
-      secret: JWT_SECRET
+    ElasticsearchModule.forRoot({
+      node: process.env.ES_HOST,
+      apiKey: process.env.ES_APIKEY
     }),
-    RedisModule.forRoot({
-      url: `redis://:${process.env.REDIS_PASSWORD}@${process.env.REDIS_HOST}:${process.env.REDIS_PORT}/${process.env.REDIS_DB}`
-    })
+    AdminModule,
+    SocketModule
   ],
   controllers: [],
   providers: []
