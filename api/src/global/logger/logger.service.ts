@@ -33,7 +33,7 @@ export class LoggerService implements NestLoggerService {
           // 日志文件文件夹，建议使用path.join()方式来处理，或者process.cwd()来设置，此处仅作示范
           dirname: 'logs',
           // 日志文件名 %DATE% 会自动设置为当前日期
-          filename: 'floolon.%DATE%.info.log',
+          filename: 'floolon-%DATE%.info.log',
           // 日期格式
           datePattern: 'YYYY-MM-DD',
           // 压缩文档，用于定义是否对存档的日志文件进行 gzip 压缩 默认值 false
@@ -41,7 +41,7 @@ export class LoggerService implements NestLoggerService {
           // 文件最大大小，可以是bytes、kb、mb、gb
           maxSize: '5m',
           // 最大文件数，可以是文件数也可以是天数，天数加单位"d"，
-          maxFiles: '1d',
+          maxFiles: '180d',
           // 格式定义，同winston
           format: format.combine(
             format.timestamp({
@@ -65,7 +65,7 @@ export class LoggerService implements NestLoggerService {
           datePattern: 'YYYY-MM-DD',
           zippedArchive: true,
           maxSize: '5m',
-          maxFiles: '1d',
+          maxFiles: '180d',
           format: format.combine(
             format.timestamp({
               format: 'YYYY-MM-DD HH:mm:ss'
