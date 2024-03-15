@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite --host",
     "build": "run-p type-check \"build-only {@}\" --",
-    "openapi-typescript": "npx openapi-typescript ../api/swagger-spec.json -o ./src/types/Schema.d.ts && pnpm run format",
+    "openapi-typescript": "npx openapi-typescript ../api/swagger-spec.json -o ./src/types/Schema.d.ts && cd ../ && pnpm run format",
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit --skipLibCheck",
