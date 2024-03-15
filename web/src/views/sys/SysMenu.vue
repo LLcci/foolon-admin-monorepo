@@ -11,7 +11,7 @@
 </template>
 <script setup lang="ts">
 import schemaTableForm from '@/components/schemaTableForm/SchemaTableForm.vue'
-import type { Api } from '@/components/schemaTableForm/types'
+import type { Api, SchemaTableFormInstance } from '@/components/schemaTableForm/types'
 import type SchemaTableForm from '@/components/schemaTableForm/types'
 import IconSelect from '@/components/iconSelect/IconSelect.vue'
 import type { paths } from '@/types/Schema'
@@ -23,8 +23,7 @@ import {
   ElRadio,
   ElRadioGroup,
   ElSelect,
-  ElTreeSelect,
-  type TableInstance
+  ElTreeSelect
 } from 'element-plus'
 import { h, ref, resolveComponent } from 'vue'
 import { useInterfaceRoutes, useMenuList } from './api'
@@ -35,7 +34,8 @@ const { components } = useComponents()
 const api = ref<Api>({
   page: '/admin/sys/menu/page',
   id: '/admin/sys/menu/id',
-  save: '/admin/sys/menu/save',
+  create: '/admin/sys/menu/save',
+  update: '/admin/sys/menu/save',
   import: '/admin/sys/menu/import',
   delete: '/admin/sys/menu/delete',
   list: '/admin/sys/menu/list'
@@ -54,8 +54,8 @@ const editFormModel = ref<
   sort: 0
 })
 
-const tableProps = ref<TableInstance['$props']>({
-  showOverflowTooltip: true
+const tableProps = ref<SchemaTableFormInstance['$props']['tableProps']>({
+  props: { showOverflowTooltip: true }
 })
 
 const tableForm = ref<
@@ -63,27 +63,13 @@ const tableForm = ref<
     paths['/admin/sys/menu/id']['get']['responses']['200']['content']['application/json']
   >
 >({
-  id: {
-    table: {
-      show: false
-    },
-    form: {
-      searchFormShow: false,
-      editFormShow: false
-    }
-  },
   menuType: {
-    table: {
-      show: false
-    },
-    form: {
-      searchFormShow: false,
-      editFormShow: true,
-      formRule: [{ required: true, message: '请选择类型' }],
-      itemProps: {
+    editForm: {
+      rule: [{ required: true, message: '请选择类型' }],
+      props: {
         label: '类型'
       },
-      itemComponent: h(
+      component: h(
         ElRadioGroup,
         {
           placeholder: '请选择类型',
@@ -121,22 +107,24 @@ const tableForm = ref<
   },
   name: {
     table: {
-      show: true,
       label: '名称'
     },
-    form: {
-      searchFormShow: true,
-      editFormShow: true,
-      formRule: [{ required: true, message: '请输入名称' }],
-      itemProps: {
+    editForm: {
+      rule: [{ required: true, message: '请输入名称' }],
+      props: {
         label: '名称'
       },
-      itemComponent: h(ElInput, { placeholder: '请输入名称' })
+      component: h(ElInput, { placeholder: '请输入名称' })
+    },
+    searchForm: {
+      props: {
+        label: '名称'
+      },
+      component: h(ElInput, { placeholder: '请输入名称' })
     }
   },
   icon: {
     table: {
-      show: true,
       label: '图标',
       align: 'center',
       formatter(row, column, cellValue) {
@@ -146,14 +134,12 @@ const tableForm = ref<
         return ''
       }
     },
-    form: {
-      searchFormShow: false,
-      editFormShow: true,
-      itemProps: {
+    editForm: {
+      props: {
         label: '图标'
       },
-      itemComponent: h(IconSelect),
-      editFormVIf(value) {
+      component: h(IconSelect),
+      vIf(value) {
         if (value.menuType == 2) {
           return false
         }
@@ -162,17 +148,12 @@ const tableForm = ref<
     }
   },
   parentId: {
-    table: {
-      show: false
-    },
-    form: {
-      searchFormShow: false,
-      editFormShow: true,
-      formRule: [{ required: true, message: '请选择父级菜单' }],
-      itemProps: {
+    editForm: {
+      rule: [{ required: true, message: '请选择父级菜单' }],
+      props: {
         label: '父级菜单'
       },
-      editFormVIf(formModel) {
+      vIf(formModel) {
         if (formModel.menuType != 0) {
           return true
         }
@@ -188,18 +169,15 @@ const tableForm = ref<
   },
   component: {
     table: {
-      show: true,
       label: '组件',
       align: 'center'
     },
-    form: {
-      searchFormShow: false,
-      editFormShow: true,
-      formRule: [{ message: '请输入组件' }],
-      itemProps: {
+    editForm: {
+      rule: [{ message: '请输入组件' }],
+      props: {
         label: '组件'
       },
-      itemComponent: h(
+      component: h(
         ElSelect,
         {
           placeholder: '请选择组件',
@@ -219,7 +197,7 @@ const tableForm = ref<
             })
         }
       ),
-      editFormVIf(value) {
+      vIf(value) {
         if (value.menuType == 2) {
           return false
         }
@@ -229,17 +207,14 @@ const tableForm = ref<
   },
   path: {
     table: {
-      show: true,
       label: '路径',
       align: 'center'
     },
-    form: {
-      searchFormShow: false,
-      editFormShow: true,
-      itemProps: {
+    editForm: {
+      props: {
         label: '路径'
       },
-      itemComponent: h(ElInput, {
+      component: h(ElInput, {
         placeholder: '请输入路径',
         onInput(value) {
           if (value && !value.startsWith('/')) {
@@ -247,7 +222,7 @@ const tableForm = ref<
           }
         }
       }),
-      editFormVIf(value) {
+      vIf(value) {
         if (value.menuType == 2) {
           return false
         }
@@ -257,7 +232,6 @@ const tableForm = ref<
   },
   perms: {
     table: {
-      show: true,
       label: '权限',
       align: 'center',
       exportFormatter(value) {
@@ -267,14 +241,12 @@ const tableForm = ref<
         return value
       }
     },
-    form: {
-      searchFormShow: false,
-      editFormShow: true,
-      formRule: [{ required: true, message: '请选择权限' }],
-      itemProps: {
+    editForm: {
+      rule: [{ required: true, message: '请选择权限' }],
+      props: {
         label: '权限'
       },
-      editFormVIf(value) {
+      vIf(value) {
         if (value.menuType != 2) {
           return false
         }
@@ -284,7 +256,6 @@ const tableForm = ref<
   },
   keepalive: {
     table: {
-      show: true,
       label: '缓存',
       align: 'center',
       formatter(row, column, cellValue) {
@@ -294,14 +265,12 @@ const tableForm = ref<
         return value === 1 ? '是' : '否'
       }
     },
-    form: {
-      searchFormShow: false,
-      editFormShow: true,
-      formRule: [{ required: true, message: '请选择缓存' }],
-      itemProps: {
+    editForm: {
+      rule: [{ required: true, message: '请选择缓存' }],
+      props: {
         label: '缓存'
       },
-      itemComponent: h(
+      component: h(
         ElSelect,
         { placeholder: '请选择缓存' },
         {
@@ -318,7 +287,6 @@ const tableForm = ref<
   },
   status: {
     table: {
-      show: true,
       label: '状态',
       align: 'center',
       formatter(row, column, cellValue) {
@@ -328,14 +296,12 @@ const tableForm = ref<
         return value === 1 ? '启用' : '停用'
       }
     },
-    form: {
-      searchFormShow: true,
-      editFormShow: true,
-      formRule: [{ required: true, message: '请选择状态' }],
-      itemProps: {
+    editForm: {
+      rule: [{ required: true, message: '请选择状态' }],
+      props: {
         label: '状态'
       },
-      itemComponent: h(
+      component: h(
         ElSelect,
         { placeholder: '请选择状态' },
         {
@@ -348,58 +314,34 @@ const tableForm = ref<
       importFormatter(value) {
         return value === '启用' ? 1 : 0
       }
+    },
+    searchForm: {
+      props: {
+        label: '状态'
+      },
+      component: h(
+        ElSelect,
+        { placeholder: '请选择状态' },
+        {
+          default: () => [
+            h(ElOption, { value: 1, label: '启用' }),
+            h(ElOption, { value: 0, label: '停用' })
+          ]
+        }
+      )
     }
   },
   sort: {
     table: {
-      show: true,
       label: '排序',
       align: 'center'
     },
-    form: {
-      searchFormShow: false,
-      editFormShow: true,
-      formRule: [{ required: true, message: '请输入排序' }],
-      itemProps: {
+    editForm: {
+      rule: [{ required: true, message: '请输入排序' }],
+      props: {
         label: '排序'
       },
-      itemComponent: h(ElInputNumber, { placeholder: '排序' })
-    }
-  },
-  createTime: {
-    table: {
-      show: false
-    },
-    form: {
-      searchFormShow: false,
-      editFormShow: false
-    }
-  },
-  updateTime: {
-    table: {
-      show: false
-    },
-    form: {
-      searchFormShow: false,
-      editFormShow: false
-    }
-  },
-  createUserId: {
-    table: {
-      show: false
-    },
-    form: {
-      searchFormShow: false,
-      editFormShow: false
-    }
-  },
-  updateUserId: {
-    table: {
-      show: false
-    },
-    form: {
-      searchFormShow: false,
-      editFormShow: false
+      component: h(ElInputNumber, { placeholder: '排序' })
     }
   }
 })
@@ -415,7 +357,7 @@ onMenuListResponse(() => {
       (item) => item.menuType != 2
     ) as paths['/admin/sys/menu/list']['post']['responses']['200']['content']['application/json']
   )
-  tableForm.value.parentId.form.itemComponent = h(ElTreeSelect, {
+  tableForm.value.parentId!.editForm!.component = h(ElTreeSelect, {
     placeholder: '请选择父级菜单',
     data: options,
     checkStrictly: true
@@ -424,7 +366,7 @@ onMenuListResponse(() => {
 
 const { data: interfaceRoutes, onFetchResponse: onInterfaceRoutesResponse } = useInterfaceRoutes()
 onInterfaceRoutesResponse(() => {
-  tableForm.value.perms.form.itemComponent = h(
+  tableForm.value.perms!.editForm!.component = h(
     ElSelect,
     {
       placeholder: '请选择权限',

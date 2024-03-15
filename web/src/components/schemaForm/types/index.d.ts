@@ -27,22 +27,24 @@ export type FormItemProps = Partial<Omit<ElFormItemProps, 'prop'>>
  * @param {FormItemProps} props ElementUI表单项目属性,https://element-plus.org/zh-CN/component/form.html#formitem-attributes
  * @param {VNode} component 组件
  */
-export type FormItems<T> = Record<
-  keyof T,
-  {
-    /**
-     * ElementUI表单项目属性,https://element-plus.org/zh-CN/component/form.html#formitem-attributes
-     */
-    props?: FormItemProps
-    /**
-     * 组件
-     */
-    component: VNode
-    /**
-     * 等同于v-if
-     */
-    vIf?: (model: T) => boolean
-  }
+export type FormItems<T> = Partial<
+  Record<
+    keyof T,
+    {
+      /**
+       * ElementUI表单项目属性,https://element-plus.org/zh-CN/component/form.html#formitem-attributes
+       */
+      props?: FormItemProps
+      /**
+       * 组件
+       */
+      component: VNode
+      /**
+       * 等同于v-if
+       */
+      vIf?: (model: T) => boolean
+    }
+  >
 >
 
 /**

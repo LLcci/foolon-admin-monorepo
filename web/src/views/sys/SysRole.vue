@@ -9,10 +9,10 @@
 </template>
 <script setup lang="ts">
 import schemaTableForm from '@/components/schemaTableForm/SchemaTableForm.vue'
-import type { Api } from '@/components/schemaTableForm/types'
+import type { Api, SchemaTableFormInstance } from '@/components/schemaTableForm/types'
 import type SchemaTableForm from '@/components/schemaTableForm/types'
 import type { paths } from '@/types/Schema'
-import { ElInput, ElOption, ElSelect, type TableInstance } from 'element-plus'
+import { ElInput, ElOption, ElSelect } from 'element-plus'
 import { h, ref } from 'vue'
 import { useMenuList } from './api'
 import { useMenuTree } from './hooks/useMenuTree'
@@ -22,7 +22,8 @@ const api = ref<Api>({
   page: '/admin/sys/role/page',
   list: '/admin/sys/role/list',
   id: '/admin/sys/role/id',
-  save: '/admin/sys/role/save',
+  create: '/admin/sys/role/save',
+  update: '/admin/sys/role/save',
   import: '/admin/sys/role/import',
   delete: '/admin/sys/role/delete'
 })
@@ -37,8 +38,8 @@ const editFormModel = ref<
   status: 1
 })
 
-const tableProps = ref<TableInstance['$props']>({
-  showOverflowTooltip: true
+const tableProps = ref<SchemaTableFormInstance['$props']['tableProps']>({
+  props: { showOverflowTooltip: true }
 })
 
 const tableForm = ref<
@@ -46,61 +47,46 @@ const tableForm = ref<
     paths['/admin/sys/role/id']['get']['responses']['200']['content']['application/json']
   >
 >({
-  id: {
-    table: {
-      show: false
-    },
-    form: {
-      searchFormShow: false,
-      editFormShow: false
-    }
-  },
   name: {
     table: {
-      show: true,
       label: '名称',
       align: 'center'
     },
-    form: {
-      searchFormShow: true,
-      editFormShow: true,
-      formRule: [{ required: true, message: '请输入名称' }],
-      itemProps: {
+    editForm: {
+      rule: [{ required: true, message: '请输入名称' }],
+      props: {
         label: '名称'
       },
-      itemComponent: h(ElInput, { placeholder: '请输入名称' })
+      component: h(ElInput, { placeholder: '请输入名称' })
+    },
+    searchForm: {
+      props: {
+        label: '名称'
+      },
+      component: h(ElInput, { placeholder: '请输入名称' })
     }
   },
   description: {
     table: {
-      show: true,
       label: '描述',
       align: 'center'
     },
-    form: {
-      searchFormShow: false,
-      editFormShow: true,
-      itemProps: {
+    editForm: {
+      props: {
         label: '描述'
       },
-      itemComponent: h(ElInput, { placeholder: '请输入描述', type: 'textarea' })
+      component: h(ElInput, { placeholder: '请输入描述', type: 'textarea' })
     }
   },
   menuIds: {
-    table: {
-      show: false
-    },
-    form: {
-      searchFormShow: false,
-      editFormShow: true,
-      itemProps: {
+    editForm: {
+      props: {
         label: '权限'
       }
     }
   },
   status: {
     table: {
-      show: true,
       label: '状态',
       formatter(row, column, cellValue) {
         return cellValue === 1 ? '启用' : '停用'
@@ -109,14 +95,12 @@ const tableForm = ref<
         return value === 1 ? '启用' : '停用'
       }
     },
-    form: {
-      searchFormShow: true,
-      editFormShow: true,
-      formRule: [{ required: true, message: '请选择状态' }],
-      itemProps: {
+    editForm: {
+      rule: [{ required: true, message: '请选择状态' }],
+      props: {
         label: '状态'
       },
-      itemComponent: h(
+      component: h(
         ElSelect,
         { placeholder: '请选择状态' },
         {
@@ -129,42 +113,21 @@ const tableForm = ref<
       importFormatter(value) {
         return value === '启用' ? 1 : 0
       }
-    }
-  },
-  createTime: {
-    table: {
-      show: false
     },
-    form: {
-      searchFormShow: false,
-      editFormShow: false
-    }
-  },
-  updateTime: {
-    table: {
-      show: false
-    },
-    form: {
-      searchFormShow: false,
-      editFormShow: false
-    }
-  },
-  createUserId: {
-    table: {
-      show: false
-    },
-    form: {
-      searchFormShow: false,
-      editFormShow: false
-    }
-  },
-  updateUserId: {
-    table: {
-      show: false
-    },
-    form: {
-      searchFormShow: false,
-      editFormShow: false
+    searchForm: {
+      props: {
+        label: '状态'
+      },
+      component: h(
+        ElSelect,
+        { placeholder: '请选择状态' },
+        {
+          default: () => [
+            h(ElOption, { value: 1, label: '启用' }),
+            h(ElOption, { value: 0, label: '停用' })
+          ]
+        }
+      )
     }
   }
 })
@@ -172,7 +135,7 @@ const tableForm = ref<
 const { data: menuList, onFetchResponse: onMenuListResponse } = useMenuList()
 onMenuListResponse(() => {
   const options = useMenuTree(menuList.value)
-  tableForm.value.menuIds.form.itemComponent = h(FormTree, {
+  tableForm.value.menuIds!.editForm!.component = h(FormTree, {
     data: options,
     defaultExpandAll: true,
     nodeKey: 'value',

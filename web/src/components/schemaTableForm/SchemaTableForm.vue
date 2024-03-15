@@ -17,7 +17,7 @@
         <el-button
           type="primary"
           icon="CirclePlus"
-          v-permissions="props.api.save"
+          v-permissions="props.api.create"
           @click="handleDialog('新增', {})"
           >新增</el-button
         >
@@ -69,7 +69,7 @@
           >
           <el-button
             type="primary"
-            v-permissions="props.api.save"
+            v-permissions="props.api.update"
             text
             size="default"
             @click="handleDialog('编辑', scope.row)"
@@ -121,8 +121,9 @@ import {
   ElMessage,
   type FormProps,
   type FormRules,
-  type TableColumnInstance,
-  type UploadRequestOptions
+  type TableInstance,
+  type UploadRequestOptions,
+  type TableColumnInstance
 } from 'element-plus'
 import type { SchemaFormInstance } from '@/components/schemaForm/types'
 import type { Api } from './types'
@@ -132,7 +133,10 @@ import { utils, writeFileXLSX, read } from 'xlsx'
 
 const props = defineProps<{
   tableForm: SchemaTableForm<any>
-  tableProps?: TableColumnInstance['$props']
+  tableProps?: {
+    props?: Partial<Omit<TableInstance['$props'], 'data'>>
+    actionProps?: Omit<TableColumnInstance['$props'], 'prop'>
+  }
   searchFormProps?: Partial<FormProps>
   editFormProps?: Partial<FormProps>
   api: Api
@@ -206,11 +210,12 @@ const table = computed(() => {
     }
   }
   for (const key in props.tableForm) {
-    if (props.tableForm[key]?.table.show) {
+    if (props.tableForm[key]?.table) {
       tableProps.columns[key] = props.tableForm[key]?.table
     }
   }
-  Object.assign(tableProps.props, props.tableProps)
+  Object.assign(tableProps.props, props.tableProps?.props)
+  Object.assign(tableProps.actionsProps as object, props.tableProps?.actionProps)
   return tableProps
 })
 
@@ -226,14 +231,17 @@ const searForm = computed(() => {
     props: { inline: true, showButtonSlot: true },
     formItems: {}
   }
+  const rulues: FormRules<FormModel> = {}
   for (const key in props.tableForm) {
-    if (props.tableForm[key].form.searchFormShow) {
+    rulues[key] = props.tableForm[key]?.searchForm?.rule
+    if (props.tableForm[key]?.searchForm) {
       formProps.formItems[key] = {
-        props: props.tableForm[key].form.itemProps,
-        component: props.tableForm[key].form.itemComponent as VNode
+        props: props.tableForm[key]?.searchForm?.props,
+        component: props.tableForm[key]?.searchForm?.component as VNode
       }
     }
   }
+  formProps.props.rules = rulues
   Object.assign(formProps.props, props.searchFormProps)
   return formProps
 })
@@ -272,12 +280,12 @@ const editForm = computed(() => {
   }
   const rulues: FormRules<FormModel> = {}
   for (const key in props.tableForm) {
-    rulues[key] = props.tableForm[key].form?.formRule
-    if (props.tableForm[key].form.editFormShow) {
+    rulues[key] = props.tableForm[key]?.editForm?.rule
+    if (props.tableForm[key]?.editForm) {
       formProps.formItems[key] = {
-        props: props.tableForm[key].form.itemProps,
-        component: props.tableForm[key].form.itemComponent as VNode,
-        vIf: props.tableForm[key].form.editFormVIf
+        props: props.tableForm[key]?.editForm?.props,
+        component: props.tableForm[key]?.editForm?.component as VNode,
+        vIf: props.tableForm[key]?.editForm?.vIf
       }
     }
   }
@@ -296,13 +304,14 @@ const _editFormModel = toRaw({ ...editFormModel.value })
 /**
  * 弹框标题
  */
-const dialogTitle = ref('新增')
+const dialogTitle = ref<'新增' | '编辑' | '查看'>('新增')
 /**
  * 开启弹框
  * @param title 标题
  * @param form 表单数据
  */
 const handleDialog = async (title: '新增' | '编辑' | '查看', form: FormModel) => {
+  saveLoading.value = true
   dialogTitle.value = title
   dialogVisible.value = true
   Object.assign(editForm.value.props, { disabled: false })
@@ -316,13 +325,17 @@ const handleDialog = async (title: '新增' | '编辑' | '查看', form: FormMod
     emits('onTableIdSuccess')
     Object.assign(editFormModel.value, data.value)
   }
+  saveLoading.value = false
 }
 const saveLoading = ref(false)
 const handleEdit = async () => {
   try {
     saveLoading.value = true
     await editFormRef.value?.formRef?.validate()
-    await tableSave(props.api.save, editFormModel.value).execute(true)
+    await tableSave(
+      dialogTitle.value == '新增' ? props.api.create : props.api.update,
+      editFormModel.value
+    ).execute(true)
     emits('onTableSaveSuccess')
     await tableListFetch(true)
     dialogVisible.value = false
@@ -382,9 +395,9 @@ const handleExport = async () => {
       exportData.value.forEach((item) => {
         const exportItem: FormModel = {}
         for (const key in item) {
-          if (has(props.tableForm, key) && props.tableForm[key].table.show) {
-            exportItem[props.tableForm[key].table.label as string] = item[key]
-            if (has(props.tableForm[key].table, 'exportFormatter')) {
+          if (has(props.tableForm, key) && props.tableForm[key]?.table) {
+            exportItem[props.tableForm[key]?.table?.label as string] = item[key]
+            if (has(props.tableForm[key]?.table, 'exportFormatter')) {
               //@ts-ignore
               exportItem[props.tableForm[key].table.label as string] = props.tableForm[
                 key
@@ -407,9 +420,9 @@ const handleExport = async () => {
 const handleExportTemplate = async () => {
   const data: FormModel = {}
   for (const key in props.tableForm) {
-    if (props.tableForm[key].form.editFormShow) {
-      if (props.tableForm[key].form.itemProps?.label) {
-        data[props.tableForm[key].form.itemProps?.label as string] = ''
+    if (props.tableForm[key]?.editForm) {
+      if (props.tableForm[key]?.editForm?.props?.label) {
+        data[props.tableForm[key]?.editForm?.props?.label as string] = ''
       } else {
         data[key] = ''
       }
@@ -433,9 +446,9 @@ const handleImport = async (options: UploadRequestOptions) => {
     const dataItem: FormModel = {}
     for (const key in item) {
       for (const propsKey in props.tableForm) {
-        if (key == props.tableForm[propsKey].form.itemProps?.label) {
+        if (key == props.tableForm[propsKey]?.editForm?.props?.label) {
           dataItem[propsKey] = item[key]
-          if (has(props.tableForm[propsKey].form, 'importFormatter')) {
+          if (has(props.tableForm[propsKey]?.editForm, 'importFormatter')) {
             //@ts-ignore
             dataItem[propsKey] = props.tableForm[propsKey].form.importFormatter(item[key])
           }
