@@ -420,7 +420,7 @@ const updatePswForm = ref<
       props: {
         label: '确认密码'
       },
-      component: h(ElInput, { type: 'password', placeholder: '请确认密码' })
+      component: h(ElInput, { type: 'password', placeholder: '请确认密码', showPassword: true })
     }
   }
 })

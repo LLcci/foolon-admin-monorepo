@@ -75,6 +75,10 @@ export const useUser = defineStore(
     }
 
     async function getPermissions() {
+      userRoutes.value = []
+      userKeepAliveRoutes.value = []
+      userMenuTree.value = []
+      userPerms.value = []
       const { data } =
         await useFetch<
           paths['/admin/sys/permission']['get']['responses']['200']['content']['application/json']
@@ -82,7 +86,7 @@ export const useUser = defineStore(
       if (data.value) {
         userInfo.value = data.value
         data.value.roles.forEach((item) => {
-          userMenus.value.push(...item.menus.filter((item) => item.menuType != 2))
+          userMenus.value = item.menus.filter((item) => item.menuType != 2)
           item.menus.forEach((item) => {
             if (item.perms?.length) {
               // 权限
