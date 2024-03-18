@@ -231,7 +231,7 @@ import FormImgUpload from '@/components/formImgUpload/FormImgUpload.vue'
 import { useAvatarDelete } from '@/views/sys/api/user'
 import type { SchemaFormInstance } from '../schemaForm/types'
 import type { paths } from '@/types/Schema'
-import { omit } from 'lodash-es'
+import { omit } from 'lodash'
 import { socket } from '@/sockets'
 
 const title = ref(import.meta.env.VITE_APP_NAME)

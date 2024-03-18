@@ -90,7 +90,7 @@ import { useUser } from '@/stores/useUser'
 import type SchemaForm from '@/components/schemaForm/types'
 import type { SchemaFormInstance } from '@/components/schemaForm/types'
 import { useFetch } from '@/hooks/useFetch'
-import { omit } from 'lodash-es'
+import { omit } from 'lodash'
 
 const api = ref<Api>({
   page: '/admin/sys/user/page',

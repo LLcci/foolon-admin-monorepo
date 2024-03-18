@@ -128,7 +128,7 @@ import {
 import type { SchemaFormInstance } from '@/components/schemaForm/types'
 import type { Api } from './types'
 import { tableDelete, tableExport, tableId, tableList, tableSave } from './api'
-import { has, omit } from 'lodash-es'
+import { has, omit } from 'lodash'
 import { utils, writeFileXLSX, read } from 'xlsx'
 
 const props = defineProps<{
