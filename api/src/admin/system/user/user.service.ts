@@ -37,7 +37,8 @@ export class UserService {
   }
 
   async saveUser(userEntity: UserEntity) {
-    return await this.userRepository.save(userEntity)
+    const user = await this.userRepository.save(userEntity)
+    return user
   }
 
   async importUser(userEntities: UserEntity[]) {
@@ -58,7 +59,7 @@ export class UserService {
   }
 
   /**
-   * 将userSaveDto转为UserEntity
+   * 将UserCreateDto转为UserEntity
    * @param UserCreateDto UserCreateDto
    * @returns UserEntity
    */

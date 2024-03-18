@@ -51,7 +51,23 @@ export class MenuService {
   }
 
   async getMenuById(id: string) {
-    return await this.menuRepository.findOne({ where: { id } })
+    return await this.menuRepository.findOne({
+      select: [
+        'id',
+        'parentId',
+        'name',
+        'path',
+        'component',
+        'icon',
+        'menuType',
+        'perms',
+        'sort',
+        'keepalive',
+        'status',
+        'roles'
+      ],
+      where: { id }
+    })
   }
 
   async getMenusById(ids: string[]) {

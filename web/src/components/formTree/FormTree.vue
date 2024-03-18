@@ -4,16 +4,21 @@
 <script setup lang="ts">
 import { ElTree } from 'element-plus'
 import { type TreeKey } from 'element-plus/es/components/tree/src/tree.type.mjs'
-import { ref, watch } from 'vue'
+import { nextTick, ref, watch } from 'vue'
 defineProps<{ props?: InstanceType<typeof ElTree> }>()
 const modelValue = defineModel<TreeKey[]>({ required: false })
 
 const tree = ref<InstanceType<typeof ElTree>>()
 
-watch(modelValue, () => {
-  if (!modelValue.value) return tree.value?.setCheckedKeys([])
-  tree.value?.setCheckedKeys(modelValue.value)
-})
+watch(
+  modelValue,
+  async () => {
+    await nextTick()
+    if (!modelValue.value) return tree.value?.setCheckedKeys([])
+    tree.value?.setCheckedKeys(modelValue.value)
+  },
+  { deep: true, immediate: true }
+)
 
 const handleChange = () => {
   modelValue.value = tree.value?.getCheckedNodes(false, true).map((item) => item.value)

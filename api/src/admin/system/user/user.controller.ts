@@ -157,7 +157,7 @@ export class UserController {
     if (user.roles.length) {
       userSelect.roleIds = user.roles.map((item) => item.id)
     }
-    Object.assign(userSelect, omit(user, ['menus']))
+    Object.assign(userSelect, omit(user, ['roles']))
     return userSelect
   }
 

@@ -111,7 +111,7 @@ const handleDelete = async () => {
   props.uploadProps['on-handle-delete']?.(imageName.value)
   deleteMaskShow.value = false
   fileList.value = []
-  imageName.value = undefined
+  imageName.value = ''
   setTimeout(() => {
     disabled.value = false
   }, 1)

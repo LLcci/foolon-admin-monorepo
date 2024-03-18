@@ -39,6 +39,7 @@ export class RoleService {
 
   async getRoleById(id: string) {
     return await this.roleRepository.findOne({
+      select: ['id', 'name', 'description', 'status'],
       where: { id },
       relations: ['menus']
     })

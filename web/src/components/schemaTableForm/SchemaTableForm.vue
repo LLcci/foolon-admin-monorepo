@@ -113,7 +113,7 @@ import type { FormModel } from '@/types'
 import schemaForm from '@/components/schemaForm/SchemaForm.vue'
 import schemaTable from '@/components/schemaTable/SchemaTable.vue'
 import type SchemaTableForm from './types'
-import { computed, nextTick, ref, toRaw, type VNode } from 'vue'
+import { computed, ref, toRaw, type VNode } from 'vue'
 import type SchemaForm from '@/components/schemaForm/types'
 import type SchemaTable from '@/components/schemaTable/types'
 import type { Pagination } from '@/components/schemaTable/types'
@@ -311,21 +311,19 @@ const dialogTitle = ref<'新增' | '编辑' | '查看'>('新增')
  * @param form 表单数据
  */
 const handleDialog = async (title: '新增' | '编辑' | '查看', form: FormModel) => {
-  saveLoading.value = true
   dialogTitle.value = title
-  dialogVisible.value = true
   Object.assign(editForm.value.props, { disabled: false })
   if (title == '查看') {
     Object.assign(editForm.value.props, { disabled: true })
   }
-  await nextTick()
   editFormModel.value = { ..._editFormModel }
   if (title === '编辑' || title === '查看') {
-    const { data } = await tableId(props.api.id, form.id)
+    const { data, error } = await tableId(props.api.id, form.id)
+    if (error.value) return
     emits('onTableIdSuccess')
     Object.assign(editFormModel.value, data.value)
   }
-  saveLoading.value = false
+  dialogVisible.value = true
 }
 const saveLoading = ref(false)
 const handleEdit = async () => {
