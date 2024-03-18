@@ -38,7 +38,6 @@
     "cross-env": "^7.0.3",
     "dayjs": "^1.11.10",
     "express-list-routes": "^1.1.9",
-    "lodash": "^4.17.21",
     "mysql2": "^3.6.5",
     "nanoid": "3",
     "redis": "^4.6.12",
