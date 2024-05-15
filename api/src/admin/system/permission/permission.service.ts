@@ -34,6 +34,7 @@ export class PermissionService {
       .leftJoinAndSelect('user.roles', 'roles')
       .leftJoinAndSelect('roles.menus', 'menus')
       .where('user.id = :id', { id: id })
+      .andWhere('user.status = 1')
       .andWhere('roles.status = 1')
       .andWhere('menus.status = 1')
       .getOne()

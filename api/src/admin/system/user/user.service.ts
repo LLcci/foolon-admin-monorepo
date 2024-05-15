@@ -10,7 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import encrypt from '@/common/utils/encrypt'
 import { RedisService } from '@/global/redis/redis.service'
 import { RoleService } from '../role/role.service'
-import { omit } from 'lodash'
+import { omit, uniq } from 'lodash'
 
 @Injectable()
 export class UserService {
@@ -38,11 +38,16 @@ export class UserService {
 
   async saveUser(userEntity: UserEntity) {
     const user = await this.userRepository.save(userEntity)
+    const permission = await this.getUserPermissions(user.id)
+    await this.redisService.setUserPermissions(user.id, permission)
     return user
   }
 
   async importUser(userEntities: UserEntity[]) {
-    return await this.userRepository.save(userEntities)
+    const users = await this.userRepository.save(userEntities)
+    const permissions = await this.getUsersPermissions(users.map((user) => user.id))
+    await this.redisService.setUsersPermissions(permissions)
+    return users
   }
 
   async getUserById(id: string) {
@@ -56,6 +61,8 @@ export class UserService {
 
   async deleteUserById(id: string[]) {
     await this.userRepository.delete(id)
+    await this.redisService.deleteUsersPermissions(id)
+    return '删除成功'
   }
 
   /**
@@ -82,5 +89,67 @@ export class UserService {
       userEntity.roles = await this.roleService.getRolesById(userCreateDto.roleIds)
     }
     return userEntity
+  }
+
+  /**
+   * 根据用户id获取用户权限
+   * @param id 用户id
+   * @returns 用户权限数组
+   */
+  async getUserPermissions(id: string) {
+    const user = await this.userRepository
+      .createQueryBuilder('user')
+      .select(['user.id'])
+      .leftJoinAndSelect('user.roles', 'roles')
+      .leftJoinAndSelect('roles.menus', 'menus')
+      .where('user.id = :id', { id: id })
+      .andWhere('user.status = 1')
+      .andWhere('roles.status = 1')
+      .andWhere('menus.status = 1')
+      .andWhere('menus.menuType = 2')
+      .getOne()
+    let permission: string[] = []
+    if (user) {
+      user.roles.forEach((role) => {
+        role.menus.forEach((menu) => {
+          permission.push(...menu.perms)
+        })
+      })
+      permission = uniq(permission)
+    }
+    return permission
+  }
+
+  /**
+   * 根据多个用户id获取用户权限
+   * @param ids 用户id数组
+   * @returns 用户权限数组
+   */
+  async getUsersPermissions(ids: string[]) {
+    const users = await this.userRepository
+      .createQueryBuilder('user')
+      .select(['user.id'])
+      .leftJoinAndSelect('user.roles', 'roles')
+      .leftJoinAndSelect('roles.menus', 'menus')
+      .where('user.id IN (:...ids)', { ids })
+      .andWhere('user.status = 1')
+      .andWhere('roles.status = 1')
+      .andWhere('menus.status = 1')
+      .andWhere('menus.menuType = 2')
+      .getMany()
+    const permissions: { id: string; permissions: string[] }[] = []
+    if (users.length) {
+      users.forEach((user) => {
+        let perms: string[] = []
+        user.roles.forEach((role) => {
+          role.menus.forEach((menu) => {
+            perms.push(...menu.perms)
+          })
+        })
+        perms = uniq(perms)
+        permissions.push({ id: user.id, permissions: perms })
+      })
+    }
+    return permissions
   }
 }

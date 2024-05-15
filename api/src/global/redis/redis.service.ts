@@ -8,7 +8,8 @@ import {
   REDIS_ROUTE_PREFIX,
   REDIS_TOKEN_EX,
   REDIS_TOKEN_PREFIX,
-  REDIS_USERID_PREFIX
+  REDIS_USERID_PREFIX,
+  REDIS_USER_PERMISSION_PREFIX
 } from '@/common/constants/redis.constants'
 import { JWT_SECRET } from '@/common/constants/token.constants'
 import { LoggerService } from '@/global/logger/logger.service'
@@ -90,5 +91,29 @@ export class RedisService implements OnModuleInit {
 
   async getUserInfoVersion(id: string) {
     return await this.client.get(`${REDIS_USERID_PREFIX}${id}`)
+  }
+
+  async setUserPermissions(id: string, permissions: string[]) {
+    return await this.client.set(`${REDIS_USER_PERMISSION_PREFIX}${id}`, permissions.join(','))
+  }
+
+  async setUsersPermissions(permissions: { id: string; permissions: string[] }[]) {
+    const setPerms: [string, string][] = []
+    permissions.forEach((item) => {
+      setPerms.push([`${REDIS_USER_PERMISSION_PREFIX}${item.id}`, permissions.join(',')])
+    })
+    return await this.client.mSet(setPerms)
+  }
+
+  async getUserPermissions(id: string) {
+    return (await this.client.get(`${REDIS_USER_PERMISSION_PREFIX}${id}`)).split(',')
+  }
+
+  async deleteUserPermissions(id: string) {
+    return await this.client.del(`${REDIS_USER_PERMISSION_PREFIX}${id}`)
+  }
+
+  async deleteUsersPermissions(ids: string[]) {
+    return await this.client.del(ids.map((id) => `${REDIS_USER_PERMISSION_PREFIX}${id}`))
   }
 }

@@ -26,3 +26,7 @@ export const REDIS_TOKEN_EX = 86400
  * 登录验证码过期时间(秒)
  */
 export const REDIS_CODE_EX = 60
+/**
+ * 用户权限前缀
+ */
+export const REDIS_USER_PERMISSION_PREFIX = `${REDIS_PREFIX}permission:`
