@@ -20,7 +20,7 @@ export class PermissionService {
   ) {}
 
   async getPermission(id: string) {
-    let user = await this.userRepository.findOne({
+    const user = await this.userRepository.findOne({
       where: { id },
       relations: ['roles', 'roles.menus']
     })
