@@ -20,24 +20,21 @@ export class PermissionService {
   ) {}
 
   async getPermission(id: string) {
-    return await this.userRepository
-      .createQueryBuilder('user')
-      .select([
-        'user.id',
-        'user.username',
-        'user.realname',
-        'user.avatar',
-        'user.email',
-        'user.phone',
-        'user.status'
-      ])
-      .leftJoinAndSelect('user.roles', 'roles')
-      .leftJoinAndSelect('roles.menus', 'menus')
-      .where('user.id = :id', { id: id })
-      .andWhere('user.status = 1')
-      .andWhere('roles.status = 1')
-      .andWhere('menus.status = 1')
-      .getOne()
+    let user = await this.userRepository.findOne({
+      where: { id },
+      relations: ['roles', 'roles.menus']
+    })
+    if (!user) {
+      throw '用户不存在'
+    }
+    if (user.status == 0) {
+      throw '用户已被禁用'
+    }
+    user.roles = user.roles.filter((role) => role.status == 1)
+    user.roles.forEach((role) => {
+      role.menus = role.menus.filter((menu) => menu.status == 1)
+    })
+    return user
   }
 
   async updateUserInfo(id: string, info: UpdateUserInfoDto) {
