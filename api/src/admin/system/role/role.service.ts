@@ -2,7 +2,7 @@
 https://docs.nestjs.com/providers#services
 */
 
-import { Injectable } from '@nestjs/common'
+import { Inject, Injectable, forwardRef } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { RoleEntity } from './role.entity'
 import { In, Like, Repository } from 'typeorm'
@@ -18,6 +18,7 @@ export class RoleService {
     private readonly roleRepository: Repository<RoleEntity>,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
+    @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
     private readonly redisService: RedisService
   ) {}
