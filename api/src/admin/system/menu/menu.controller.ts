@@ -39,7 +39,11 @@ export class MenuController {
     const menuTree = Array.of<MenuTree>()
     this.menuService.getMenuTree(menuTree, list, null)
     return new PageResultDto<MenuTree>(
-      menuTree,
+      menuTree.slice(
+        (menuPageListDto.currentPage - 1) * menuPageListDto.pageSize,
+        menuPageListDto.currentPage * menuPageListDto.pageSize
+      ),
+      menuTree.length,
       menuPageListDto.currentPage,
       menuPageListDto.pageSize
     )

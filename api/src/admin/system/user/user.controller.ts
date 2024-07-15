@@ -58,12 +58,7 @@ export class UserController {
     type: PageResultDto<UserEntity>
   })
   async getUserPageList(@Body() userPageListDto: UserPageListDto) {
-    const list = await this.userService.getUserList(userPageListDto)
-    return new PageResultDto<UserEntity>(
-      list,
-      userPageListDto.currentPage,
-      userPageListDto.pageSize
-    )
+    return await this.userService.getUserPageList(userPageListDto)
   }
 
   @Post('list')

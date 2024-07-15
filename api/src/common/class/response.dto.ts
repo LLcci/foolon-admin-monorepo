@@ -31,11 +31,11 @@ export class ResponseDto<T> {
 }
 
 export class PageResultDto<T> {
-  constructor(records: T[], currentPage = 1, pageSize = 10) {
+  constructor(records: T[], total: number, currentPage = 1, pageSize = 10) {
     this.currentPage = currentPage
     this.pageSize = pageSize
-    this.total = records.length
-    this.records = records.slice((currentPage - 1) * pageSize, currentPage * pageSize)
+    this.total = total
+    this.records = records
   }
   currentPage: number
   pageSize: number

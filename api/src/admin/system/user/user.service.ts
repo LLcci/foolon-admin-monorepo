@@ -11,6 +11,7 @@ import encrypt from '@/common/utils/encrypt'
 import { RedisService } from '@/global/redis/redis.service'
 import { RoleService } from '../role/role.service'
 import { omit, uniq } from 'lodash'
+import { PageResultDto } from '@/common/class/response.dto'
 
 @Injectable()
 export class UserService {
@@ -20,6 +21,39 @@ export class UserService {
     private readonly redisService: RedisService,
     private readonly roleService: RoleService
   ) {}
+
+  async getUserPageList(userPageListDto: UserPageListDto) {
+    const [users, total] = await this.userRepository.findAndCount({
+      select: [
+        'id',
+        'username',
+        'realname',
+        'avatar',
+        'email',
+        'phone',
+        'status',
+        'createTime',
+        'roles'
+      ],
+      where: {
+        username: userPageListDto.username ? Like(`%${userPageListDto.username}%`) : undefined,
+        realname: userPageListDto.realname ? Like(`%${userPageListDto.realname}%`) : undefined,
+        status: userPageListDto.status
+      },
+      relations: ['roles'],
+      order: {
+        createTime: 'DESC'
+      },
+      skip: userPageListDto.pageSize * (userPageListDto.currentPage - 1),
+      take: userPageListDto.pageSize
+    })
+    return new PageResultDto<UserEntity>(
+      users,
+      total,
+      userPageListDto.currentPage,
+      userPageListDto.pageSize
+    )
+  }
 
   async getUserList(userPageListDto: UserPageListDto) {
     return await this.userRepository.find({

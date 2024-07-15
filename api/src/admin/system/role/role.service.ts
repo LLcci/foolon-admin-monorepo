@@ -10,6 +10,7 @@ import { RolePageListDto } from './role.dto'
 import { UserEntity } from '../user/user.entity'
 import { UserService } from '../user/user.service'
 import { RedisService } from '@/global/redis/redis.service'
+import { PageResultDto } from '@/common/class/response.dto'
 
 @Injectable()
 export class RoleService {
@@ -22,6 +23,25 @@ export class RoleService {
     private readonly userService: UserService,
     private readonly redisService: RedisService
   ) {}
+
+  async getRolePageList(rolePageListDto: RolePageListDto) {
+    const [roles, total] = await this.roleRepository.findAndCount({
+      where: {
+        name: rolePageListDto.name ? Like(`%${rolePageListDto.name}%`) : undefined,
+        status: rolePageListDto.status
+      },
+      relations: ['menus'],
+      order: { createTime: 'DESC' },
+      skip: rolePageListDto.pageSize * (rolePageListDto.currentPage - 1),
+      take: rolePageListDto.pageSize
+    })
+    return new PageResultDto<RoleEntity>(
+      roles,
+      total,
+      rolePageListDto.currentPage,
+      rolePageListDto.pageSize
+    )
+  }
 
   async getRoleList(rolePageListDto: RolePageListDto) {
     return await this.roleRepository.find({

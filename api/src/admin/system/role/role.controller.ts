@@ -36,12 +36,7 @@ export class RoleController {
     type: PageResultDto<RoleEntity>
   })
   async getRolePageList(@Body() rolePageListDto: RolePageListDto) {
-    const list = await this.roleService.getRoleList(rolePageListDto)
-    return new PageResultDto<RoleEntity>(
-      list,
-      rolePageListDto.currentPage,
-      rolePageListDto.pageSize
-    )
+    return await this.roleService.getRolePageList(rolePageListDto)
   }
 
   @Post('list')
