@@ -12,6 +12,7 @@ import { DeleteResult } from 'typeorm'
 import { RedisService } from '@/global/redis/redis.service'
 import { User } from '@/common/decorator/user.decorator'
 import validateArrObj from '@/common/utils/validateArrObj'
+import { ApiPaginatedResponse } from '@/common/decorator/pageRequest.decorator'
 
 @ApiTags('菜单管理')
 @ApiHeader({
@@ -30,10 +31,7 @@ export class MenuController {
   @ApiOperation({
     summary: '分页菜单列表'
   })
-  @ApiOkResponse({
-    description: '分页菜单列表',
-    type: PageResultDto<MenuEntity>
-  })
+  @ApiPaginatedResponse(MenuTree)
   async getMenuPageList(@Body() menuPageListDto: MenuPageListDto) {
     const list = await this.menuService.getMenuList(menuPageListDto)
     const menuTree = Array.of<MenuTree>()

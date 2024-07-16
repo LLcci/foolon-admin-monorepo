@@ -22,5 +22,11 @@ export class MenuSaveDto {
 }
 
 export class MenuTree extends MenuEntity {
+  @ApiProperty({
+    description: '子菜单数',
+    required: true,
+    type: MenuTree,
+    isArray: true
+  })
   children: MenuTree[]
 }

@@ -5,7 +5,6 @@ https://docs.nestjs.com/controllers#controllers
 import { Body, Controller, Get, Post, Query } from '@nestjs/common'
 import { ApiHeader, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { RoleService } from './role.service'
-import { PageResultDto } from '@/common/class/response.dto'
 import { RoleEntity } from './role.entity'
 import { RoleImportDto, RolePageListDto, RoleSaveDto } from './role.dto'
 import { User } from '@/common/decorator/user.decorator'
@@ -13,6 +12,7 @@ import { DeleteResult } from 'typeorm'
 import { MenuService } from '../menu/menu.service'
 import { omit } from 'lodash'
 import validateArrObj from '@/common/utils/validateArrObj'
+import { ApiPaginatedResponse } from '@/common/decorator/pageRequest.decorator'
 
 @ApiTags('角色管理')
 @ApiHeader({
@@ -31,10 +31,7 @@ export class RoleController {
   @ApiOperation({
     summary: '分页角色列表'
   })
-  @ApiOkResponse({
-    description: '分页角色列表',
-    type: PageResultDto<RoleEntity>
-  })
+  @ApiPaginatedResponse(RoleEntity)
   async getRolePageList(@Body() rolePageListDto: RolePageListDto) {
     return await this.roleService.getRolePageList(rolePageListDto)
   }

@@ -11,7 +11,6 @@ import {
   UpdatePasswordDto
 } from '@/admin/system/user/user.dto'
 import { UserService } from '@/admin/system/user/user.service'
-import { PageResultDto } from '@/common/class/response.dto'
 import { User } from '@/common/decorator/user.decorator'
 import {
   Body,
@@ -35,6 +34,7 @@ import { DeleteResult } from 'typeorm'
 import { compressImg2Webp, deleteFile } from '@/common/utils/file'
 import { RoleService } from '../role/role.service'
 import encrypt from '@/common/utils/encrypt'
+import { ApiPaginatedResponse } from '@/common/decorator/pageRequest.decorator'
 
 @ApiTags('用户管理')
 @ApiHeader({
@@ -53,10 +53,7 @@ export class UserController {
   @ApiOperation({
     summary: '分页用户列表'
   })
-  @ApiOkResponse({
-    description: '分页用户列表',
-    type: PageResultDto<UserEntity>
-  })
+  @ApiPaginatedResponse(UserEntity)
   async getUserPageList(@Body() userPageListDto: UserPageListDto) {
     return await this.userService.getUserPageList(userPageListDto)
   }
