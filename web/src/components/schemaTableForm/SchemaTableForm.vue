@@ -57,7 +57,7 @@
   </div>
   <div class="mt">
     <schemaTable :table="table" v-model="pagination">
-      <template #default="scope">
+      <template v-if="props.showTableOperations" #default="scope">
         <slot name="tableButtons" v-bind="scope">
           <el-button
             type="success"
@@ -131,16 +131,24 @@ import { tableDelete, tableExport, tableId, tableList, tableSave } from './api'
 import { has, omit } from 'lodash'
 import { utils, writeFileXLSX, read } from 'xlsx'
 
-const props = defineProps<{
-  tableForm: SchemaTableForm<any>
-  tableProps?: {
-    props?: Partial<Omit<TableInstance['$props'], 'data'>>
-    actionProps?: Omit<TableColumnInstance['$props'], 'prop'>
+const props = withDefaults(
+  defineProps<{
+    searchOnCreate?: boolean
+    showTableOperations?: boolean
+    tableForm: SchemaTableForm<any>
+    tableProps?: {
+      props?: Partial<Omit<TableInstance['$props'], 'data'>>
+      actionProps?: Omit<TableColumnInstance['$props'], 'prop'>
+    }
+    searchFormProps?: Partial<FormProps>
+    editFormProps?: Partial<FormProps>
+    api: Api
+  }>(),
+  {
+    searchOnCreate: true,
+    showTableOperations: true
   }
-  searchFormProps?: Partial<FormProps>
-  editFormProps?: Partial<FormProps>
-  api: Api
-}>()
+)
 
 const emits = defineEmits([
   'onTableListSuccess',
@@ -172,7 +180,9 @@ const {
   onFetchResponse: tableListOnFetchResponse,
   execute: tableListFetch
 } = tableList(props.api.page, searchFormQuery)
-tableListFetch()
+if (props.searchOnCreate) {
+  tableListFetch()
+}
 tableListOnFetchResponse(() => {
   emits('onTableListSuccess')
   pagination.value.total = tableData.value?.total || 0
@@ -191,11 +201,13 @@ const table = computed(() => {
       defaultExpandAll: true
     },
     columns: {},
-    actionsProps: {
-      label: '操作',
-      width: 300,
-      align: 'center'
-    },
+    actionsProps: props.showTableOperations
+      ? {
+          label: '操作',
+          width: 300,
+          align: 'center'
+        }
+      : undefined,
     pagination: {
       events: {
         change: async () => {
@@ -215,7 +227,9 @@ const table = computed(() => {
     }
   }
   Object.assign(tableProps.props, props.tableProps?.props)
-  Object.assign(tableProps.actionsProps as object, props.tableProps?.actionProps)
+  if (tableProps.actionsProps && props.tableProps?.actionProps) {
+    Object.assign(tableProps.actionsProps, props.tableProps?.actionProps)
+  }
   return tableProps
 })
 

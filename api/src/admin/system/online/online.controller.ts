@@ -3,9 +3,10 @@ https://docs.nestjs.com/controllers#controllers
 */
 
 import { Body, Controller, Post } from '@nestjs/common'
-import { ApiHeader, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiHeader, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { OnlineService } from './online.service'
-import { OnlineUserPageListDto } from './online.dto'
+import { OnlineUserDto, OnlineUserPageListDto } from './online.dto'
+import { ApiPaginatedResponse } from '@/common/decorator/pageRequest.decorator'
 
 @ApiTags('在线用户')
 @ApiHeader({
@@ -21,9 +22,7 @@ export class OnlineController {
   @ApiOperation({
     summary: '分页在线用户列表'
   })
-  @ApiOkResponse({
-    description: '分页在线用户列表'
-  })
+  @ApiPaginatedResponse(OnlineUserDto)
   async getOnlineUserList(@Body() onlineUserPageListDto: OnlineUserPageListDto) {
     return await this.onlineService.getOnlineUserList(onlineUserPageListDto)
   }

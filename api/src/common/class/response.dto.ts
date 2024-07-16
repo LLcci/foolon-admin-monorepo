@@ -37,8 +37,17 @@ export class PageResultDto<T> {
     this.total = total
     this.records = records
   }
+  @ApiProperty({
+    description: '当前页码'
+  })
   currentPage: number
+  @ApiProperty({
+    description: '每页条数'
+  })
   pageSize: number
+  @ApiProperty({
+    description: '总条数'
+  })
   total: number
   records: T[]
 }

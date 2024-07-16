@@ -119,6 +119,10 @@ export interface paths {
     /** 登出 */
     get: operations['LogoutController_logout']
   }
+  '/admin/sys/online/list': {
+    /** 分页在线用户列表 */
+    post: operations['OnlineController_getOnlineUserList']
+  }
 }
 
 export type webhooks = Record<string, never>
@@ -143,7 +147,14 @@ export interface components {
       /** @description 状态:0-无效,1-有效 */
       status?: number
     }
-    PageResultDto: Record<string, never>
+    PageResultDto: {
+      /** @description 当前页码 */
+      currentPage: number
+      /** @description 每页条数 */
+      pageSize: number
+      /** @description 总条数 */
+      total: number
+    }
     MenuEntity: {
       /** Format: date-time */
       createTime?: string
@@ -415,6 +426,36 @@ export interface components {
       newPassword: string
       /** @description 确认新密码 */
       confirmPassword: string
+    }
+    OnlineUserDto: {
+      /** @description 用户id,新增时不需要传,更新时必传 */
+      id?: string
+      /** @description 用户账户,查询时非必传,新增更新时必传 */
+      username?: string
+      /** @description 用户名,查询时非必传,新增更新时必传 */
+      realname?: string
+      /** @description 头像 */
+      avatar?: string
+      /** @description 登录时间 */
+      loginDate: string
+      /** @description ip地址 */
+      address: string
+    }
+    OnlineUserPageListDto: {
+      /**
+       * @description 当前页码
+       * @default 1
+       */
+      currentPage?: number
+      /**
+       * @description 页大小
+       * @default 10
+       */
+      pageSize?: number
+      /** @description 用户账户,查询时非必传,新增更新时必传 */
+      username?: string
+      /** @description 用户名,查询时非必传,新增更新时必传 */
+      realname?: string
     }
   }
   responses: never
@@ -977,6 +1018,29 @@ export interface operations {
       /** @description 登出 */
       200: {
         content: never
+      }
+    }
+  }
+  /** 分页在线用户列表 */
+  OnlineController_getOnlineUserList: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['OnlineUserPageListDto']
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': components['schemas']['PageResultDto'] & {
+            records: components['schemas']['OnlineUserDto'][]
+          }
+        }
       }
     }
   }

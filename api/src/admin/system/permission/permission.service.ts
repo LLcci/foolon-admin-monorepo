@@ -33,6 +33,7 @@ export class PermissionService {
     user.roles = user.roles.filter((role) => role.status == 1)
     user.roles.forEach((role) => {
       role.menus = role.menus.filter((menu) => menu.status == 1)
+      role.menus = role.menus.sort((a, b) => a.sort - b.sort)
     })
     return user
   }
