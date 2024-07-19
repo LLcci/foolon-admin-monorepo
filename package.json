@@ -4,6 +4,7 @@
   "description": "",
   "private": true,
   "scripts": {
+    "docker:compose:deploy": "cd ./api && pnpm run build && cd ../web && pnpm run build && cd ../ && docker-compose up -d --build",
     "prepare": "husky install",
     "format": "prettier --write \"api/src/**/*.ts\" \"api/test/**/*.ts\" \"web/src\""
   },

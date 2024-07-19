@@ -1,0 +1,10 @@
+version: '3.7'
+services:
+  floolon-admin-web:
+    container_name: floolon-admin-web
+    restart: always
+    build: ./
+    environment:
+      - TZ=Asia/Shanghai
+    ports:
+      - 80:80

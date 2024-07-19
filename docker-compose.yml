@@ -1,0 +1,71 @@
+version: '3.7'
+services:
+  floolon-admin-web:
+    container_name: floolon-admin-web
+    restart: always
+    build:
+      context: ./web/
+      dockerfile: ./Dockerfile
+    depends_on:
+      - floolon-admin-api
+      # 依赖名为'mysql-container'的服务
+      - mysql-container
+      # 依赖名为'redis-container'的服务
+      - redis-container
+    environment:
+      - TZ=Asia/Shanghai
+    ports:
+      - 80:80
+
+  floolon-admin-api:
+    container_name: floolon-admin-api
+    restart: always
+    build:
+      context: ./api/
+      dockerfile: ./Dockerfile
+    depends_on:
+      # 依赖名为'mysql-container'的服务
+      - mysql-container
+      # 依赖名为'redis-container'的服务
+      - redis-container
+    ports:
+      - '8081:8081'
+      - '8080:8080'
+    environment:
+      - TZ=Asia/Shanghai
+      - LANG=en_US.UTF-8
+
+  # 定义一个名为'mysql-container'的服务，使用mysql镜像
+  mysql-container:
+    container_name: mysql-container
+    restart: always
+    # 指定使用mysql官方Docker镜像
+    image: mysql
+    # 端口映射，将宿主机的3306端口映射到容器的3306端口
+    ports:
+      - '3306:3306'
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci #设置utf8字符集
+    # 数据卷配置，用于持久化存储
+    volumes:
+      - D:\foolon-admin-mysql:/var/lib/mysql
+      - ./sql/:/docker-entrypoint-initdb.d/
+    environment:
+      MYSQL_DATABASE: foolon-admin
+      MYSQL_ROOT_PASSWORD: root
+      TZ: Asia/Shanghai
+
+  # 定义一个名为'redis-container'的服务，使用redis镜像
+  redis-container:
+    container_name: redis-container
+    restart: always
+    # 指定使用redis官方Docker镜像
+    image: redis
+    # 端口映射，将宿主机的6379端口映射到容器的6379端口
+    ports:
+      - '6379:6379'
+    command: redis-server --requirepass floolon-admin:H9tCSNrpQXSpLYNmJ=EJ
+    # 数据卷配置，用于持久化存储
+    volumes:
+      - D:\foolon-admin-redis:/data
+    environment:
+      - TZ=Asia/Shanghai
