@@ -3,3 +3,5 @@ packages:
   - api
   # 前端页面
   - web
+  # 文档
+  - doc
