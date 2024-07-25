@@ -1,11 +1,11 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 //@ts-ignore
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import { useUser } from '@/stores/useUser'
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/login',
