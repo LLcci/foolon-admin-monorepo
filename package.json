@@ -6,7 +6,7 @@
   "scripts": {
     "docker:compose:deploy": "cd ./api && pnpm run build && cd ../web && pnpm run build && cd ../ && docker-compose up -d --build",
     "prepare": "husky install",
-    "format": "prettier --write \"api/src/**/*.ts\" \"api/test/**/*.ts\" \"web/src\""
+    "format": "prettier --write \"**/*.{vue,js,ts,jsx,tsx,json,md,html,css,scss}\""
   },
   "keywords": [],
   "author": "",
@@ -16,9 +16,19 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.3.0",
+    "@commitlint/config-conventional": "^19.2.2",
     "@types/lodash": "^4.17.0",
     "eslint": "^8.57.0",
+    "lint-staged": "^15.2.7",
     "prettier": "^3.2.5",
     "typescript": "^5.3.3"
+  },
+  "lint-staged": {
+    "./web/**/*.{vue,js,ts,jsx,tsx}": "eslint --fix",
+    "./api/**/*.ts": [
+      "eslint --fix"
+    ],
+    "**/*.{vue,js,ts,jsx,tsx,json,md,html,css,scss}": "prettier --write"
   }
 }
