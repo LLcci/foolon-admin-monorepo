@@ -11,7 +11,7 @@
  Target Server Version : 80200
  File Encoding         : 65001
 
- Date: 19/07/2024 11:13:49
+ Date: 26/07/2024 15:51:20
 */
 
 SET NAMES utf8mb4;
@@ -85,9 +85,7 @@ CREATE TABLE `sys_role`  (
 -- ----------------------------
 -- Records of sys_role
 -- ----------------------------
-INSERT INTO `sys_role` VALUES ('2024-07-15 10:11:16.646401', '2024-07-15 10:11:16.646401', 'ad59b6ce-18e3-46cb-815f-179159402b57', 'ad59b6ce-18e3-46cb-815f-179159402b57', '4845c1b6-9089-435a-936f-5a31271d6fac', '测试2', NULL, 1);
 INSERT INTO `sys_role` VALUES ('2024-02-28 09:13:18.032904', '2024-02-28 09:13:18.032904', 'ad59b6ce-18e3-46cb-815f-179159402b57', 'ad59b6ce-18e3-46cb-815f-179159402b57', '8e418709-fea2-4e64-be29-59035533cee9', 'admin', NULL, 1);
-INSERT INTO `sys_role` VALUES ('2024-03-08 14:54:51.303422', '2024-03-18 10:49:37.000000', 'ad59b6ce-18e3-46cb-815f-179159402b57', 'ad59b6ce-18e3-46cb-815f-179159402b57', 'cb196ef8-6916-4883-9719-70f42cfdf042', '测试1', NULL, 1);
 
 -- ----------------------------
 -- Table structure for sys_role_menus_sys_menu
@@ -106,14 +104,6 @@ CREATE TABLE `sys_role_menus_sys_menu`  (
 -- ----------------------------
 -- Records of sys_role_menus_sys_menu
 -- ----------------------------
-INSERT INTO `sys_role_menus_sys_menu` VALUES ('4845c1b6-9089-435a-936f-5a31271d6fac', '2701d412-108b-4864-8a98-b44abeb0ed6a');
-INSERT INTO `sys_role_menus_sys_menu` VALUES ('4845c1b6-9089-435a-936f-5a31271d6fac', '539d486c-e0f2-41f0-aaca-d58f81008421');
-INSERT INTO `sys_role_menus_sys_menu` VALUES ('4845c1b6-9089-435a-936f-5a31271d6fac', '9336c0e8-8add-41f9-8d7e-e8cb9cdda060');
-INSERT INTO `sys_role_menus_sys_menu` VALUES ('4845c1b6-9089-435a-936f-5a31271d6fac', '9c7fdede-3078-4937-aaad-eb4499d9f25f');
-INSERT INTO `sys_role_menus_sys_menu` VALUES ('4845c1b6-9089-435a-936f-5a31271d6fac', 'a765d1c0-8c95-420f-8054-dec6049b1f34');
-INSERT INTO `sys_role_menus_sys_menu` VALUES ('4845c1b6-9089-435a-936f-5a31271d6fac', 'b7c4e78e-b01c-4e17-9457-affedbe49f51');
-INSERT INTO `sys_role_menus_sys_menu` VALUES ('4845c1b6-9089-435a-936f-5a31271d6fac', 'bd39b140-850a-460f-ac0a-921f6cfc8168');
-INSERT INTO `sys_role_menus_sys_menu` VALUES ('4845c1b6-9089-435a-936f-5a31271d6fac', 'cfce0604-de8a-4e2b-a8b4-882462a27fd2');
 INSERT INTO `sys_role_menus_sys_menu` VALUES ('8e418709-fea2-4e64-be29-59035533cee9', '141cddc1-59f4-436d-b34c-876dc76c533d');
 INSERT INTO `sys_role_menus_sys_menu` VALUES ('8e418709-fea2-4e64-be29-59035533cee9', '2701d412-108b-4864-8a98-b44abeb0ed6a');
 INSERT INTO `sys_role_menus_sys_menu` VALUES ('8e418709-fea2-4e64-be29-59035533cee9', '2a60bb81-950d-45ab-91fe-e0c3a7c993b6');
@@ -134,9 +124,6 @@ INSERT INTO `sys_role_menus_sys_menu` VALUES ('8e418709-fea2-4e64-be29-59035533c
 INSERT INTO `sys_role_menus_sys_menu` VALUES ('8e418709-fea2-4e64-be29-59035533cee9', 'dc955259-11c2-468a-a45c-95da7beec342');
 INSERT INTO `sys_role_menus_sys_menu` VALUES ('8e418709-fea2-4e64-be29-59035533cee9', 'f4e93bd3-f5f3-4449-9668-53307e23c603');
 INSERT INTO `sys_role_menus_sys_menu` VALUES ('8e418709-fea2-4e64-be29-59035533cee9', 'f5820fc4-8df3-4907-b353-47d9aa6811dc');
-INSERT INTO `sys_role_menus_sys_menu` VALUES ('cb196ef8-6916-4883-9719-70f42cfdf042', '9336c0e8-8add-41f9-8d7e-e8cb9cdda060');
-INSERT INTO `sys_role_menus_sys_menu` VALUES ('cb196ef8-6916-4883-9719-70f42cfdf042', 'a765d1c0-8c95-420f-8054-dec6049b1f34');
-INSERT INTO `sys_role_menus_sys_menu` VALUES ('cb196ef8-6916-4883-9719-70f42cfdf042', 'bd39b140-850a-460f-ac0a-921f6cfc8168');
 
 -- ----------------------------
 -- Table structure for sys_user
@@ -164,9 +151,7 @@ CREATE TABLE `sys_user`  (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES ('2024-03-15 17:11:56.861149', '2024-03-15 17:11:56.861149', 'ad59b6ce-18e3-46cb-815f-179159402b57', 'ad59b6ce-18e3-46cb-815f-179159402b57', '68da91ad-693b-4753-90ac-21fa567d09ee', 'test1', 'e70fe2a5d6fee5438fd7', '测试1', '813da00e7da3186b66ae9537b8278045', 'b49fd6bc1b9a23307345709a0f03f26c', NULL, NULL, NULL, 1);
-INSERT INTO `sys_user` VALUES ('2024-03-18 11:06:26.394380', '2024-07-15 10:16:59.000000', 'ad59b6ce-18e3-46cb-815f-179159402b57', 'ad59b6ce-18e3-46cb-815f-179159402b57', '6978988b-e41c-43e6-96ba-85bcf98e5f63', 'test', 'fbf556268dd2dcf2278a', '测试', '594c2adcb089b631075867e61584c35f', '7d5bb17d5f407699b75e7f0d8a739ba6', '', NULL, NULL, 1);
-INSERT INTO `sys_user` VALUES ('2024-02-27 16:02:03.690395', '2024-03-18 11:20:11.000000', '9f71ebdb-283a-4cd0-886b-3075ffbd66fa', 'ad59b6ce-18e3-46cb-815f-179159402b57', 'ad59b6ce-18e3-46cb-815f-179159402b57', 'admin', 'ef41db7fe07444a389a0', '超级管理员', 'b441dd01381ecc7b5cae4a53b25b3a6f', '70cf546ed04983342410f0e013377d40', 'avatar-1710731502204-512417899.webp', '374166002@qq.com', '15324682154', 1);
+INSERT INTO `sys_user` VALUES ('2024-02-27 16:02:03.690395', '2024-07-26 15:46:41.000000', '9f71ebdb-283a-4cd0-886b-3075ffbd66fa', 'ad59b6ce-18e3-46cb-815f-179159402b57', 'ad59b6ce-18e3-46cb-815f-179159402b57', 'admin', 'bba5489f9ceededdfe470c9ed6f5b847', '超级管理员', 'f6c7e53c4d2d4231192a475d3e0acd8a', '68cc4276388c2658e3a4960c7e4ec29a', 'avatar-1710731502204-512417899.webp', '', '', 1);
 
 -- ----------------------------
 -- Table structure for sys_user_roles_sys_role
