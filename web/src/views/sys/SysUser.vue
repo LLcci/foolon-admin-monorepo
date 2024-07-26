@@ -205,7 +205,7 @@ const emailComponent: ItemComponent = {
       }
     }
   ],
-  component: h(ElInput, { type: 'email', placeholder: '请输入邮箱' })
+  component: h(ElInput, { type: 'email', placeholder: '请输入邮箱', clearable: true })
 }
 
 const phoneComponent: ItemComponent = {
@@ -223,7 +223,7 @@ const phoneComponent: ItemComponent = {
       }
     }
   ],
-  component: h(ElInput, { type: 'tel', placeholder: '请输入手机号' })
+  component: h(ElInput, { type: 'tel', placeholder: '请输入手机号', clearable: true })
 }
 
 const statusComponent: ItemComponent = {
@@ -300,15 +300,6 @@ const tableForm = ref<
         label: realnameComponent.label
       },
       component: realnameComponent.component
-    }
-  },
-  password: {
-    editForm: {
-      rule: passwordComponent.rule,
-      props: {
-        label: passwordComponent.label
-      },
-      component: passwordComponent.component
     }
   },
   roleIds: {

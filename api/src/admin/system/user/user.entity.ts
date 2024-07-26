@@ -7,7 +7,9 @@ import {
   IsOptional,
   IsPhoneNumber,
   IsString,
-  IsStrongPassword
+  IsStrongPassword,
+  ValidateIf,
+  isNotEmpty
 } from 'class-validator'
 import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm'
 import { RoleEntity } from '../role/role.entity'
@@ -87,12 +89,14 @@ export class UserEntity extends BaseEntity {
   @Column({ nullable: true, comment: '邮箱' })
   @ApiProperty({ required: false, description: '邮箱' })
   @IsEmail({}, { message: '邮箱格式不正确' })
+  @ValidateIf((object, value) => isNotEmpty(value))
   @IsOptional()
   email: string
 
   @Column({ nullable: true, comment: '手机号' })
   @ApiProperty({ required: false, description: '手机号' })
   @IsPhoneNumber('CN', { message: '手机号格式不正确' })
+  @ValidateIf((object, value) => isNotEmpty(value))
   @IsOptional()
   phone: string
 
