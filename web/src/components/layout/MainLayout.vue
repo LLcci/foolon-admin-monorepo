@@ -106,7 +106,7 @@
             router
             @select="handleSelect"
           >
-            <el-menu-item index="/">
+            <el-menu-item index="/index">
               <el-icon><House /></el-icon>
               <template #title>
                 <span class="w-30 overflow-hidden text-nowrap text-ellipsis">首页</span>
@@ -161,7 +161,7 @@
   <!-- 移动端菜单 -->
   <el-drawer v-model="drawer" title="菜单" direction="ltr" size="100%">
     <el-menu :default-active="route.path" @select="() => (drawer = false)" router>
-      <el-menu-item index="/">
+      <el-menu-item index="/index">
         <el-icon><House /></el-icon>
         <template #title>
           <span>首页</span>
@@ -298,7 +298,7 @@ const menuHeight = computed(() => {
 
 const handleSelect = (index: string) => {
   if (!editableTabs.value.find((item) => item.name === index)) {
-    const route = useUser().userRoutes.find((item) => item.path === index)
+    const route = router.getRoutes().find((item) => item.path === index)
     editableTabs.value.push({
       name: index,
       label: route?.meta?.title

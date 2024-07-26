@@ -19,9 +19,10 @@ const router = createRouter({
       path: '/',
       name: 'main',
       component: () => import('@/components/layout/MainLayout.vue'),
+      redirect: '/index',
       children: [
         {
-          path: '/',
+          path: '/index',
           component: () => import('@/views/home/IndexHome.vue'),
           meta: {
             title: '首页'
