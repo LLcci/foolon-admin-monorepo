@@ -48,7 +48,7 @@ services:
     # 数据卷配置，用于持久化存储
     volumes:
       - D:\foolon-admin-mysql:/var/lib/mysql
-      - ./sql/:/docker-entrypoint-initdb.d/
+      - ./api/sql/:/docker-entrypoint-initdb.d/
     environment:
       MYSQL_DATABASE: foolon-admin
       MYSQL_ROOT_PASSWORD: root
