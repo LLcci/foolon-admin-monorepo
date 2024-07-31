@@ -36,6 +36,8 @@ features:
     title: TypeORM
     details: 使用 TypeORM 作为 ORM 框架
   - icon: { src: '/Docker.svg' }
+    link: https://docker-practice.github.io/zh-cn/
+    linkText: 了解更多
     title: Docker
     details: 支持 Docker 容器化部署
   - icon: { src: '/element-plus.svg' }

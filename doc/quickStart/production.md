@@ -141,7 +141,7 @@ pnpm run pm2:prod
 
 ### 环境准备
 
-生产环境需要安装 [Node.js](https://nodejs.org/zh-cn) 、 [pnpm](https://www.pnpm.cn/) 、 [Git](https://git-scm.com/) 、 [Docker](https://docker-practice.github.io/zh-cn/) 和 Docker Compose 。
+生产环境需要安装 [Node.js](https://nodejs.org/zh-cn) 、 [pnpm](https://www.pnpm.cn/) 、 [Git](https://git-scm.com/) 、 [Docker](https://docker-practice.github.io/zh-cn/) 和 [Docker Compose](https://docker-practice.github.io/zh-cn/compose/) 。
 ::: tip 提示
 若生产环境使用k8s部署，请参考前端镜像生成、后端镜像生成。
 :::
@@ -184,7 +184,7 @@ services:
    redis-container:
     ...
     volumes:
-      # 修改"D:\foolon-admin-redis"为你的MySQL持久化目录
+      # 修改"D:\foolon-admin-redis"为你的Redis持久化目录
       - D:\foolon-admin-redis:/data
 ```
 
@@ -218,7 +218,7 @@ services:
    redis-container:
     ...
     volumes:
-      # 修改"D:\foolon-admin-redis"为你的MySQL持久化目录
+      # 修改"D:\foolon-admin-redis"为你的Redis持久化目录
       - D:\foolon-admin-redis:/data
 ```
 

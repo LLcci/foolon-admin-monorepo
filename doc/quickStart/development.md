@@ -5,7 +5,7 @@
 ## 前言
 
 ::: tip 关于组件
-项目虽然二次封装了一些组件，但是可能不能满足大部分的要求。所以，如果组件不满足你的要求，完全可以不用甚至删除代码自己写，不必坚持使用项目自带的组件。
+项目虽然二次封装了一些组件，但是可能无法满足部分要求。如果组件无法满足你的要求，完全可以不用，甚至删除代码自己写，不必坚持使用项目自带的组件。
 :::
 
 ## 环境准备
@@ -16,8 +16,8 @@
 - Node.js 版本要求18.x以上。
 - 推荐安装 nvm 来管理 Node.js 版本。
 - MySQL 和 Redis 推荐使用 [Docker](https://docker-practice.github.io/zh-cn/) 进行安装。
-- 本项目支持 [Docker](https://docker-practice.github.io/zh-cn/) ，若使用 Docker Compose 启动项目，请提前安装 [Docker](https://docker-practice.github.io/zh-cn/) 和 Docker Compose。
-- 使用 Docker Compose 启动项目，无需单独安装 MySQL 和 Redis。
+- 本项目支持 [Docker](https://docker-practice.github.io/zh-cn/) ，若使用 [Docker Compose](https://docker-practice.github.io/zh-cn/compose/) 启动项目，请提前安装 [Docker](https://docker-practice.github.io/zh-cn/) 和 [Docker Compose](https://docker-practice.github.io/zh-cn/compose/)。
+- 使用 [Docker Compose](https://docker-practice.github.io/zh-cn/compose/) 启动项目，无需单独安装 MySQL 和 Redis。
   :::
 
 ## 安装依赖
@@ -90,9 +90,9 @@ pnpm run start:dev
 ## Docker Compose 启动项目
 
 ::: warning Docker Compose
-请确保电脑已安装 Docker 和 Docker Compose。
+请确保电脑已安装 [Docker](https://docker-practice.github.io/zh-cn/) 和 [Docker Compose](https://docker-practice.github.io/zh-cn/compose/)。
 
-Docker Compose 启动项目：
+[Docker Compose](https://docker-practice.github.io/zh-cn/compose/) 启动项目：
 
 - 无需单独安装 MySQL 和 Redis。
 - 默认使用生产环境配置。
@@ -115,7 +115,7 @@ services:
    redis-container:
     ...
     volumes:
-      # 修改"D:\foolon-admin-redis"为你的MySQL持久化目录
+      # 修改"D:\foolon-admin-redis"为你的Redis持久化目录
       - D:\foolon-admin-redis:/data
 ```
 
@@ -149,7 +149,7 @@ services:
    redis-container:
     ...
     volumes:
-      # 修改"D:\foolon-admin-redis"为你的MySQL持久化目录
+      # 修改"D:\foolon-admin-redis"为你的Redis持久化目录
       - D:\foolon-admin-redis:/data
 ```
 
