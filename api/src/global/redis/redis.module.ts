@@ -7,6 +7,7 @@ https://docs.nestjs.com/modules
 import { DynamicModule, Module } from '@nestjs/common'
 import { RedisClientOptions } from 'redis'
 
+// todo 引入RedisOm
 @Module({
   imports: [],
   controllers: [],

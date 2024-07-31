@@ -58,7 +58,7 @@ export class RedisService implements OnModuleInit {
 
   async setToken(token: string, userIv: string) {
     return await this.client.set(`${REDIS_TOKEN_PREFIX}${token}`, userIv, {
-      EX: Number(REDIS_TOKEN_EX)
+      EX: REDIS_TOKEN_EX
     })
   }
 
@@ -94,15 +94,14 @@ export class RedisService implements OnModuleInit {
   }
 
   async setUserPermissions(id: string, permissions: string[]) {
-    return await this.client.set(`${REDIS_USER_PERMISSION_PREFIX}${id}`, permissions.join(','))
+    return await this.client.set(`${REDIS_USER_PERMISSION_PREFIX}${id}`, permissions.join(','), {
+      EX: REDIS_TOKEN_EX
+    })
   }
 
-  async setUsersPermissions(permissions: { id: string; permissions: string[] }[]) {
-    const setPerms: [string, string][] = []
-    permissions.forEach((item) => {
-      setPerms.push([`${REDIS_USER_PERMISSION_PREFIX}${item.id}`, permissions.join(',')])
-    })
-    return await this.client.mSet(setPerms)
+  async checkUserPermissions(id: string, permission: string) {
+    const userPermissions = await this.getUserPermissions(id)
+    return userPermissions.includes(permission)
   }
 
   async getUserPermissions(id: string) {
@@ -111,9 +110,5 @@ export class RedisService implements OnModuleInit {
 
   async deleteUserPermissions(id: string) {
     return await this.client.del(`${REDIS_USER_PERMISSION_PREFIX}${id}`)
-  }
-
-  async deleteUsersPermissions(ids: string[]) {
-    return await this.client.del(ids.map((id) => `${REDIS_USER_PERMISSION_PREFIX}${id}`))
   }
 }

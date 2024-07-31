@@ -10,13 +10,15 @@ import { UpdateUserInfoDto, UpdateUserPasswordDto } from './permission.dto'
 import decrypt from '@/common/utils/decrypt'
 import encrypt from '@/common/utils/encrypt'
 import { RedisService } from '@/global/redis/redis.service'
+import { UserService } from '../user/user.service'
 
 @Injectable()
 export class PermissionService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
-    private readonly redisService: RedisService
+    private readonly redisService: RedisService,
+    private readonly userService: UserService
   ) {}
 
   async getPermission(id: string) {
@@ -35,6 +37,8 @@ export class PermissionService {
       role.menus = role.menus.filter((menu) => menu.status == 1)
       role.menus = role.menus.sort((a, b) => a.sort - b.sort)
     })
+    const permission = await this.userService.getUserPermissions(user.id)
+    await this.redisService.setUserPermissions(user.id, permission)
     return user
   }
 

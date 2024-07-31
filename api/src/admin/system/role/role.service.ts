@@ -55,37 +55,11 @@ export class RoleService {
   }
 
   async saveRole(role: RoleEntity) {
-    const roleSave = await this.roleRepository.save(role)
-    const roleUser = await this.roleRepository.findOne({
-      where: {
-        id: roleSave.id
-      },
-      relations: ['users']
-    })
-    if (roleUser.users.length) {
-      const permissions = await this.userService.getUsersPermissions(
-        roleUser.users.map((item) => item.id)
-      )
-      await this.redisService.setUsersPermissions(permissions)
-    }
-    return roleSave
+    return await this.roleRepository.save(role)
   }
 
   async importRole(role: RoleEntity[]) {
-    const roles = await this.roleRepository.save(role)
-    const roleUsers = await this.roleRepository.find({
-      where: { id: In(roles.map((item) => item.id)) },
-      relations: ['users']
-    })
-    if (roleUsers.length) {
-      const users: UserEntity[] = []
-      roleUsers.forEach((role) => {
-        users.push(...role.users)
-      })
-      const permissions = await this.userService.getUsersPermissions(users.map((item) => item.id))
-      await this.redisService.setUsersPermissions(permissions)
-    }
-    return roles
+    return await this.roleRepository.save(role)
   }
 
   async getRoleById(id: string) {

@@ -5,7 +5,13 @@ https://docs.nestjs.com/guards#guards
 
 import { AUTHORIZE } from '@/common/constants/token.constants'
 import { RedisService } from '@/global/redis/redis.service'
-import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common'
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  UnauthorizedException,
+  ForbiddenException
+} from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
 import extractTokenFromHeader from '@/common/utils/extractTokenFromHeader'
 import { PERMISSION } from '@/common/constants/permission.constants'
@@ -39,6 +45,10 @@ export class AdminGuard implements CanActivate {
     }
     if (this.reflector.get(PERMISSION, context.getHandler())) {
       return true
+    }
+    const checkPermission = await this.redisService.checkUserPermissions(payload.id, request.url)
+    if (!checkPermission) {
+      throw new ForbiddenException('权限不足')
     }
     return true
   }

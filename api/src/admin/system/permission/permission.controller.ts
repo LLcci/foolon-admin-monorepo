@@ -9,6 +9,7 @@ import { User } from '@/common/decorator/user.decorator'
 import { UserEntity } from '../user/user.entity'
 import { UpdateUserInfoDto, UpdateUserPasswordDto } from './permission.dto'
 import { UpdateResult } from 'typeorm'
+import { Permission } from '@/common/decorator/permission.decorator'
 
 @ApiTags('许可管理')
 @ApiHeader({
@@ -20,6 +21,7 @@ import { UpdateResult } from 'typeorm'
 export class PermissionController {
   constructor(private permissionService: PermissionService) {}
 
+  @Permission()
   @Get()
   @ApiOperation({
     summary: '获取用户权限'

@@ -72,16 +72,12 @@ export class UserService {
 
   async saveUser(userEntity: UserEntity) {
     const user = await this.userRepository.save(userEntity)
-    const permission = await this.getUserPermissions(user.id)
-    await this.redisService.setUserPermissions(user.id, permission)
+    await this.redisService.setUserInfoVersion(user.id, user.iv)
     return user
   }
 
   async importUser(userEntities: UserEntity[]) {
-    const users = await this.userRepository.save(userEntities)
-    const permissions = await this.getUsersPermissions(users.map((user) => user.id))
-    await this.redisService.setUsersPermissions(permissions)
-    return users
+    return await this.userRepository.save(userEntities)
   }
 
   async getUserById(id: string) {
@@ -95,7 +91,6 @@ export class UserService {
 
   async deleteUserById(id: string[]) {
     await this.userRepository.delete(id)
-    await this.redisService.deleteUsersPermissions(id)
     return '删除成功'
   }
 
