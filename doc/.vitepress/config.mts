@@ -41,7 +41,15 @@ export default defineConfig({
   },
   description: 'nestjs + vue3 + TS 的后台管理系统框架',
   head: [
-    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/foolon-admin-monorepo/favicon.svg' }]
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/foolon-admin-monorepo/favicon.svg' }],
+    [
+      'meta',
+      {
+        name: 'Keywords',
+        content:
+          'foolon,fonlonadmin,foolon admin,foolon-admin,foolon-admin-monorepo,foolon-admin-monorepo-docs,foolon-admin-monorepo-docs-zh,foolon-admin-monorepo-docs-en,foolon-admin-monorepo-docs-cn,foolon-admin-monorepo-docs-docs,foolon-admin-monore'
+      }
+    ]
   ],
   themeConfig: {
     logo: '/favicon.svg',
