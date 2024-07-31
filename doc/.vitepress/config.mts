@@ -40,7 +40,9 @@ export default defineConfig({
     }
   },
   description: 'nestjs + vue3 + TS 的后台管理系统框架',
-  head: [['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }]],
+  head: [
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/foolon-admin-monorepo/favicon.svg' }]
+  ],
   themeConfig: {
     logo: '/favicon.svg',
     // https://vitepress.dev/reference/default-theme-config
