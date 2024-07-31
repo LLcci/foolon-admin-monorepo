@@ -11,7 +11,7 @@ import {
   ValidateIf,
   isNotEmpty
 } from 'class-validator'
-import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, Index, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm'
 import { RoleEntity } from '../role/role.entity'
 
 @Entity('sys_user')
@@ -25,6 +25,7 @@ export class UserEntity extends BaseEntity {
   @IsString({ message: '用户id必须是字符串' })
   id: string
 
+  @Index()
   @Column({ unique: true, comment: '用户账户' })
   @ApiProperty({
     required: false,
@@ -65,6 +66,7 @@ export class UserEntity extends BaseEntity {
   )
   password: string
 
+  @Index()
   @Column({ comment: '用户名' })
   @ApiProperty({
     required: false,
@@ -86,6 +88,7 @@ export class UserEntity extends BaseEntity {
   @IsOptional()
   avatar: string
 
+  @Index()
   @Column({ nullable: true, comment: '邮箱' })
   @ApiProperty({ required: false, description: '邮箱' })
   @IsEmail({}, { message: '邮箱格式不正确' })
@@ -93,6 +96,7 @@ export class UserEntity extends BaseEntity {
   @IsOptional()
   email: string
 
+  @Index()
   @Column({ nullable: true, comment: '手机号' })
   @ApiProperty({ required: false, description: '手机号' })
   @IsPhoneNumber('CN', { message: '手机号格式不正确' })
@@ -110,6 +114,7 @@ export class UserEntity extends BaseEntity {
   @JoinTable()
   roles: RoleEntity[]
 
+  @Index()
   @Column({ comment: '状态:0-无效,1-有效', default: 1, type: 'tinyint' })
   @ApiProperty({ required: false, description: '状态:0-无效,1-有效' })
   @IsEnum([0, 1], { message: '状态:0-无效,1-有效' })

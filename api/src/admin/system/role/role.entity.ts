@@ -17,6 +17,7 @@ export class RoleEntity extends BaseEntity {
   @IsOptional()
   id: string
 
+  @Index()
   @Column({ comment: '角色名称' })
   @ApiProperty({
     description: '角色名称,查询时非必传,新增更新时必传',
@@ -43,6 +44,7 @@ export class RoleEntity extends BaseEntity {
   @JoinTable()
   menus: MenuEntity[]
 
+  @Index()
   @Column({
     name: 'status',
     type: 'tinyint',

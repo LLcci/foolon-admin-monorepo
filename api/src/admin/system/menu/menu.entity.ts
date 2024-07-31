@@ -55,6 +55,7 @@ export class MenuEntity extends BaseEntity {
   @IsOptional()
   icon: string
 
+  @Index()
   @Column({
     name: 'menu_type',
     type: 'tinyint',
@@ -77,12 +78,14 @@ export class MenuEntity extends BaseEntity {
   @IsOptional()
   perms: string[]
 
+  @Index()
   @Column({ name: 'sort', comment: '排序', default: 1 })
   @ApiProperty({ required: true, description: '排序' })
   @IsNotEmpty({ message: '排序不能为空' })
   @IsNumber({}, { message: '排序必须是数字' })
   sort: number
 
+  @Index()
   @Column({
     name: 'keepalive',
     type: 'tinyint',
