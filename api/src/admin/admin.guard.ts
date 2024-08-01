@@ -46,7 +46,10 @@ export class AdminGuard implements CanActivate {
     if (this.reflector.get(PERMISSION, context.getHandler())) {
       return true
     }
-    const checkPermission = await this.redisService.checkUserPermissions(payload.id, request.url)
+    const checkPermission = await this.redisService.checkUserPermissions(
+      payload.id,
+      request.url.split('?')[0]
+    )
     if (!checkPermission) {
       throw new ForbiddenException('权限不足')
     }

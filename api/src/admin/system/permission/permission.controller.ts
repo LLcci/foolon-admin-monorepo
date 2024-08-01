@@ -18,10 +18,10 @@ import { Permission } from '@/common/decorator/permission.decorator'
   example: 'Bearer token'
 })
 @Controller('permission')
+@Permission()
 export class PermissionController {
   constructor(private permissionService: PermissionService) {}
 
-  @Permission()
   @Get()
   @ApiOperation({
     summary: '获取用户权限'
