@@ -11,7 +11,7 @@
  Target Server Version : 80200
  File Encoding         : 65001
 
- Date: 31/07/2024 09:21:55
+ Date: 01/08/2024 11:28:25
 */
 
 SET NAMES utf8mb4;
@@ -52,7 +52,8 @@ INSERT INTO `sys_menu` VALUES ('2024-02-26 15:18:56.114806', '2024-03-01 11:26:3
 INSERT INTO `sys_menu` VALUES ('2024-07-16 15:09:19.045036', '2024-07-16 15:09:19.045036', 'ad59b6ce-18e3-46cb-815f-179159402b57', 'ad59b6ce-18e3-46cb-815f-179159402b57', '2a60bb81-950d-45ab-91fe-e0c3a7c993b6', '141cddc1-59f4-436d-b34c-876dc76c533d', '查询', NULL, NULL, NULL, 2, '/admin/sys/online/list', 0, 1, 1);
 INSERT INTO `sys_menu` VALUES ('2024-02-29 16:49:37.798756', '2024-02-29 16:50:02.000000', 'ad59b6ce-18e3-46cb-815f-179159402b57', 'ad59b6ce-18e3-46cb-815f-179159402b57', '2caad99d-a738-4622-af40-cbbe344d4549', 'dc955259-11c2-468a-a45c-95da7beec342', '查询', NULL, NULL, NULL, 2, '/admin/sys/role/page,/admin/sys/role/id', 2, 1, 1);
 INSERT INTO `sys_menu` VALUES ('2024-02-29 16:48:45.626399', '2024-02-29 16:48:52.000000', 'ad59b6ce-18e3-46cb-815f-179159402b57', 'ad59b6ce-18e3-46cb-815f-179159402b57', '359da62f-5cef-4be8-8877-984efe18437f', 'dc955259-11c2-468a-a45c-95da7beec342', '删除', NULL, NULL, NULL, 2, '/admin/sys/role/delete', 1, 1, 1);
-INSERT INTO `sys_menu` VALUES ('2024-07-30 16:07:20.692576', '2024-07-30 16:07:20.692576', 'ad59b6ce-18e3-46cb-815f-179159402b57', 'ad59b6ce-18e3-46cb-815f-179159402b57', '3e71d37b-fb1c-4fd3-8a24-84e707ef7536', '2701d412-108b-4864-8a98-b44abeb0ed6a', '权限列表', NULL, NULL, NULL, 2, '/admin/sys/menu/routes,/admin/sys/menu/list', 0, 1, 1);
+INSERT INTO `sys_menu` VALUES ('2024-08-01 11:22:45.472380', '2024-08-01 11:22:59.000000', 'ad59b6ce-18e3-46cb-815f-179159402b57', 'ad59b6ce-18e3-46cb-815f-179159402b57', '3d880f35-908b-4152-a1fc-bea73f68e90e', '8b9e25b8-a7ff-4562-885a-79eed8d1f456', '角色列表', NULL, NULL, NULL, 2, '/admin/sys/role/list', 5, 1, 1);
+INSERT INTO `sys_menu` VALUES ('2024-07-30 16:07:20.692576', '2024-08-01 11:23:12.000000', 'ad59b6ce-18e3-46cb-815f-179159402b57', 'ad59b6ce-18e3-46cb-815f-179159402b57', '3e71d37b-fb1c-4fd3-8a24-84e707ef7536', '2701d412-108b-4864-8a98-b44abeb0ed6a', '权限列表', NULL, NULL, NULL, 2, '/admin/sys/menu/routes,/admin/sys/menu/list', 3, 1, 1);
 INSERT INTO `sys_menu` VALUES ('2024-03-14 16:45:55.092706', '2024-03-14 16:48:03.000000', 'ad59b6ce-18e3-46cb-815f-179159402b57', 'ad59b6ce-18e3-46cb-815f-179159402b57', '4a594cfb-cec6-436c-9d04-0148546d5ed0', '8b9e25b8-a7ff-4562-885a-79eed8d1f456', '新增', NULL, NULL, NULL, 2, '/admin/sys/user/create,/admin/sys/user/import', 0, 1, 1);
 INSERT INTO `sys_menu` VALUES ('2024-02-29 16:47:14.155895', '2024-02-29 16:47:14.155895', 'ad59b6ce-18e3-46cb-815f-179159402b57', 'ad59b6ce-18e3-46cb-815f-179159402b57', '539d486c-e0f2-41f0-aaca-d58f81008421', '2701d412-108b-4864-8a98-b44abeb0ed6a', '新增修改', NULL, NULL, NULL, 2, '/admin/sys/menu/save,/admin/sys/menu/import', 0, 1, 1);
 INSERT INTO `sys_menu` VALUES ('2024-02-29 16:51:22.714482', '2024-02-29 16:51:22.714482', 'ad59b6ce-18e3-46cb-815f-179159402b57', 'ad59b6ce-18e3-46cb-815f-179159402b57', '7cb2d261-000e-4d66-9587-a1d1f346f74c', '8b9e25b8-a7ff-4562-885a-79eed8d1f456', '查询', NULL, NULL, NULL, 2, '/admin/sys/user/page,/admin/sys/user/id', 2, 1, 1);
@@ -114,6 +115,7 @@ INSERT INTO `sys_role_menus_sys_menu` VALUES ('8e418709-fea2-4e64-be29-59035533c
 INSERT INTO `sys_role_menus_sys_menu` VALUES ('8e418709-fea2-4e64-be29-59035533cee9', '2a60bb81-950d-45ab-91fe-e0c3a7c993b6');
 INSERT INTO `sys_role_menus_sys_menu` VALUES ('8e418709-fea2-4e64-be29-59035533cee9', '2caad99d-a738-4622-af40-cbbe344d4549');
 INSERT INTO `sys_role_menus_sys_menu` VALUES ('8e418709-fea2-4e64-be29-59035533cee9', '359da62f-5cef-4be8-8877-984efe18437f');
+INSERT INTO `sys_role_menus_sys_menu` VALUES ('8e418709-fea2-4e64-be29-59035533cee9', '3d880f35-908b-4152-a1fc-bea73f68e90e');
 INSERT INTO `sys_role_menus_sys_menu` VALUES ('8e418709-fea2-4e64-be29-59035533cee9', '3e71d37b-fb1c-4fd3-8a24-84e707ef7536');
 INSERT INTO `sys_role_menus_sys_menu` VALUES ('8e418709-fea2-4e64-be29-59035533cee9', '4a594cfb-cec6-436c-9d04-0148546d5ed0');
 INSERT INTO `sys_role_menus_sys_menu` VALUES ('8e418709-fea2-4e64-be29-59035533cee9', '539d486c-e0f2-41f0-aaca-d58f81008421');
