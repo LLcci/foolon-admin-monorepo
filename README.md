@@ -2,7 +2,7 @@
 
 ## 简介
 
-[foolon admin](https://github.com/LLcci/foolon-admin-monorepo) 是一个基于 [NestJS](https://nest.nodejs.cn/)、[Vue3](https://cn.vuejs.org/)、[TypeScript](https://www.tslang.cn/index.html)、[MySQL](https://dev.mysql.com/downloads/)、[Redis](https://www.redis.net.cn/#google_vignette) 编写的一款简单高效的权限管理后台。包括二次封装组件、utils、hooks、动态菜单、权限校验、按钮级别权限控制等功能。可以作为项目的启动模版，快速搭建企业级中后台产品原型。也可以作为一个示例，用于学习 vue3、ts、NestJS 等主流技术。该项目会持续跟进最新技术，并将其应用在项目中。希望这个项目在全栈的路上能够帮助到你。
+[foolon admin](https://llcci.github.io/foolon-admin-monorepo/) 是一个基于 [NestJS](https://nest.nodejs.cn/)、[Vue3](https://cn.vuejs.org/)、[TypeScript](https://www.tslang.cn/index.html)、[MySQL](https://dev.mysql.com/downloads/)、[Redis](https://www.redis.net.cn/#google_vignette) 编写的一款简单高效的权限管理后台。包括二次封装组件、utils、hooks、动态菜单、权限校验、按钮级别权限控制等功能。可以作为项目的启动模版，快速搭建企业级中后台产品原型。也可以作为一个示例，用于学习 vue3、ts、NestJS 等主流技术。该项目会持续跟进最新技术，并将其应用在项目中。希望这个项目在全栈的路上能够帮助到你。
 
 [文档地址](https://llcci.github.io/foolon-admin-monorepo/)
 
@@ -36,8 +36,11 @@ git clone https://gitee.com/shangchehanyu_admin/foolon-admin-monorepo.git
 ## 浏览器支持
 
 本地开发推荐使用 Chrome 最新版浏览器，不支持Chrome 80以下版本。
+
 ::: danger
+
 生产环境支持现代浏览器，不支持 IE。
+
 :::
 
 ## 后续更新计划
