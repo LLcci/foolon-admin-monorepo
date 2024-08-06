@@ -35,7 +35,7 @@ pnpm run build
 ### 修改nginx配置
 
 ::: warning 注意
-下面的nginx配置仅供参考，请按照项目实际需要修改/web/nginx.conf配置
+下面的nginx配置仅供参考，请按照项目实际需要修改nginx配置
 :::
 
 ```sh

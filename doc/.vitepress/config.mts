@@ -56,8 +56,8 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: '快速上手', link: '/quickStart/introduce' },
-      { text: '后端文档', link: '/markdown-examples' },
-      { text: '前端文档', link: '/markdown-examples' }
+      { text: '后端文档', link: '/apiDoc/index' },
+      { text: '前端文档', link: '/webDoc/index' }
     ],
     sidebar: {
       '/quickStart/': [
@@ -66,8 +66,21 @@ export default defineConfig({
           items: [
             { text: '介绍', link: '/quickStart/introduce' },
             { text: '项目配置', link: '/quickStart/config' },
+            { text: 'NPM脚本', link: '/quickStart/scripts' },
             { text: '本地运行', link: '/quickStart/development' },
             { text: '项目部署', link: '/quickStart/production' }
+          ]
+        }
+      ],
+      '/apiDoc/': [
+        {
+          text: '后端文档',
+          items: [
+            { text: '介绍', link: '/apiDoc/index' },
+            { text: '全局模块', link: '/apiDoc/global' },
+            { text: 'admin模块', link: '/apiDoc/admin' },
+            { text: 'socket', link: '/apiDoc/socket' },
+            { text: '常见问题', link: '/apiDoc/FAQ' }
           ]
         }
       ]

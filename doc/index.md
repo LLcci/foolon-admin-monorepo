@@ -14,10 +14,10 @@ hero:
       link: /quickStart/introduce
     - theme: alt
       text: 后端文档
-      link: /api-examples
+      link: /apiDoc/index
     - theme: alt
       text: 前端文档
-      link: /api-examples
+      link: /webDoc/index
 
 features:
   - icon: { src: '/NestJS.svg' }

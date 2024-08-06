@@ -46,6 +46,9 @@ git clone https://gitee.com/shangchehanyu_admin/foolon-admin-monorepo.git
 ## 后续更新计划
 
 - [ ] 支持 [RedisOM](https://redis.io/docs/latest/integrate/redisom-for-node-js/)
+- [ ] 支持队列管理
+- [ ] 支持主题配置
+- [ ] 增加字典管理
 - [ ] 增加组织结构管理
 - [ ] 增加矩阵管理
 - [ ] 增加流程引擎
