@@ -6,6 +6,11 @@
 
 ::: tip
 foolon admin 是一个 monorepo 项目，使用 pnpm 的 [Workspace](https://www.pnpm.cn/workspaces) 对多个项目管理。
+
+- `/api`目录下是后端代码
+- `/web`目录下是前端代码
+- `/doc`目录下是文档代码
+
 :::
 
 ## 基础知识
