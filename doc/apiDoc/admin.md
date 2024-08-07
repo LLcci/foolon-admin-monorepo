@@ -45,6 +45,10 @@ export class DemoController {
 
 无需进行权限校验的接口，可在`Controller`的类名或方法名上添加`@Permission()`注解`/api/src/common/decorator/permission.decorator.ts`。
 
+在类名上添加`@Permission()`注解，表示该类内所有接口无需进行权限校验。
+
+在方法名上添加`@Permission()`注解，表示该方法无需进行权限校验。
+
 ```typescript
 import { Permission } from '@/common/decorator/permission.decorator'
 

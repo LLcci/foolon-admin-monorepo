@@ -80,6 +80,7 @@ export default defineConfig({
             { text: '全局模块', link: '/apiDoc/global' },
             { text: 'admin模块', link: '/apiDoc/admin' },
             { text: 'socket', link: '/apiDoc/socket' },
+            { text: '自定义注解', link: '/apiDoc/decorator' },
             { text: '常见问题', link: '/apiDoc/FAQ' }
           ]
         }
