@@ -280,6 +280,12 @@ const tableForm = ref<
           ]
         }
       ),
+      vIf(value) {
+        if (value.menuType != 2) {
+          return true
+        }
+        return false
+      },
       importFormatter(value) {
         return value === '是' ? 1 : 0
       }
