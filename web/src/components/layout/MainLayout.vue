@@ -228,7 +228,7 @@ import { useUser } from '@/stores/useUser'
 import schemaForm from '../schemaForm/SchemaForm.vue'
 import type SchemaForm from '../schemaForm/types'
 import FormImgUpload from '@/components/formImgUpload/FormImgUpload.vue'
-import { useAvatarDelete } from '@/views/sys/api/user'
+import { useImgDelete } from '@/views/sys/api/user'
 import type { SchemaFormInstance } from '../schemaForm/types'
 import type { paths } from '@/types/Schema'
 import { omit } from 'lodash'
@@ -238,7 +238,7 @@ const title = ref(import.meta.env.VITE_APP_NAME)
 
 const userAvatar = computed(() => {
   if (useUser().userInfo.avatar) {
-    return `${import.meta.env.VITE_AVATAR_URL}/${useUser().userInfo.avatar}`
+    return `${import.meta.env.VITE_UPLOAD_URL}/${useUser().userInfo.avatar}`
   }
   return defaultAvatar
 })
@@ -338,15 +338,15 @@ const userInfoForm = ref<SchemaForm<typeof userInfoFormModel.value>>({
       },
       component: h(FormImgUpload, {
         uploadProps: {
-          action: `${import.meta.env.VITE_API_URL}/admin/sys/user/upload`,
+          action: `${import.meta.env.VITE_API_URL}/admin/sys/upload/img`,
           headers: { Authorization: `Bearer ${useUser().token}` },
-          name: 'avatarFile',
+          name: 'file',
           'on-error': (err) => {
             ElMessage.error(JSON.parse(err.message).message)
           },
           'on-handle-delete': (imageUrl) => {
             if (imageUrl) {
-              useAvatarDelete(imageUrl)
+              useImgDelete(imageUrl)
             }
           }
         }

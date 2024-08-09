@@ -82,7 +82,7 @@ const imageName = defineModel<string>({ required: false })
 
 const imageUrl = computed(() => {
   if (imageName.value) {
-    return `${import.meta.env.VITE_AVATAR_URL}/${imageName.value}`
+    return `${import.meta.env.VITE_UPLOAD_URL}/${imageName.value}`
   }
   return ''
 })

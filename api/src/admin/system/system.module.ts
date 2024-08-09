@@ -21,6 +21,7 @@ import { LogoutController } from './logout/logout.controller'
 import { LogoutService } from './logout/logout.service'
 import { OnlineController } from './online/online.controller'
 import { OnlineService } from './online/online.service'
+import { UploadController } from './upload/upload.controller'
 
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity, MenuEntity, RoleEntity])],
@@ -31,7 +32,8 @@ import { OnlineService } from './online/online.service'
     RoleController,
     PermissionController,
     LogoutController,
-    OnlineController
+    OnlineController,
+    UploadController
   ],
   providers: [
     LoginService,

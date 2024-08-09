@@ -85,7 +85,7 @@ import { ElAvatar, ElInput, ElMessage, ElOption, ElSelect, type FormItemRule } f
 import { h, ref, type VNode } from 'vue'
 import { useRoleList } from './api/role'
 import FormImgUpload from '@/components/formImgUpload/FormImgUpload.vue'
-import { useAvatarDelete } from './api/user'
+import { useImgDelete } from './api/user'
 import { useUser } from '@/stores/useUser'
 import type SchemaForm from '@/components/schemaForm/types'
 import type { SchemaFormInstance } from '@/components/schemaForm/types'
@@ -132,15 +132,15 @@ const avatarComponent: ItemComponent = {
   label: '头像',
   component: h(FormImgUpload, {
     uploadProps: {
-      action: `${import.meta.env.VITE_API_URL}/admin/sys/user/upload`,
+      action: `${import.meta.env.VITE_API_URL}/admin/sys/upload/img`,
       headers: { Authorization: `Bearer ${useUser().token}` },
-      name: 'avatarFile',
+      name: 'file',
       'on-error': (err) => {
         ElMessage.error(JSON.parse(err.message).message)
       },
       'on-handle-delete': (imageUrl) => {
         if (imageUrl) {
-          useAvatarDelete(imageUrl)
+          useImgDelete(imageUrl)
         }
       }
     }
@@ -251,7 +251,7 @@ const tableForm = ref<
       label: avatarComponent.label,
       formatter(row, column, cellValue) {
         if (cellValue) {
-          return h(ElAvatar, { size: 40, src: `${import.meta.env.VITE_AVATAR_URL}/${cellValue}` })
+          return h(ElAvatar, { size: 40, src: `${import.meta.env.VITE_UPLOAD_URL}/${cellValue}` })
         }
         return ''
       },

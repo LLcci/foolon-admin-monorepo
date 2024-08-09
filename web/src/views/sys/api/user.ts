@@ -1,5 +1,5 @@
 import { useFetch } from '@/hooks/useFetch'
 
-export const useAvatarDelete = (filename: string) => {
-  return useFetch(`/admin/sys/user/deleteAvatar?filename=${filename}`).get()
+export const useImgDelete = (filename: string) => {
+  return useFetch(`/admin/sys/upload/delete?filename=${filename}`).get()
 }

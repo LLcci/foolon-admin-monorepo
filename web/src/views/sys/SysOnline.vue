@@ -55,7 +55,7 @@ const tableForm = ref<
       label: '头像',
       formatter(row, column, cellValue) {
         if (cellValue) {
-          return h(ElAvatar, { size: 40, src: `${import.meta.env.VITE_AVATAR_URL}/${cellValue}` })
+          return h(ElAvatar, { size: 40, src: `${import.meta.env.VITE_UPLOAD_URL}/${cellValue}` })
         }
         return ''
       },
