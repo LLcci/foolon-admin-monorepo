@@ -68,7 +68,8 @@ export default defineConfig({
             { text: '项目配置', link: '/quickStart/config' },
             { text: 'NPM脚本', link: '/quickStart/scripts' },
             { text: '本地运行', link: '/quickStart/development' },
-            { text: '项目部署', link: '/quickStart/production' }
+            { text: '项目部署', link: '/quickStart/production' },
+            { text: '权限配置', link: '/quickStart/permission' }
           ]
         }
       ],
@@ -82,6 +83,18 @@ export default defineConfig({
             { text: 'socket', link: '/apiDoc/socket' },
             { text: '自定义注解', link: '/apiDoc/decorator' },
             { text: '常见问题', link: '/apiDoc/FAQ' }
+          ]
+        }
+      ],
+      '/webDoc/': [
+        {
+          text: '前端文档',
+          items: [
+            { text: '介绍', link: '/webDoc/index' },
+            { text: '路由', link: '/webDoc/route' },
+            { text: '自定义组件', link: '/webDoc/component' },
+            { text: '自定义指令', link: '/webDoc/directive' },
+            { text: '常见问题', link: '/webDoc/FAQ' }
           ]
         }
       ]
