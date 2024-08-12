@@ -217,6 +217,9 @@ importers:
       '@vueuse/core':
         specifier: ^10.7.1
         version: 10.7.1(vue@3.4.3)
+      animate.css:
+        specifier: ^4.1.1
+        version: 4.1.1
       element-plus:
         specifier: ^2.4.4
         version: 2.4.4(vue@3.4.3)
@@ -275,15 +278,9 @@ importers:
       openapi-typescript:
         specifier: ^6.7.4
         version: 6.7.4
-      postcss:
-        specifier: ^8.4.35
-        version: 8.4.35
-      postcss-px-conversion:
-        specifier: ^0.0.4
-        version: 0.0.4(postcss@8.4.35)
       unocss:
         specifier: ^0.58.0
-        version: 0.58.2(postcss@8.4.35)(vite@5.0.10)
+        version: 0.58.2(postcss@8.4.39)(vite@5.0.10)
       unplugin-auto-import:
         specifier: ^0.17.3
         version: 0.17.3(@vueuse/core@10.7.1)
@@ -3439,7 +3436,7 @@ packages:
       sirv: 2.0.4
     dev: true
 
-  /@unocss/postcss@0.58.2(postcss@8.4.35):
+  /@unocss/postcss@0.58.2(postcss@8.4.39):
     resolution: {integrity: sha512-5x6W9WxxU2NtaKJfhIKBtZs+KhvP8dOg/jG0VV+jrlwq67gMxa2LHdF1qI8kRje9L5th3Yz7Gl3TP2x/l/sbPQ==}
     engines: {node: '>=14'}
     peerDependencies:
@@ -3451,7 +3448,7 @@ packages:
       css-tree: 2.3.1
       fast-glob: 3.3.2
       magic-string: 0.30.5
-      postcss: 8.4.35
+      postcss: 8.4.39
     dev: true
 
   /@unocss/preset-attributify@0.58.2:
@@ -4236,6 +4233,10 @@ packages:
       '@algolia/requester-node-http': 4.24.0
       '@algolia/transporter': 4.24.0
     dev: true
+
+  /animate.css@4.1.1:
+    resolution: {integrity: sha512-+mRmCTv6SbCmtYJCN4faJMNFVNN5EuCTTprDTAo7YzIGji2KADmakjVA3+8mVDkZ2Bf09vayB35lSQIex2+QaQ==}
+    dev: false
 
   /ansi-colors@4.1.3:
     resolution: {integrity: sha512-/6w/C21Pm1A7aZitlI5Ni/2J6FFQN8i1Cvz3kHABAAbw93v/NlvKdVOqz7CCWz/3iv/JplRSEEZ83XION15ovw==}
@@ -6178,6 +6179,7 @@ packages:
 
   /glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
+    deprecated: Glob versions prior to v9 are no longer supported
     dependencies:
       fs.realpath: 1.0.0
       inflight: 1.0.6
@@ -6411,6 +6413,7 @@ packages:
 
   /inflight@1.0.6:
     resolution: {integrity: sha512-k92I/b08q4wvFscXCLvqfsHCrjrF7yiXsQuIVvVE7N82W3+aqpzuUdBbfhWcy/FZR3/4IgflMgKLOsvPDrGCJA==}
+    deprecated: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
     dependencies:
       once: 1.4.0
       wrappy: 1.0.2
@@ -8183,15 +8186,6 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
-  /postcss-px-conversion@0.0.4(postcss@8.4.35):
-    resolution: {integrity: sha512-9sh+tdw9akfyASUdmTlD4dNJMw6Gxs6dANMSQejDt0wDJDmfWifG5BcOz13r1M0yvF9+O4jTomN2z4jCM/20ug==}
-    engines: {node: '>=16'}
-    peerDependencies:
-      postcss: '>=8.0.0'
-    dependencies:
-      postcss: 8.4.35
-    dev: true
-
   /postcss-selector-parser@6.0.15:
     resolution: {integrity: sha512-rEYkQOMUCEMhsKbK66tbEU9QVIxbhN18YiniAwA7XQYTVBqrBy+P2p5JcdqsHgKM2zWylp8d7J6eszocfds5Sw==}
     engines: {node: '>=4'}
@@ -9573,7 +9567,7 @@ packages:
     engines: {node: '>= 10.0.0'}
     dev: true
 
-  /unocss@0.58.2(postcss@8.4.35)(vite@5.0.10):
+  /unocss@0.58.2(postcss@8.4.39)(vite@5.0.10):
     resolution: {integrity: sha512-M82hvJojUsjD98HWLhOU/SITD/9WuHhYoSrQYG6TAa7PuQKJbvxZnZP9hifVjiTSO/VN8MELcdwiuzTTa5GlKQ==}
     engines: {node: '>=14'}
     peerDependencies:
@@ -9589,7 +9583,7 @@ packages:
       '@unocss/cli': 0.58.2
       '@unocss/core': 0.58.2
       '@unocss/extractor-arbitrary-variants': 0.58.2
-      '@unocss/postcss': 0.58.2(postcss@8.4.35)
+      '@unocss/postcss': 0.58.2(postcss@8.4.39)
       '@unocss/preset-attributify': 0.58.2
       '@unocss/preset-icons': 0.58.2
       '@unocss/preset-mini': 0.58.2
