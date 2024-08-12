@@ -30,7 +30,6 @@ export default defineConfig({
   },
   presets: [
     //@ts-ignore
-    presetRemToPx(),
     presetUno(),
     presetAttributify(),
     presetIcons(),
