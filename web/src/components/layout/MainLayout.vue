@@ -146,7 +146,7 @@
         </el-header>
         <el-main>
           <div class="h-full flex">
-            <el-card class="flex-1">
+            <el-card class="flex-1 pos-relative">
               <router-view v-slot="{ Component }">
                 <keep-alive :include="useUser().userKeepAliveRoutes">
                   <component :is="Component" />
