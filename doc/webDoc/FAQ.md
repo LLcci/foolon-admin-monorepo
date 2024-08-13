@@ -10,3 +10,33 @@
 cd web
 pnpm run openapi-typescript
 ```
+
+## 自适应
+
+在 html 中使用 [UnoCSS 断点](https://unocss.nodejs.cn/config/theme#breakpoints) 进行自适应判断。
+
+默认配置在`/web/uno.config.ts`
+
+```ts
+export default defineConfig({
+  theme: {
+    breakpoints: {
+      xs: '0px',
+      sm: '768px',
+      md: '992px',
+      lg: '1200px',
+      xl: '1920px'
+    }
+  }
+})
+```
+
+在 typescript 中，引入`@/stores/useSystem`进行自适应判断。
+
+breakpoints 的值与 UnoCSS 断点一致。
+
+```ts
+import { useSystem } from '@/stores/useSystem'
+
+const breakpoints = useSystem().breakpoints
+```
