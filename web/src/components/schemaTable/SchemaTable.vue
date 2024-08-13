@@ -20,7 +20,11 @@
   </el-table>
   <el-pagination
     class="mt float-right mr mb"
-    layout="total, sizes, prev, pager, next, jumper"
+    :layout="
+      useSystem().breakpoints == 'xs'
+        ? 'total, prev, pager, next'
+        : 'total, sizes, prev, pager, next, jumper'
+    "
     :page-sizes="[10, 50, 100]"
     v-bind="props.table.pagination?.props"
     :total="pagination.total"
@@ -33,6 +37,7 @@
 import type { FormModel } from '@/types'
 import type { Pagination } from './types'
 import type SchemaTable from './types'
+import { useSystem } from '@/stores/useSystem'
 
 const props = defineProps<{ table: SchemaTable<FormModel> }>()
 

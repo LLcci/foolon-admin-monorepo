@@ -11,7 +11,7 @@
       </slot>
     </template>
   </schemaForm>
-  <div class="mt flex justify-between">
+  <div class="mt xs:block sm:flex justify-between">
     <div class="flex">
       <slot name="operationButtons">
         <el-button
@@ -87,7 +87,13 @@
     </schemaTable>
   </div>
   <div>
-    <el-dialog v-model="dialogVisible" :title="dialogTitle" width="60%" destroy-on-close>
+    <el-dialog
+      v-model="dialogVisible"
+      :fullscreen="['xs', 'sm', 'md'].includes(useSystem().breakpoints)"
+      :title="dialogTitle"
+      width="60%"
+      destroy-on-close
+    >
       <schemaForm
         v-loading="saveLoading"
         ref="editFormRef"
@@ -130,6 +136,7 @@ import type { Api } from './types'
 import { tableDelete, tableExport, tableId, tableList, tableSave } from './api'
 import { has, omit } from 'lodash'
 import { utils, writeFileXLSX, read } from 'xlsx'
+import { useSystem } from '@/stores/useSystem'
 
 const props = withDefaults(
   defineProps<{
@@ -205,7 +212,8 @@ const table = computed(() => {
       ? {
           label: '操作',
           width: 300,
-          align: 'center'
+          align: 'center',
+          fixed: useSystem().breakpoints != 'xs' ? 'right' : undefined
         }
       : undefined,
     pagination: {
@@ -242,7 +250,12 @@ const searchFormRef = ref<SchemaFormInstance>()
  */
 const searForm = computed(() => {
   const formProps: SchemaForm<FormModel> = {
-    props: { inline: true, showButtonSlot: true },
+    props: {
+      inline: useSystem().breakpoints != 'xs',
+      labelPosition: useSystem().breakpoints == 'xs' ? 'left' : 'right',
+      labelWidth: 'auto',
+      showButtonSlot: true
+    },
     formItems: {}
   }
   const rulues: FormRules<FormModel> = {}
@@ -271,6 +284,7 @@ const handleReset = () => {
   searchFormRef.value?.formRef?.resetFields()
   pagination.value.currentPage = 1
   pagination.value.pageSize = 10
+  handleSearch()
 }
 
 /**

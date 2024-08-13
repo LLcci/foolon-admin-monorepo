@@ -209,13 +209,6 @@ import { socket } from '@/sockets'
 
 const title = ref(import.meta.env.VITE_APP_NAME)
 
-useSystem().$subscribe((mutation, state) => {
-  isCollapse.value = false
-  if (['sm', 'md'].includes(state.breakpoints)) {
-    isCollapse.value = true
-  }
-})
-
 const userAvatar = computed(() => {
   if (useUser().userInfo.avatar) {
     return `${import.meta.env.VITE_UPLOAD_URL}/${useUser().userInfo.avatar}`
@@ -230,6 +223,16 @@ const isDark = useDark()
 const toggleDark = useToggle(isDark)
 
 let isCollapse = ref(false)
+
+if (['sm', 'md'].includes(useSystem().breakpoints)) {
+  isCollapse.value = true
+}
+useSystem().$subscribe((mutation, state) => {
+  isCollapse.value = false
+  if (['sm', 'md'].includes(state.breakpoints)) {
+    isCollapse.value = true
+  }
+})
 
 let activeTab = ref(route.path)
 let editableTabs = ref([

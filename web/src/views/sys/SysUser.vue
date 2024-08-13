@@ -39,7 +39,11 @@
       </el-popconfirm>
     </template>
   </schemaTableForm>
-  <el-dialog v-model="pswDialogShow" :title="`${updatePswUser}：修改密码`">
+  <el-dialog
+    v-model="pswDialogShow"
+    :fullscreen="['xs', 'sm', 'md'].includes(useSystem().breakpoints)"
+    :title="`${updatePswUser}：修改密码`"
+  >
     <schemaForm
       v-loading="pswConfirmLoading"
       ref="updatePswFormRef"
@@ -55,7 +59,11 @@
       </span>
     </template>
   </el-dialog>
-  <el-dialog v-model="infoDialogShow" :title="`${updateInfoUser}：修改信息`">
+  <el-dialog
+    v-model="infoDialogShow"
+    :fullscreen="['xs', 'sm', 'md'].includes(useSystem().breakpoints)"
+    :title="`${updateInfoUser}：修改信息`"
+  >
     <schemaForm
       v-loading="infoConfirmLoading"
       ref="updateInfoFormRef"
@@ -91,6 +99,7 @@ import type SchemaForm from '@/components/schemaForm/types'
 import type { SchemaFormInstance } from '@/components/schemaForm/types'
 import { useFetch } from '@/hooks/useFetch'
 import { omit } from 'lodash'
+import { useSystem } from '@/stores/useSystem'
 
 const api = ref<Api>({
   page: '/admin/sys/user/page',
