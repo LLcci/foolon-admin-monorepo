@@ -1,19 +1,7 @@
 <template>
   <div class="h-screen flex items-center justify-center bg-$el-bg-color-page">
-    <el-card
-      :class="{
-        'w-4xl': useSystem().orientation == 'Landscape',
-        'w-xs': useSystem().orientation == 'Portrait'
-      }"
-      shadow="always"
-    >
-      <div
-        class="flex items-center flex-col"
-        :class="{
-          'mb-10': useSystem().orientation == 'Landscape',
-          'mb-5': useSystem().orientation == 'Portrait'
-        }"
-      >
+    <el-card class="xs:w-xs sm:w-4xl" shadow="always">
+      <div class="flex items-center flex-col xs:mb-5 sm:mb-10">
         <div class="mt-4 flex items-center justify-center">
           <img class="w-10" src="/favicon.svg" alt="" />
           <span class="font-size-8 font-bold ml-2">{{ title }}</span>
@@ -21,12 +9,7 @@
         <span class="color-$el-text-color-secondary mt-2">
           {{ description }}
         </span>
-        <div
-          :class="{
-            'w-xl mt-10': useSystem().orientation == 'Landscape',
-            'w-70 mt-6': useSystem().orientation == 'Portrait'
-          }"
-        >
+        <div class="xs:w-70 sm:w-xl xs:mt-6 sm:mt-10">
           <el-tabs>
             <el-tab-pane label="密码登录">
               <el-form :model="formData" ref="formRef" :rules="rules" @keyup.enter="onSubmit">

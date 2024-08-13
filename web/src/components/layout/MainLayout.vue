@@ -5,70 +5,32 @@
       height="fit-content(height)"
       class="bg-$el-color-primary color-$el-color-white"
     >
-      <el-row align="middle" justify="space-between">
-        <el-col :span="useSystem().orientation == 'Landscape' ? 5 : 15">
-          <div
-            class="flex items-center"
-            :class="{
-              'h-10': useSystem().orientation == 'Portrait',
-              'h-15': useSystem().orientation == 'Landscape'
-            }"
-          >
-            <img
-              :class="{
-                'w-8': useSystem().orientation == 'Landscape',
-                'w-6': useSystem().orientation == 'Portrait'
-              }"
-              src="/favicon.svg"
-              alt=""
-            />
-            <span
-              class="ml-2 font-bold"
-              :class="{
-                'font-size-lg': useSystem().orientation == 'Landscape',
-                'font-size-sm': useSystem().orientation == 'Portrait'
-              }"
-              >{{ title }}</span
-            >
-            <el-button
-              v-if="useSystem().orientation == 'Landscape'"
-              type="primary"
-              size="small"
-              @click="() => (isCollapse = !isCollapse)"
-            >
+      <div class="flex justify-between">
+        <div class="flex items-center h-10 sm:h-15">
+          <img class="w-6 sm:w-8" src="/favicon.svg" alt="" />
+          <span class="ml-2 font-bold xs:font-size-sm sm:font-size-lg">{{ title }}</span>
+          <div class="xs:hidden sm:block">
+            <el-button type="primary" size="small" @click="() => (isCollapse = !isCollapse)">
               <el-icon v-if="!isCollapse" :size="20"><Fold /></el-icon>
               <el-icon v-else :size="20"><Expand /></el-icon>
             </el-button>
-            <el-button type="primary" size="small" @click="toggleDark()">
-              <el-icon v-if="isDark" :size="20"> <Sunny /></el-icon>
-              <el-icon v-else :size="20"> <Moon /></el-icon>
-            </el-button>
           </div>
-        </el-col>
-        <el-col :span="useSystem().orientation == 'Landscape' ? 5 : 9">
-          <div
-            class="flex items-center"
-            :class="{
-              'h-10': useSystem().orientation == 'Portrait',
-              'h-15': useSystem().orientation == 'Landscape'
-            }"
-          >
-            <el-avatar :size="useSystem().orientation == 'Landscape' ? 30 : 24" :src="userAvatar" />
-            <div
-              v-if="useSystem().orientation == 'Landscape'"
-              class="max-w-30 ml-2 font-size-base font-bold truncate"
-            >
+          <el-button type="primary" size="small" @click="toggleDark()">
+            <el-icon v-if="isDark" :size="20"> <Sunny /></el-icon>
+            <el-icon v-else :size="20"> <Moon /></el-icon>
+          </el-button>
+        </div>
+        <div class="flex items-center xs:h-10 sm:h-15 justify-between">
+          <div class="flex items-center">
+            <el-avatar :size="useSystem().breakpoints == 'xs' ? 24 : 30" :src="userAvatar" />
+            <div class="max-w-30 ml-2 font-size-base font-bold truncate xs:hidden sm:block">
               {{ useUser().userInfo.realname }}
             </div>
-            <el-dropdown class="ml-2" trigger="click">
-              <el-button
-                v-if="useSystem().orientation == 'Landscape'"
-                type="primary"
-                size="large"
-                :icon="Setting"
-                >设置</el-button
-              >
-              <el-button v-else type="primary" size="small"
+          </div>
+          <div class="ml-2 xs:hidden lg:block">
+            <el-dropdown trigger="click">
+              <el-button type="primary" size="large" :icon="Setting">设置</el-button>
+              <el-button type="primary" size="small"
                 ><el-icon :size="20"><Setting /></el-icon
               ></el-button>
               <template #dropdown>
@@ -78,26 +40,37 @@
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
-            <el-button
-              v-if="useSystem().orientation == 'Landscape'"
-              type="primary"
-              size="large"
-              :icon="SwitchButton"
-              @click="logout"
+          </div>
+          <div class="ml-2 xs:block lg:hidden">
+            <el-dropdown trigger="click">
+              <el-button type="primary" size="small"
+                ><el-icon :size="20"><Setting /></el-icon
+              ></el-button>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item @click="showUserInfo = true">用户信息</el-dropdown-item>
+                  <el-dropdown-item @click="showUpdatePassword = true">修改密码</el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+          </div>
+          <div class="xs:hidden lg:block">
+            <el-button type="primary" size="large" :icon="SwitchButton" @click="logout"
               >退出登录</el-button
             >
-            <el-button v-else type="primary" size="small" @click="logout"
+          </div>
+          <div class="xs:block lg:hidden">
+            <el-button type="primary" size="small" @click="logout"
               ><el-icon :size="20"><SwitchButton /></el-icon
             ></el-button>
           </div>
-        </el-col>
-      </el-row>
+        </div>
+      </div>
     </el-header>
     <el-container>
       <el-aside
-        class="border-r-1px border-r-solid border-r-$el-border-color shadow-lg"
+        class="border-r-1px border-r-solid border-r-$el-border-color shadow-lg xs:hidden sm:block"
         width="fit-content(width)"
-        v-if="useSystem().orientation == 'Landscape'"
       >
         <el-scrollbar :height="menuHeight">
           <el-menu
@@ -118,24 +91,24 @@
       </el-aside>
       <el-container>
         <el-header height="fit-content(height)">
-          <el-tabs
-            v-if="useSystem().orientation == 'Landscape'"
-            class="mt-3"
-            v-model="activeTab"
-            @edit="handleTabsEdit"
-            @tab-change="handleTabsChange"
-            closable
-          >
-            <el-tab-pane
-              v-for="(item, index) in editableTabs"
-              :key="index"
-              :label="item.label"
-              :name="item.name"
-            ></el-tab-pane>
-          </el-tabs>
+          <div class="xs:hidden sm:block">
+            <el-tabs
+              class="mt-3"
+              v-model="activeTab"
+              @edit="handleTabsEdit"
+              @tab-change="handleTabsChange"
+              closable
+            >
+              <el-tab-pane
+                v-for="(item, index) in editableTabs"
+                :key="index"
+                :label="item.label"
+                :name="item.name"
+              ></el-tab-pane>
+            </el-tabs>
+          </div>
           <div
-            v-else
-            class="border-b-1px border-b-solid border-b-$el-border-color flex items-center h-10"
+            class="border-b-1px border-b-solid border-b-$el-border-color items-center h-10 xs:flex sm:hidden"
             @click="() => (drawer = !drawer)"
           >
             <el-icon :size="20"><Menu /></el-icon>
@@ -175,7 +148,7 @@
     v-model="showUserInfo"
     title="用户信息"
     direction="rtl"
-    :size="useSystem().orientation == 'Landscape' ? '30%' : '100%'"
+    :size="useSystem().breakpoints == 'xs' ? '100%' : '30%'"
   >
     <schemaForm
       v-loading="confirmUserInfoLoading"
@@ -194,7 +167,7 @@
   </el-drawer>
   <el-dialog
     v-model="showUpdatePassword"
-    :fullscreen="useSystem().orientation == 'Portrait'"
+    :fullscreen="useSystem().breakpoints == 'xs'"
     title="修改密码"
   >
     <schemaForm
@@ -235,6 +208,13 @@ import { omit } from 'lodash'
 import { socket } from '@/sockets'
 
 const title = ref(import.meta.env.VITE_APP_NAME)
+
+useSystem().$subscribe((mutation, state) => {
+  isCollapse.value = false
+  if (['sm', 'md'].includes(state.breakpoints)) {
+    isCollapse.value = true
+  }
+})
 
 const userAvatar = computed(() => {
   if (useUser().userInfo.avatar) {
@@ -439,7 +419,7 @@ const updatePasswordForm = ref<
   props: {
     labelWidth: '100px',
     labelSuffix: '：',
-    labelPosition: useSystem().orientation == 'Landscape' ? 'left' : 'top'
+    labelPosition: useSystem().breakpoints == 'xs' ? 'top' : 'left'
   },
   formItems: {
     oldPassword: {

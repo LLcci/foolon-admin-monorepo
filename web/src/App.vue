@@ -11,10 +11,10 @@ import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 import { ref } from 'vue'
 
 const locale = ref(zhCn)
-useSystem().checkOrientationResize()
+useSystem().checkBreakpointsResize()
 
 window.onresize = () => {
-  useSystem().checkOrientationResize()
+  useSystem().checkBreakpointsResize()
 }
 </script>
 <style scoped></style>

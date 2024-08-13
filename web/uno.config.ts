@@ -9,7 +9,6 @@ import {
   transformerDirectives,
   transformerVariantGroup
 } from 'unocss'
-import presetRemToPx from '@unocss/preset-rem-to-px'
 
 export default defineConfig({
   shortcuts: [],
@@ -17,15 +16,19 @@ export default defineConfig({
     [
       'safe-area',
       {
-        'padding-bottom': 'constant(safe-area -inset-bottom)',
+        'padding-bottom': 'constant(safe-area-inset-bottom)',
         // @ts-ignore
         'padding-bottom': 'env(safe-area-inset-bottom)'
       }
     ]
   ],
   theme: {
-    colors: {
-      // ...
+    breakpoints: {
+      xs: '0px',
+      sm: '768px',
+      md: '992px',
+      lg: '1200px',
+      xl: '1920px'
     }
   },
   presets: [
