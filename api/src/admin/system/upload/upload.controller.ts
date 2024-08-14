@@ -10,9 +10,10 @@ import {
   UseInterceptors
 } from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express'
-import { ApiConsumes, ApiHeader, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiBody, ApiConsumes, ApiHeader, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { diskStorage } from 'multer'
 import { extname } from 'path'
+import { UploadDto } from './upload.dto'
 
 @ApiTags('上传文件')
 @ApiHeader({
@@ -27,6 +28,10 @@ export class UploadController {
     summary: '上传图片'
   })
   @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    description: 'Upload file',
+    type: UploadDto
+  })
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
