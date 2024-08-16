@@ -8,6 +8,7 @@ import { ElasticsearchModule } from '@/global/elasticsearch/elasticsearch.module
 import { RedisModule } from '@/global/redis/redis.module'
 import { LoggerModule } from '@/global/logger/logger.module'
 import { JWT_SECRET } from '@/common/constants/token.constants'
+import { BullModule } from '@nestjs/bullmq'
 
 @Module({
   imports: [
@@ -22,6 +23,14 @@ import { JWT_SECRET } from '@/common/constants/token.constants'
     }),
     RedisModule.forRoot({
       url: `redis://:${process.env.REDIS_PASSWORD}@${process.env.REDIS_HOST}:${process.env.REDIS_PORT}/${process.env.REDIS_DB}`
+    }),
+    BullModule.forRoot({
+      connection: {
+        host: process.env.REDIS_HOST,
+        port: Number(process.env.REDIS_PORT),
+        db: Number(process.env.REDIS_DB),
+        password: process.env.REDIS_PASSWORD
+      }
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',

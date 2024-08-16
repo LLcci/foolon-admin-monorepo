@@ -24,6 +24,6 @@ export class OnlineController {
   })
   @ApiPaginatedResponse(OnlineUserDto)
   async getOnlineUserList(@Body() onlineUserPageListDto: OnlineUserPageListDto) {
-    return await this.onlineService.getOnlineUserList(onlineUserPageListDto)
+    return await this.onlineService.getOnlineUserPage(onlineUserPageListDto)
   }
 }

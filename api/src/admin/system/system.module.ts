@@ -22,9 +22,31 @@ import { LogoutService } from './logout/logout.service'
 import { OnlineController } from './online/online.controller'
 import { OnlineService } from './online/online.service'
 import { UploadController } from './upload/upload.controller'
+import { QueuesService } from './queues/queues.service'
+import { QueuesController } from './queues/queues.controller'
+import { BullModule } from '@nestjs/bullmq'
+import { QUEUE_NAME } from '@/common/constants/queues.constants'
+import { ConfigModule, ConfigService } from '@nestjs/config'
+import { QuquesConsumer } from './queues/quques.consumer'
+import { QueueEvents } from './queues/queues.enents'
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity, MenuEntity, RoleEntity])],
+  imports: [
+    TypeOrmModule.forFeature([UserEntity, MenuEntity, RoleEntity]),
+    BullModule.registerQueueAsync({
+      name: QUEUE_NAME,
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        connection: {
+          host: configService.get<string>('REDIS_HOST'),
+          port: configService.get<number>('REDIS_PORT'),
+          password: configService.get<string>('REDIS_PASSWORD'),
+          db: configService.get<number>('REDIS_DB')
+        }
+      }),
+      inject: [ConfigService]
+    })
+  ],
   controllers: [
     UserController,
     LoginController,
@@ -33,7 +55,8 @@ import { UploadController } from './upload/upload.controller'
     PermissionController,
     LogoutController,
     OnlineController,
-    UploadController
+    UploadController,
+    QueuesController
   ],
   providers: [
     LoginService,
@@ -42,7 +65,14 @@ import { UploadController } from './upload/upload.controller'
     RoleService,
     PermissionService,
     LogoutService,
-    OnlineService
+    OnlineService,
+    QueuesService,
+    QuquesConsumer,
+    QueueEvents,
+    {
+      provide: 'QuquesConsumer',
+      useExisting: QuquesConsumer
+    }
   ]
 })
 export class SystemModule {}

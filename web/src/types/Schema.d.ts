@@ -36,13 +36,6 @@ export interface paths {
     /** id删除用户 */
     post: operations['UserController_deleteUserById']
   }
-  '/admin/sys/user/upload': {
-    /** 上传头像 */
-    post: operations['UserController_upload']
-  }
-  '/admin/sys/user/deleteAvatar': {
-    get: operations['UserController_deleteAvatar']
-  }
   '/admin/sys/login': {
     /** 登录 */
     post: operations['LoginController_login']
@@ -123,30 +116,39 @@ export interface paths {
     /** 分页在线用户列表 */
     post: operations['OnlineController_getOnlineUserList']
   }
+  '/admin/sys/upload/img': {
+    /** 上传图片 */
+    post: operations['UploadController_upload']
+  }
+  '/admin/sys/upload/delete': {
+    get: operations['UploadController_deleteAvatar']
+  }
+  '/admin/sys/queues/add': {
+    /** 添加工作 */
+    post: operations['QueuesController_addJob']
+  }
+  '/admin/sys/queues/remove': {
+    /** 移除工作 */
+    post: operations['QueuesController_removeJob']
+  }
+  '/admin/sys/queues/page': {
+    /** 分页获取工作 */
+    post: operations['QueuesController_getJobPage']
+  }
+  '/admin/sys/queues/id': {
+    /** 根据ID获取工作 */
+    get: operations['QueuesController_getJobById']
+  }
+  '/admin/sys/queues/consumerMethod': {
+    /** 获取消费者方法 */
+    get: operations['QueuesController_getConsumerMethod']
+  }
 }
 
 export type webhooks = Record<string, never>
 
 export interface components {
   schemas: {
-    UserPageListDto: {
-      /**
-       * @description 当前页码
-       * @default 1
-       */
-      currentPage?: number
-      /**
-       * @description 页大小
-       * @default 10
-       */
-      pageSize?: number
-      /** @description 用户账户,查询时非必传,新增更新时必传 */
-      username?: string
-      /** @description 用户名,查询时非必传,新增更新时必传 */
-      realname?: string
-      /** @description 状态:0-无效,1-有效 */
-      status?: number
-    }
     PageResultDto: {
       /** @description 当前页码 */
       currentPage: number
@@ -235,6 +237,24 @@ export interface components {
       phone?: string
       /** @description 角色列表 */
       roles: readonly components['schemas']['RoleEntity'][]
+      /** @description 状态:0-无效,1-有效 */
+      status?: number
+    }
+    UserPageListDto: {
+      /**
+       * @description 当前页码
+       * @default 1
+       */
+      currentPage?: number
+      /**
+       * @description 页大小
+       * @default 10
+       */
+      pageSize?: number
+      /** @description 用户账户,查询时非必传,新增更新时必传 */
+      username?: string
+      /** @description 用户名,查询时非必传,新增更新时必传 */
+      realname?: string
       /** @description 状态:0-无效,1-有效 */
       status?: number
     }
@@ -340,6 +360,44 @@ export interface components {
       img: string
       /** @description 唯一id */
       id: string
+    }
+    MenuTree: {
+      /** Format: date-time */
+      createTime?: string
+      /** Format: date-time */
+      updateTime?: string
+      createUserId?: string
+      updateUserId?: string
+      /** @description 菜单id,新增时不需要传,更新时需要传 */
+      id?: string
+      /** @description 父菜单id */
+      parentId?: string
+      /** @description 名称:类型为菜单时必填 */
+      name?: string
+      /** @description 路由页面时必填 */
+      path?: string
+      /** @description 路由页面时必填 */
+      component?: string
+      /** @description 菜单图标 */
+      icon?: string
+      /** @description 菜单类型:0-一级菜单,1-子菜单,2-权限 */
+      menuType: number
+      /** @description 类型为权限时必填 */
+      perms?: string[]
+      /** @description 排序 */
+      sort: number
+      /**
+       * @description 是否缓存:0-不缓存,1-缓存
+       * @default 1
+       */
+      keepalive?: number
+      /**
+       * @description 是否启用:0-停用,1-启用
+       * @default 1
+       */
+      status?: number
+      /** @description 子菜单数 */
+      children: components['schemas']['MenuTree'][]
     }
     MenuPageListDto: {
       /**
@@ -457,6 +515,37 @@ export interface components {
       /** @description 用户名,查询时非必传,新增更新时必传 */
       realname?: string
     }
+    UploadDto: {
+      /** Format: binary */
+      file: string
+    }
+    JobDto: {
+      /** @description 工作名称 */
+      name: string
+      /** @description 消费者方法 */
+      method: string
+      /** @description 传递参数 */
+      data: Record<string, never>
+      /** @description 工作配置 */
+      opts?: Record<string, never>
+    }
+    Job: Record<string, never>
+    JobPageDto: {
+      /**
+       * @description 当前页码
+       * @default 1
+       */
+      currentPage?: number
+      /**
+       * @description 页大小
+       * @default 10
+       */
+      pageSize?: number
+      /** @description 工作名称 */
+      name?: string
+      /** @description 工作类型 */
+      state?: string
+    }
   }
   responses: never
   parameters: never
@@ -484,10 +573,11 @@ export interface operations {
       }
     }
     responses: {
-      /** @description 分页用户列表 */
       200: {
         content: {
-          'application/json': components['schemas']['PageResultDto']
+          'application/json': components['schemas']['PageResultDto'] & {
+            records: components['schemas']['UserEntity'][]
+          }
         }
       }
     }
@@ -627,36 +717,6 @@ export interface operations {
       }
     }
   }
-  /** 上传头像 */
-  UserController_upload: {
-    parameters: {
-      header?: {
-        /** @description Bearer token */
-        Authorization?: string
-      }
-    }
-    responses: {
-      201: {
-        content: never
-      }
-    }
-  }
-  UserController_deleteAvatar: {
-    parameters: {
-      query: {
-        filename: string
-      }
-      header?: {
-        /** @description Bearer token */
-        Authorization?: string
-      }
-    }
-    responses: {
-      200: {
-        content: never
-      }
-    }
-  }
   /** 登录 */
   LoginController_login: {
     requestBody: {
@@ -698,10 +758,11 @@ export interface operations {
       }
     }
     responses: {
-      /** @description 分页菜单列表 */
       200: {
         content: {
-          'application/json': components['schemas']['PageResultDto']
+          'application/json': components['schemas']['PageResultDto'] & {
+            records: components['schemas']['MenuTree'][]
+          }
         }
       }
     }
@@ -840,10 +901,11 @@ export interface operations {
       }
     }
     responses: {
-      /** @description 分页角色列表 */
       200: {
         content: {
-          'application/json': components['schemas']['PageResultDto']
+          'application/json': components['schemas']['PageResultDto'] & {
+            records: components['schemas']['RoleEntity'][]
+          }
         }
       }
     }
@@ -1040,6 +1102,133 @@ export interface operations {
           'application/json': components['schemas']['PageResultDto'] & {
             records: components['schemas']['OnlineUserDto'][]
           }
+        }
+      }
+    }
+  }
+  /** 上传图片 */
+  UploadController_upload: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    /** @description Upload file */
+    requestBody: {
+      content: {
+        'multipart/form-data': components['schemas']['UploadDto']
+      }
+    }
+    responses: {
+      201: {
+        content: never
+      }
+    }
+  }
+  UploadController_deleteAvatar: {
+    parameters: {
+      query: {
+        filename: string
+      }
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    responses: {
+      200: {
+        content: never
+      }
+    }
+  }
+  /** 添加工作 */
+  QueuesController_addJob: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['JobDto']
+      }
+    }
+    responses: {
+      201: {
+        content: never
+      }
+    }
+  }
+  /** 移除工作 */
+  QueuesController_removeJob: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    responses: {
+      201: {
+        content: never
+      }
+    }
+  }
+  /** 分页获取工作 */
+  QueuesController_getJobPage: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['JobPageDto']
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': components['schemas']['PageResultDto'] & {
+            records: components['schemas']['Job'][]
+          }
+        }
+      }
+    }
+  }
+  /** 根据ID获取工作 */
+  QueuesController_getJobById: {
+    parameters: {
+      query: {
+        id: string
+      }
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': components['schemas']['Job']
+        }
+      }
+    }
+  }
+  /** 获取消费者方法 */
+  QueuesController_getConsumerMethod: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': string[]
         }
       }
     }

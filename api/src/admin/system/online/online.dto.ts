@@ -13,7 +13,8 @@ export class OnlineUserDto extends PickType(UserEntity, ['id', 'username', 'avat
   address: string
 }
 
-export class OnlineUserPageListDto extends IntersectionType(
-  PageRequestDto,
+export class OnlineUserListDto extends IntersectionType(
   PickType(OnlineUserDto, ['username', 'realname'])
 ) {}
+
+export class OnlineUserPageListDto extends IntersectionType(PageRequestDto, OnlineUserListDto) {}

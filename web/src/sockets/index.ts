@@ -12,3 +12,7 @@ export const socket: Socket = io(import.meta.env.VITE_WS_URL, {
 socket.on('connect_error', () => {
   ElNotification.error('服务器无法访问')
 })
+
+socket.on('message', (message) => {
+  ElNotification.info({ title: '消息', message, duration: 0 })
+})
