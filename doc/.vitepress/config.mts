@@ -82,6 +82,8 @@ export default defineConfig({
             { text: 'admin模块', link: '/apiDoc/admin' },
             { text: 'socket', link: '/apiDoc/socket' },
             { text: '自定义注解', link: '/apiDoc/decorator' },
+            { text: '队列', link: '/apiDoc/queue' },
+            { text: '定时任务', link: '/apiDoc/task' },
             { text: '常见问题', link: '/apiDoc/FAQ' }
           ]
         }
