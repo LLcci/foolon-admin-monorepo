@@ -13,6 +13,6 @@ socket.on('connect_error', () => {
   ElNotification.error('服务器无法访问')
 })
 
-socket.on('message', (message) => {
+socket.on('quequesMessage', (message) => {
   ElNotification.info({ title: '消息', message, duration: 0 })
 })

@@ -51,7 +51,6 @@ export class RoleEntity extends BaseEntity {
     default: 1,
     comment: '是否启用:0-停用,1-启用'
   })
-  @Index()
   @ApiProperty({
     required: false,
     default: 1,

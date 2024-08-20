@@ -25,6 +25,13 @@ export class QueuesService {
     return await this.queue.add(jobDto.name, jobDto.data, jobDto.opts)
   }
 
+  async addJobs(jobDtos: JobDto[]) {
+    for (const item of jobDtos) {
+      Object.assign(item.data, { method: item.method, notifier: item.notifier || undefined })
+    }
+    return await this.queue.addBulk(jobDtos)
+  }
+
   async editJob(jobDto: JobDto) {
     await this.queue.remove(jobDto.opts.jobId)
     return await this.addJob(jobDto)
@@ -35,14 +42,15 @@ export class QueuesService {
   }
 
   async removeJob(jobId: string) {
-    await this.getJobById(jobId)
     return await this.queue.remove(jobId)
   }
 
   async getJobById(jobId: string) {
-    const job = await this.queue.getJob(jobId)
-    if (!job) throw '工作未找到'
-    return job
+    return await this.queue.getJob(jobId)
+  }
+
+  async removeRepeatableByKey(key: string) {
+    return await this.queue.removeRepeatableByKey(key)
   }
 
   async getConsumerMethod() {

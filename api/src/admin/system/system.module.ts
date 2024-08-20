@@ -29,10 +29,13 @@ import { QUEUE_NAME } from '@/common/constants/queues.constants'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { QuquesConsumer } from './queues/quques.consumer'
 import { QueueEvents } from './queues/queues.enents'
+import { TaskController } from './task/task.controller'
+import { TaskService } from './task/task.service'
+import { TaskEntity } from './task/task.entity'
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserEntity, MenuEntity, RoleEntity]),
+    TypeOrmModule.forFeature([UserEntity, MenuEntity, RoleEntity, TaskEntity]),
     BullModule.registerQueueAsync({
       name: QUEUE_NAME,
       imports: [ConfigModule],
@@ -56,7 +59,8 @@ import { QueueEvents } from './queues/queues.enents'
     LogoutController,
     OnlineController,
     UploadController,
-    QueuesController
+    QueuesController,
+    TaskController
   ],
   providers: [
     LoginService,
@@ -72,7 +76,8 @@ import { QueueEvents } from './queues/queues.enents'
     {
       provide: 'QuquesConsumer',
       useExisting: QuquesConsumer
-    }
+    },
+    TaskService
   ]
 })
 export class SystemModule {}

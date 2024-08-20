@@ -2,14 +2,12 @@
 https://docs.nestjs.com/providers#services
 */
 
-import { Inject, Injectable, forwardRef } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { RoleEntity } from './role.entity'
 import { In, Like, Repository } from 'typeorm'
 import { RolePageListDto } from './role.dto'
 import { UserEntity } from '../user/user.entity'
-import { UserService } from '../user/user.service'
-import { RedisService } from '@/global/redis/redis.service'
 import { PageResultDto } from '@/common/class/response.dto'
 
 @Injectable()
@@ -18,10 +16,7 @@ export class RoleService {
     @InjectRepository(RoleEntity)
     private readonly roleRepository: Repository<RoleEntity>,
     @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>,
-    @Inject(forwardRef(() => UserService))
-    private readonly userService: UserService,
-    private readonly redisService: RedisService
+    private readonly userRepository: Repository<UserEntity>
   ) {}
 
   async getRolePageList(rolePageListDto: RolePageListDto) {

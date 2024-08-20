@@ -476,7 +476,7 @@ const handleImport = async (options: UploadRequestOptions) => {
           dataItem[propsKey] = item[key]
           if (has(props.tableForm[propsKey]?.editForm, 'importFormatter')) {
             //@ts-ignore
-            dataItem[propsKey] = props.tableForm[propsKey].form.importFormatter(item[key])
+            dataItem[propsKey] = props.tableForm[propsKey].editForm.importFormatter(item[key])
           }
         }
       }

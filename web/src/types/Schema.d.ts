@@ -143,6 +143,38 @@ export interface paths {
     /** 获取消费者方法 */
     get: operations['QueuesController_getConsumerMethod']
   }
+  '/admin/sys/task/page': {
+    /** 分页定时任务列表 */
+    post: operations['TaskController_getTaskPageList']
+  }
+  '/admin/sys/task/list': {
+    /** 定时任务列表 */
+    post: operations['TaskController_getTaskList']
+  }
+  '/admin/sys/task/save': {
+    /** 保存定时任务 */
+    post: operations['TaskController_saveTask']
+  }
+  '/admin/sys/task/import': {
+    /** 导入定时任务 */
+    post: operations['TaskController_importTask']
+  }
+  '/admin/sys/task/id': {
+    /** id查询定时任务详情 */
+    get: operations['TaskController_getTaskById']
+  }
+  '/admin/sys/task/delete': {
+    /** id删除定时任务 */
+    post: operations['TaskController_deleteTaskById']
+  }
+  '/admin/sys/task/start': {
+    /** 启动定时任务 */
+    get: operations['TaskController_startTask']
+  }
+  '/admin/sys/task/stop': {
+    /** 停止定时任务 */
+    get: operations['TaskController_stopTask']
+  }
 }
 
 export type webhooks = Record<string, never>
@@ -524,6 +556,8 @@ export interface components {
       name: string
       /** @description 消费者方法 */
       method: string
+      /** @description 通知用户 */
+      notifier?: string
       /** @description 传递参数 */
       data: Record<string, never>
       /** @description 工作配置 */
@@ -545,6 +579,54 @@ export interface components {
       name?: string
       /** @description 工作类型 */
       state?: string
+    }
+    TaskEntity: {
+      /** Format: date-time */
+      createTime?: string
+      /** Format: date-time */
+      updateTime?: string
+      createUserId?: string
+      updateUserId?: string
+      /** @description id,新增时不需要传,更新时需要传 */
+      id?: string
+      /** @description 任务名称 */
+      name: string
+      /** @description 任务描述 */
+      description?: string
+      /** @description cron表达式 */
+      cron: string
+      /** @description 任务方法 */
+      method: string
+      /** @description 传递参数 */
+      data?: string
+      /**
+       * @description 是否启用:0-停用,1-启用
+       * @default 1
+       */
+      status?: number
+    }
+    TaskPageListDto: {
+      /**
+       * @description 当前页码
+       * @default 1
+       */
+      currentPage?: number
+      /**
+       * @description 页大小
+       * @default 10
+       */
+      pageSize?: number
+      /** @description 任务名称 */
+      name: string
+      /**
+       * @description 是否启用:0-停用,1-启用
+       * @default 1
+       */
+      status?: number
+    }
+    TaskImportDto: {
+      /** @description 定时任务列表 */
+      list: components['schemas']['TaskEntity'][]
     }
   }
   responses: never
@@ -1229,6 +1311,172 @@ export interface operations {
       200: {
         content: {
           'application/json': string[]
+        }
+      }
+    }
+  }
+  /** 分页定时任务列表 */
+  TaskController_getTaskPageList: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['TaskPageListDto']
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': components['schemas']['PageResultDto'] & {
+            records: components['schemas']['TaskEntity'][]
+          }
+        }
+      }
+    }
+  }
+  /** 定时任务列表 */
+  TaskController_getTaskList: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['TaskPageListDto']
+      }
+    }
+    responses: {
+      /** @description 定时任务列表 */
+      200: {
+        content: {
+          'application/json': components['schemas']['TaskEntity'][]
+        }
+      }
+    }
+  }
+  /** 保存定时任务 */
+  TaskController_saveTask: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['TaskEntity']
+      }
+    }
+    responses: {
+      /** @description 保存定时任务 */
+      200: {
+        content: {
+          'application/json': components['schemas']['TaskEntity']
+        }
+      }
+    }
+  }
+  /** 导入定时任务 */
+  TaskController_importTask: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['TaskImportDto']
+      }
+    }
+    responses: {
+      /** @description 导入定时任务 */
+      200: {
+        content: {
+          'application/json': components['schemas']['TaskEntity'][]
+        }
+      }
+    }
+  }
+  /** id查询定时任务详情 */
+  TaskController_getTaskById: {
+    parameters: {
+      query: {
+        id: string
+      }
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    responses: {
+      /** @description id查询定时任务详情 */
+      200: {
+        content: {
+          'application/json': components['schemas']['TaskEntity']
+        }
+      }
+    }
+  }
+  /** id删除定时任务 */
+  TaskController_deleteTaskById: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    responses: {
+      /** @description id删除定时任务 */
+      200: {
+        content: {
+          'application/json': components['schemas']['DeleteResult']
+        }
+      }
+    }
+  }
+  /** 启动定时任务 */
+  TaskController_startTask: {
+    parameters: {
+      query: {
+        id: string
+      }
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    responses: {
+      /** @description 启动定时任务 */
+      200: {
+        content: {
+          'application/json': components['schemas']['TaskEntity']
+        }
+      }
+    }
+  }
+  /** 停止定时任务 */
+  TaskController_stopTask: {
+    parameters: {
+      query: {
+        id: string
+      }
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    responses: {
+      /** @description 停止定时任务 */
+      200: {
+        content: {
+          'application/json': components['schemas']['TaskEntity']
         }
       }
     }

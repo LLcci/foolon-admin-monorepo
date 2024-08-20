@@ -64,7 +64,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayInit, OnGate
     )
   }
 
-  async sendMessage(socket: Socket, message: string) {
-    return socket.send(message)
+  async sendQuequesMessage(socket: Socket, message: string) {
+    return socket.emit('quequesMessage', message)
   }
 }

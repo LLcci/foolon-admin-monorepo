@@ -26,7 +26,7 @@ export class QueueEvents extends QueueEventsHost {
       if (!userSocket) {
         return this.logger.log(`job:completed:notifier ${job.returnvalue.notifier} is not online`)
       }
-      this.socketGateway.sendMessage(userSocket, job.returnvalue.message)
+      this.socketGateway.sendQuequesMessage(userSocket, job.returnvalue.message)
     }
   }
 }
