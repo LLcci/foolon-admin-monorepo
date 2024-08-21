@@ -73,12 +73,7 @@
         width="fit-content(width)"
       >
         <el-scrollbar :height="menuHeight">
-          <el-menu
-            :default-active="route.path"
-            :collapse="isCollapse"
-            router
-            @select="handleSelect"
-          >
+          <el-menu :default-active="route.path" :collapse="isCollapse" @select="handleSelect">
             <el-menu-item index="/index">
               <el-icon><House /></el-icon>
               <template #title>
@@ -119,7 +114,7 @@
         </el-header>
         <el-main>
           <div class="h-full flex">
-            <el-card class="flex-1 pos-relative">
+            <el-card ref="viewBody" id="main" class="flex-1 pos-relative">
               <router-view v-slot="{ Component }">
                 <keep-alive :include="useUser().userKeepAliveRoutes">
                   <component :is="Component" />
@@ -133,7 +128,7 @@
   </el-container>
   <!-- 移动端菜单 -->
   <el-drawer v-model="drawer" title="菜单" direction="ltr" size="100%">
-    <el-menu :default-active="route.path" @select="() => (drawer = false)" router>
+    <el-menu :default-active="route.path" @select="handleAppSelect">
       <el-menu-item index="/index">
         <el-icon><House /></el-icon>
         <template #title>
@@ -191,7 +186,7 @@ import { RouterView, useRoute, useRouter } from 'vue-router'
 import { useDark, useToggle } from '@vueuse/core'
 import { SwitchButton, Setting } from '@element-plus/icons-vue'
 import defaultAvatar from '@/assets/defaultAvatar.svg'
-import { computed, h, ref } from 'vue'
+import { computed, h, ref, watch } from 'vue'
 import { ElInput, ElMessage, ElMessageBox, type TabPaneName } from 'element-plus'
 import { useSystem } from '@/stores/useSystem'
 import { useElementSize } from '@vueuse/core'
@@ -280,14 +275,30 @@ const menuHeight = computed(() => {
 })
 
 const handleSelect = (index: string) => {
-  if (!editableTabs.value.find((item) => item.name === index)) {
-    const route = router.getRoutes().find((item) => item.path === index)
-    editableTabs.value.push({
-      name: index,
-      label: route?.meta?.title
-    })
+  const menu = useUser().userMenus.find((item) => item.path === index)
+  if (menu?.menuType == 3) {
+    if (menu.openType == 1) {
+      window.open(menu.path)
+    } else {
+      index = `/${encodeURIComponent(index)}`
+    }
+  }
+  const route = router.getRoutes().find((item) => item.path === index)
+  if (route) {
+    if (!editableTabs.value.find((item) => item.name === index)) {
+      editableTabs.value.push({
+        name: index,
+        label: route?.meta?.title
+      })
+    }
+    router.push(index)
   }
   activeTab.value = index
+}
+
+const handleAppSelect = (index: string) => {
+  drawer.value = false
+  handleSelect(index)
 }
 
 const handleTabsChange = (name: TabPaneName) => {

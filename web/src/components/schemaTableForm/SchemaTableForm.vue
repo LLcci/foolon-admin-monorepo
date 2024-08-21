@@ -348,8 +348,8 @@ const handleDialog = async (title: '新增' | '编辑' | '查看', form: FormMod
   if (title === '编辑' || title === '查看') {
     const { data, error } = await tableId(props.api.id, form.id)
     if (error.value) return
-    emits('onTableIdSuccess')
     Object.assign(editFormModel.value, data.value)
+    emits('onTableIdSuccess')
   }
   dialogVisible.value = true
 }

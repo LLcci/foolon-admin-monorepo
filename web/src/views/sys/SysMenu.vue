@@ -4,6 +4,7 @@
     v-model:edit-form-model="editFormModel"
     @on-table-save-success="menuListFetch"
     @on-table-delete-success="menuListFetch"
+    @on-table-id-success="onMenuIdFetch"
     :table-props="tableProps"
     :table-form="tableForm"
     :api="api"
@@ -78,14 +79,27 @@ const tableForm = ref<
               case 0:
                 editFormModel.value.parentId = undefined
                 editFormModel.value.perms = undefined
+                editFormModel.value.openType = undefined
                 break
               case 1:
                 editFormModel.value.perms = undefined
+                editFormModel.value.openType = undefined
                 break
               case 2:
                 editFormModel.value.icon = undefined
                 editFormModel.value.path = undefined
                 editFormModel.value.component = undefined
+                editFormModel.value.openType = undefined
+                break
+              case 3:
+                editFormModel.value.icon = undefined
+                editFormModel.value.component = undefined
+                editFormModel.value.path = undefined
+                editFormModel.value.perms = undefined
+                if (tableForm.value.parentId?.editForm?.rule) {
+                  tableForm.value.parentId.editForm.rule[0].required = false
+                }
+                editFormModel.value.openType = 1
                 break
               default:
                 break
@@ -96,7 +110,8 @@ const tableForm = ref<
           default: () => [
             h(ElRadio, { label: 0 }, { default: () => '一级菜单' }),
             h(ElRadio, { label: 1 }, { default: () => '子菜单' }),
-            h(ElRadio, { label: 2 }, { default: () => '权限' })
+            h(ElRadio, { label: 2 }, { default: () => '权限' }),
+            h(ElRadio, { label: 3 }, { default: () => '外部链接' })
           ]
         }
       ),
@@ -167,6 +182,34 @@ const tableForm = ref<
       }
     }
   },
+  openType: {
+    editForm: {
+      rule: [{ required: true, message: '请选择打开方式' }],
+      props: {
+        label: '打开方式'
+      },
+      component: h(
+        ElRadioGroup,
+        {
+          placeholder: '请选择打开方式',
+          clearable: true,
+          filterable: true
+        },
+        {
+          default: () => [
+            h(ElRadio, { label: 0 }, { default: () => '内部打开' }),
+            h(ElRadio, { label: 1 }, { default: () => '外部打开' })
+          ]
+        }
+      ),
+      vIf(value) {
+        if (value.menuType == 3) {
+          return true
+        }
+        return false
+      }
+    }
+  },
   component: {
     table: {
       label: '组件',
@@ -198,7 +241,7 @@ const tableForm = ref<
         }
       ),
       vIf(value) {
-        if (value.menuType == 2) {
+        if ([2, 3].includes(value.menuType)) {
           return false
         }
         return true
@@ -217,7 +260,7 @@ const tableForm = ref<
       component: h(ElInput, {
         placeholder: '请输入路径',
         onInput(value) {
-          if (value && !value.startsWith('/')) {
+          if ([0, 1].includes(editFormModel.value.menuType) && value && !value.startsWith('/')) {
             editFormModel.value.path = '/' + value
           }
         }
@@ -281,7 +324,7 @@ const tableForm = ref<
         }
       ),
       vIf(value) {
-        if (value.menuType != 2) {
+        if (![2, 3].includes(value.menuType)) {
           return true
         }
         return false
@@ -388,5 +431,14 @@ onInterfaceRoutesResponse(() => {
     }
   )
 })
+
+const onMenuIdFetch = () => {
+  console.log(editFormModel.value.menuType)
+  if (editFormModel.value.menuType == 3) {
+    if (tableForm.value.parentId?.editForm?.rule) {
+      tableForm.value.parentId.editForm.rule[0].required = false
+    }
+  }
+}
 </script>
 <style scoped></style>

@@ -59,15 +59,16 @@ export class MenuEntity extends BaseEntity {
   @Column({
     name: 'menu_type',
     type: 'tinyint',
-    comment: '菜单类型:0-一级菜单,1-子菜单,2-权限'
+    comment: '菜单类型:0-一级菜单,1-子菜单,2-权限,3外部链接'
   })
   @ApiProperty({
     required: true,
-    description: '菜单类型:0-一级菜单,1-子菜单,2-权限'
+    description: '菜单类型:0-一级菜单,1-子菜单,2-权限,3-外部链接',
+    enum: [0, 1, 2, 3]
   })
   @IsNotEmpty({ message: '菜单类型不能为空' })
-  @IsEnum([0, 1, 2], { message: '菜单类型必须是为 0 | 1 | 2' })
-  menuType: 0 | 1 | 2
+  @IsEnum([0, 1, 2, 3], { message: '菜单类型必须是为 0 | 1 | 2 | 3' })
+  menuType: 0 | 1 | 2 | 3
 
   @Column('simple-array', { name: 'perms', nullable: true, comment: '权限' })
   @ApiProperty({
@@ -77,6 +78,16 @@ export class MenuEntity extends BaseEntity {
   @IsArray({ message: '权限必须是数组' })
   @IsOptional()
   perms: string[]
+
+  @Column({ name: 'open_type', type: 'tinyint', comment: '0-内部打开,1-外部打开', nullable: true })
+  @ApiProperty({
+    required: false,
+    description: '打开方式:0-内部打开,1-外部打开，类型为外部链接时必填',
+    enum: [0, 1]
+  })
+  @IsEnum([0, 1], { message: '打开方式必须是为 0 | 1 ' })
+  @IsOptional()
+  openType: 0 | 1
 
   @Index()
   @Column({ name: 'sort', comment: '排序', default: 1 })

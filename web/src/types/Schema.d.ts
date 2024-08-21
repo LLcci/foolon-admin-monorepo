@@ -208,10 +208,18 @@ export interface components {
       component?: string
       /** @description 菜单图标 */
       icon?: string
-      /** @description 菜单类型:0-一级菜单,1-子菜单,2-权限 */
-      menuType: number
+      /**
+       * @description 菜单类型:0-一级菜单,1-子菜单,2-权限,3-外部链接
+       * @enum {number}
+       */
+      menuType: 0 | 1 | 2 | 3
       /** @description 类型为权限时必填 */
       perms?: string[]
+      /**
+       * @description 打开方式:0-内部打开,1-外部打开，类型为外部链接时必填
+       * @enum {number}
+       */
+      openType?: 0 | 1
       /** @description 排序 */
       sort: number
       /**
@@ -412,10 +420,18 @@ export interface components {
       component?: string
       /** @description 菜单图标 */
       icon?: string
-      /** @description 菜单类型:0-一级菜单,1-子菜单,2-权限 */
-      menuType: number
+      /**
+       * @description 菜单类型:0-一级菜单,1-子菜单,2-权限,3-外部链接
+       * @enum {number}
+       */
+      menuType: 0 | 1 | 2 | 3
       /** @description 类型为权限时必填 */
       perms?: string[]
+      /**
+       * @description 打开方式:0-内部打开,1-外部打开，类型为外部链接时必填
+       * @enum {number}
+       */
+      openType?: 0 | 1
       /** @description 排序 */
       sort: number
       /**
@@ -589,8 +605,8 @@ export interface components {
       updateUserId?: string
       /** @description id,新增时不需要传,更新时需要传 */
       id?: string
-      /** @description 任务名称 */
-      name: string
+      /** @description 查询时非必传,新增更新时需要传 */
+      name?: string
       /** @description 任务描述 */
       description?: string
       /** @description cron表达式 */
@@ -598,7 +614,7 @@ export interface components {
       /** @description 任务方法 */
       method: string
       /** @description 传递参数 */
-      data?: string
+      data?: Record<string, never>
       /**
        * @description 是否启用:0-停用,1-启用
        * @default 1
@@ -616,8 +632,8 @@ export interface components {
        * @default 10
        */
       pageSize?: number
-      /** @description 任务名称 */
-      name: string
+      /** @description 查询时非必传,新增更新时需要传 */
+      name?: string
       /**
        * @description 是否启用:0-停用,1-启用
        * @default 1

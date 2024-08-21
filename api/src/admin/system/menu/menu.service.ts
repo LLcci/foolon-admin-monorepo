@@ -62,6 +62,7 @@ export class MenuService {
         'menuType',
         'perms',
         'sort',
+        'openType',
         'keepalive',
         'status',
         'roles'

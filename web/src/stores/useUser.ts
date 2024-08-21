@@ -87,6 +87,7 @@ export const useUser = defineStore(
         userInfo.value = data.value
         data.value.roles.forEach((item) => {
           userMenus.value = item.menus.filter((item) => item.menuType != 2)
+          const module = import.meta.glob('/src/views/**/*.vue')
           item.menus.forEach((item) => {
             if (item.perms?.length) {
               // 权限
@@ -94,7 +95,6 @@ export const useUser = defineStore(
             }
             if (item.menuType != 2 && item.path && item.component) {
               // 子菜单
-              const module = import.meta.glob('/src/views/**/*.vue')
               const route: RouteRecordRaw = {
                 path: item.path,
                 name: item.path,
@@ -109,6 +109,17 @@ export const useUser = defineStore(
                 const componentName = item.component?.split('.')[0].split('/').at(-1)
                 if (componentName) userKeepAliveRoutes.value.push(componentName)
               }
+            }
+            if (item.menuType == 3 && item.path && item.openType == 0) {
+              const route: RouteRecordRaw = {
+                path: `/${encodeURIComponent(item.path)}`,
+                name: item.name,
+                component: module[`/src/views/iframe/IframeView.vue`],
+                meta: {
+                  title: item.name
+                }
+              }
+              userRoutes.value.push(route)
             }
           })
         })
@@ -138,7 +149,10 @@ export const useUser = defineStore(
       list?.forEach((item) => {
         const tree: UserMenuTreeType = {
           id: item.id as string,
-          index: item.path,
+          index:
+            item.openType == 0 && item.menuType == 3
+              ? `/${encodeURIComponent(item.path as string)}`
+              : item.path,
           name: item.name as string,
           icon: item.icon ?? undefined,
           children: []
