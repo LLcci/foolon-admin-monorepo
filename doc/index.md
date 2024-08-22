@@ -31,7 +31,7 @@ features:
     title: Socket.IO
     details: 使用 Socket.IO 进行双向且低延迟的通信
   - icon: { src: '/TypeORM.png', width: 100 }
-    link: https://typeorm.biunav.com/
+    link: https://www.typeorm.org/
     linkText: 了解更多
     title: TypeORM
     details: 使用 TypeORM 作为 ORM 框架

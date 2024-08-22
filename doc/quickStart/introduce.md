@@ -22,7 +22,7 @@ foolon admin 是一个 monorepo 项目，使用 pnpm 的 [Workspace](https://www
 - [MySQL](https://dev.mysql.com/downloads/)
 - [Redis](https://www.redis.net.cn/#google_vignette)
 - [TypeScript](https://www.tslang.cn/index.html)
-- [TypeORM](https://typeorm.biunav.com/)
+- [TypeORM](https://www.typeorm.org/)
 - [UnoCSS](https://unocss.dev/)
 - [Socket.IO](https://socket.nodejs.cn/)
 

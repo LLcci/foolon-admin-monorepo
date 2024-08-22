@@ -6,7 +6,7 @@
 
 [NestJS](https://nest.nodejs.cn/) 是一个用于构建高效、可扩展的 Node.js 服务器端应用的框架。
 
-[TypeORM](https://typeorm.biunav.com/) 是一个 ORM 框架，它可以运行在 NodeJS、Browser、Cordova、PhoneGap、Ionic、React Native、Expo 和 Electron 平台上，可以与 TypeScript 和 JavaScript (ES5,ES6,ES7,ES8)一起使用。
+[TypeORM](https://www.typeorm.org/) 是一个 ORM 框架，它可以运行在 NodeJS、Browser、Cordova、PhoneGap、Ionic、React Native、Expo 和 Electron 平台上，可以与 TypeScript 和 JavaScript (ES5,ES6,ES7,ES8)一起使用。
 
 [Socket.IO](https://socket.nodejs.cn/) 适用于每个平台的双向且低延迟的通信。
 
