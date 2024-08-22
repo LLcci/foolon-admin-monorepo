@@ -52,7 +52,7 @@ git clone https://gitee.com/shangchehanyu_admin/foolon-admin-monorepo.git
 - [x] 支持队列管理
 - [x] 支持定时任务
 - [x] 支持逻辑删除
-- [ ] 支持主题配置
+- [x] 支持主题配置
 - [ ] 增加字典管理
 - [ ] 增加组织结构管理
 - [ ] 增加数据权限

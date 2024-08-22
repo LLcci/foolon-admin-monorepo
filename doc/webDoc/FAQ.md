@@ -40,3 +40,7 @@ import { useSystem } from '@/stores/useSystem'
 
 const breakpoints = useSystem().breakpoints
 ```
+
+## 主题配置
+
+foolon admin 使用 Element Plus 组件库，主题配置可参考[自定义主题](https://element-plus.org/zh-CN/guide/theming.html)自行配置，框架不再进行二次封装。
