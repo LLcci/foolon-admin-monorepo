@@ -20,3 +20,11 @@ foolon admin 中的配置在`/api/src/app.module.ts`
 ```typescript:line-numbers=35
 synchronize: process.env.NODE_ENV == 'production' ? false : true
 ```
+
+## 逻辑删除(软删除)
+
+foolon admin 中默认使用物理删除(硬删除)，但在`/api/src/common/entity/base.entity.ts`中提供了支持逻辑删除(软删除)的属性`deleteTime`。
+
+该属性使用了 TypeORM 提供的 [DeleteDateColumn](https://www.typeorm.org/entities#%E7%89%B9%E6%AE%8A%E5%88%97) 注解，提供逻辑删除(软删除)的功能。
+
+具体使用可参考 TypeORM 的 [数据仓库 API ](https://www.typeorm.org/repository-api)中`softDelete`、`restore`，以及`softRemove `、`recover`方法
