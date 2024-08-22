@@ -311,6 +311,15 @@ const tableForm = ref<
       component: realnameComponent.component
     }
   },
+  password: {
+    editForm: {
+      rule: passwordComponent.rule,
+      props: {
+        label: passwordComponent.label
+      },
+      component: passwordComponent.component
+    }
+  },
   roleIds: {
     editForm: {
       props: {
