@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Column, CreateDateColumn, Index, UpdateDateColumn } from 'typeorm'
+import { Column, CreateDateColumn, DeleteDateColumn, Index, UpdateDateColumn } from 'typeorm'
 
 export class BaseEntity {
   @Index()
@@ -25,4 +25,9 @@ export class BaseEntity {
   })
   @ApiProperty({ required: false, readOnly: true })
   updateUserId: string
+
+  @Index()
+  @DeleteDateColumn({ name: 'delete_time', comment: '删除时间', nullable: true })
+  @ApiProperty({ required: false, readOnly: true })
+  deleteTime: Date
 }
