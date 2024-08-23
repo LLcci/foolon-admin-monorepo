@@ -175,6 +175,30 @@ export interface paths {
     /** 停止定时任务 */
     get: operations['TaskController_stopTask']
   }
+  '/admin/sys/dictType/page': {
+    /** 分页字典类型列表 */
+    post: operations['DictTypeController_getDictTypePageList']
+  }
+  '/admin/sys/dictType/list': {
+    /** 字典类型列表 */
+    post: operations['DictTypeController_getDictTypeList']
+  }
+  '/admin/sys/dictType/save': {
+    /** 保存字典类型 */
+    post: operations['DictTypeController_saveDictType']
+  }
+  '/admin/sys/dictType/import': {
+    /** 导入字典类型 */
+    post: operations['DictTypeController_importDictType']
+  }
+  '/admin/sys/dictType/id': {
+    /** id查询字典类型 */
+    get: operations['DictTypeController_getDictTypeById']
+  }
+  '/admin/sys/dictType/delete': {
+    /** id删除字典类型 */
+    post: operations['DictTypeController_deleteDictTypeById']
+  }
 }
 
 export type webhooks = Record<string, never>
@@ -190,14 +214,21 @@ export interface components {
       total: number
     }
     MenuEntity: {
+      /** @description id,新增时不需要传,更新时需要传 */
+      id?: string
+      /**
+       * @description 是否启用:0-停用,1-启用
+       * @default 1
+       */
+      status?: number
       /** Format: date-time */
       createTime?: string
       /** Format: date-time */
       updateTime?: string
       createUserId?: string
       updateUserId?: string
-      /** @description 菜单id,新增时不需要传,更新时需要传 */
-      id?: string
+      /** Format: date-time */
+      deleteTime?: string
       /** @description 父菜单id */
       parentId?: string
       /** @description 名称:类型为菜单时必填 */
@@ -227,42 +258,48 @@ export interface components {
        * @default 1
        */
       keepalive?: number
+    }
+    RoleEntity: {
+      /** @description id,新增时不需要传,更新时需要传 */
+      id?: string
       /**
        * @description 是否启用:0-停用,1-启用
        * @default 1
        */
       status?: number
-    }
-    RoleEntity: {
       /** Format: date-time */
       createTime?: string
       /** Format: date-time */
       updateTime?: string
       createUserId?: string
       updateUserId?: string
-      /** @description 角色id,新增时不需要传,更新时需要传 */
-      id?: string
+      /** Format: date-time */
+      deleteTime?: string
       /** @description 角色名称,查询时非必传,新增更新时必传 */
       name?: string
+      /** @description 角色编码,查询时非必传,新增更新时必传 */
+      code?: string
       /** @description 角色描述 */
       description?: string
       /** @description 菜单列表 */
       menus: readonly components['schemas']['MenuEntity'][]
+    }
+    UserEntity: {
+      /** @description id,新增时不需要传,更新时需要传 */
+      id?: string
       /**
        * @description 是否启用:0-停用,1-启用
        * @default 1
        */
       status?: number
-    }
-    UserEntity: {
       /** Format: date-time */
       createTime?: string
       /** Format: date-time */
       updateTime?: string
       createUserId?: string
       updateUserId?: string
-      /** @description 用户id,新增时不需要传,更新时必传 */
-      id?: string
+      /** Format: date-time */
+      deleteTime?: string
       /** @description 用户账户,查询时非必传,新增更新时必传 */
       username?: string
       /** @description 密码 */
@@ -277,8 +314,6 @@ export interface components {
       phone?: string
       /** @description 角色列表 */
       roles: readonly components['schemas']['RoleEntity'][]
-      /** @description 状态:0-无效,1-有效 */
-      status?: number
     }
     UserPageListDto: {
       /**
@@ -291,20 +326,30 @@ export interface components {
        * @default 10
        */
       pageSize?: number
+      /**
+       * @description 是否启用:0-停用,1-启用
+       * @default 1
+       */
+      status?: number
       /** @description 用户账户,查询时非必传,新增更新时必传 */
       username?: string
       /** @description 用户名,查询时非必传,新增更新时必传 */
       realname?: string
-      /** @description 状态:0-无效,1-有效 */
-      status?: number
     }
     UserCreateDto: {
+      /**
+       * @description 是否启用:0-停用,1-启用
+       * @default 1
+       */
+      status?: number
       /** Format: date-time */
       createTime?: string
       /** Format: date-time */
       updateTime?: string
       createUserId?: string
       updateUserId?: string
+      /** Format: date-time */
+      deleteTime?: string
       /** @description 用户账户,查询时非必传,新增更新时必传 */
       username?: string
       /** @description 密码 */
@@ -317,20 +362,25 @@ export interface components {
       email?: string
       /** @description 手机号 */
       phone?: string
-      /** @description 状态:0-无效,1-有效 */
-      status?: number
       /** @description 角色ids */
       roleIds?: string[]
     }
     UserUpdateDto: {
+      /** @description id,新增时不需要传,更新时需要传 */
+      id?: string
+      /**
+       * @description 是否启用:0-停用,1-启用
+       * @default 1
+       */
+      status?: number
       /** Format: date-time */
       createTime?: string
       /** Format: date-time */
       updateTime?: string
       createUserId?: string
       updateUserId?: string
-      /** @description 用户id,新增时不需要传,更新时必传 */
-      id?: string
+      /** Format: date-time */
+      deleteTime?: string
       /** @description 用户名,查询时非必传,新增更新时必传 */
       realname?: string
       /** @description 头像 */
@@ -339,8 +389,6 @@ export interface components {
       email?: string
       /** @description 手机号 */
       phone?: string
-      /** @description 状态:0-无效,1-有效 */
-      status?: number
       /** @description 角色ids */
       roleIds?: string[]
     }
@@ -357,14 +405,21 @@ export interface components {
       list: components['schemas']['UserCreateDto'][]
     }
     UserSelectDto: {
+      /** @description id,新增时不需要传,更新时需要传 */
+      id?: string
+      /**
+       * @description 是否启用:0-停用,1-启用
+       * @default 1
+       */
+      status?: number
       /** Format: date-time */
       createTime?: string
       /** Format: date-time */
       updateTime?: string
       createUserId?: string
       updateUserId?: string
-      /** @description 用户id,新增时不需要传,更新时必传 */
-      id?: string
+      /** Format: date-time */
+      deleteTime?: string
       /** @description 用户账户,查询时非必传,新增更新时必传 */
       username?: string
       /** @description 用户名,查询时非必传,新增更新时必传 */
@@ -375,8 +430,6 @@ export interface components {
       email?: string
       /** @description 手机号 */
       phone?: string
-      /** @description 状态:0-无效,1-有效 */
-      status?: number
       /** @description 角色ids */
       roleIds?: string[]
     }
@@ -402,14 +455,21 @@ export interface components {
       id: string
     }
     MenuTree: {
+      /** @description id,新增时不需要传,更新时需要传 */
+      id?: string
+      /**
+       * @description 是否启用:0-停用,1-启用
+       * @default 1
+       */
+      status?: number
       /** Format: date-time */
       createTime?: string
       /** Format: date-time */
       updateTime?: string
       createUserId?: string
       updateUserId?: string
-      /** @description 菜单id,新增时不需要传,更新时需要传 */
-      id?: string
+      /** Format: date-time */
+      deleteTime?: string
       /** @description 父菜单id */
       parentId?: string
       /** @description 名称:类型为菜单时必填 */
@@ -439,11 +499,6 @@ export interface components {
        * @default 1
        */
       keepalive?: number
-      /**
-       * @description 是否启用:0-停用,1-启用
-       * @default 1
-       */
-      status?: number
       /** @description 子菜单数 */
       children: components['schemas']['MenuTree'][]
     }
@@ -458,13 +513,13 @@ export interface components {
        * @default 10
        */
       pageSize?: number
-      /** @description 名称:类型为菜单时必填 */
-      name?: string
       /**
        * @description 是否启用:0-停用,1-启用
        * @default 1
        */
       status?: number
+      /** @description 名称:类型为菜单时必填 */
+      name?: string
     }
     MenuSaveDto: {
       /** @description 菜单列表 */
@@ -481,32 +536,36 @@ export interface components {
        * @default 10
        */
       pageSize?: number
-      /** @description 角色名称,查询时非必传,新增更新时必传 */
-      name?: string
       /**
        * @description 是否启用:0-停用,1-启用
        * @default 1
        */
       status?: number
+      /** @description 角色名称,查询时非必传,新增更新时必传 */
+      name?: string
     }
     RoleSaveDto: {
+      /** @description id,新增时不需要传,更新时需要传 */
+      id?: string
+      /**
+       * @description 是否启用:0-停用,1-启用
+       * @default 1
+       */
+      status?: number
       /** Format: date-time */
       createTime?: string
       /** Format: date-time */
       updateTime?: string
       createUserId?: string
       updateUserId?: string
-      /** @description 角色id,新增时不需要传,更新时需要传 */
-      id?: string
+      /** Format: date-time */
+      deleteTime?: string
       /** @description 角色名称,查询时非必传,新增更新时必传 */
       name?: string
+      /** @description 角色编码,查询时非必传,新增更新时必传 */
+      code?: string
       /** @description 角色描述 */
       description?: string
-      /**
-       * @description 是否启用:0-停用,1-启用
-       * @default 1
-       */
-      status?: number
       /** @description 菜单ID列表 */
       menuIds?: string[]
     }
@@ -534,7 +593,7 @@ export interface components {
       confirmPassword: string
     }
     OnlineUserDto: {
-      /** @description 用户id,新增时不需要传,更新时必传 */
+      /** @description id,新增时不需要传,更新时需要传 */
       id?: string
       /** @description 用户账户,查询时非必传,新增更新时必传 */
       username?: string
@@ -597,14 +656,21 @@ export interface components {
       state?: string
     }
     TaskEntity: {
+      /** @description id,新增时不需要传,更新时需要传 */
+      id?: string
+      /**
+       * @description 是否启用:0-停用,1-启用
+       * @default 1
+       */
+      status?: number
       /** Format: date-time */
       createTime?: string
       /** Format: date-time */
       updateTime?: string
       createUserId?: string
       updateUserId?: string
-      /** @description id,新增时不需要传,更新时需要传 */
-      id?: string
+      /** Format: date-time */
+      deleteTime?: string
       /** @description 查询时非必传,新增更新时需要传 */
       name?: string
       /** @description 任务描述 */
@@ -615,11 +681,6 @@ export interface components {
       method: string
       /** @description 传递参数 */
       data?: Record<string, never>
-      /**
-       * @description 是否启用:0-停用,1-启用
-       * @default 1
-       */
-      status?: number
     }
     TaskPageListDto: {
       /**
@@ -632,17 +693,65 @@ export interface components {
        * @default 10
        */
       pageSize?: number
-      /** @description 查询时非必传,新增更新时需要传 */
-      name?: string
       /**
        * @description 是否启用:0-停用,1-启用
        * @default 1
        */
       status?: number
+      /** @description 查询时非必传,新增更新时需要传 */
+      name?: string
     }
     TaskImportDto: {
       /** @description 定时任务列表 */
       list: components['schemas']['TaskEntity'][]
+    }
+    DictTypeEntity: {
+      /** @description id,新增时不需要传,更新时需要传 */
+      id?: string
+      /**
+       * @description 是否启用:0-停用,1-启用
+       * @default 1
+       */
+      status?: number
+      /** Format: date-time */
+      createTime?: string
+      /** Format: date-time */
+      updateTime?: string
+      createUserId?: string
+      updateUserId?: string
+      /** Format: date-time */
+      deleteTime?: string
+      /** @description 字典类型名称 */
+      name: string
+      /** @description 字典类型编码 */
+      code: string
+      /** @description 字典类型描述 */
+      description?: string
+    }
+    DictTypePageListDto: {
+      /**
+       * @description 当前页码
+       * @default 1
+       */
+      currentPage?: number
+      /**
+       * @description 页大小
+       * @default 10
+       */
+      pageSize?: number
+      /**
+       * @description 是否启用:0-停用,1-启用
+       * @default 1
+       */
+      status?: number
+      /** @description 字典类型名称 */
+      name?: string
+      /** @description 字典类型编码 */
+      code?: string
+    }
+    DictTypeImportDto: {
+      /** @description 字典类型列表 */
+      list: components['schemas']['DictTypeEntity'][]
     }
   }
   responses: never
@@ -1493,6 +1602,132 @@ export interface operations {
       200: {
         content: {
           'application/json': components['schemas']['TaskEntity']
+        }
+      }
+    }
+  }
+  /** 分页字典类型列表 */
+  DictTypeController_getDictTypePageList: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['DictTypePageListDto']
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': components['schemas']['PageResultDto'] & {
+            records: components['schemas']['DictTypeEntity'][]
+          }
+        }
+      }
+    }
+  }
+  /** 字典类型列表 */
+  DictTypeController_getDictTypeList: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['DictTypePageListDto']
+      }
+    }
+    responses: {
+      /** @description 字典类型列表 */
+      200: {
+        content: {
+          'application/json': components['schemas']['DictTypeEntity'][]
+        }
+      }
+    }
+  }
+  /** 保存字典类型 */
+  DictTypeController_saveDictType: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['DictTypeEntity']
+      }
+    }
+    responses: {
+      /** @description 保存字典类型 */
+      200: {
+        content: {
+          'application/json': components['schemas']['DictTypeEntity']
+        }
+      }
+    }
+  }
+  /** 导入字典类型 */
+  DictTypeController_importDictType: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['DictTypeImportDto']
+      }
+    }
+    responses: {
+      /** @description 导入字典类型 */
+      200: {
+        content: {
+          'application/json': components['schemas']['DictTypeEntity'][]
+        }
+      }
+    }
+  }
+  /** id查询字典类型 */
+  DictTypeController_getDictTypeById: {
+    parameters: {
+      query: {
+        id: string
+      }
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    responses: {
+      /** @description id查询字典类型 */
+      200: {
+        content: {
+          'application/json': components['schemas']['DictTypeEntity']
+        }
+      }
+    }
+  }
+  /** id删除字典类型 */
+  DictTypeController_deleteDictTypeById: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    responses: {
+      /** @description id删除字典类型 */
+      200: {
+        content: {
+          'application/json': components['schemas']['DeleteResult']
         }
       }
     }

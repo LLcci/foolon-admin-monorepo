@@ -23,6 +23,7 @@ export class RoleService {
     const [roles, total] = await this.roleRepository.findAndCount({
       where: {
         name: rolePageListDto.name ? Like(`%${rolePageListDto.name}%`) : undefined,
+        code: rolePageListDto.code ? Like(`%${rolePageListDto.code}%`) : undefined,
         status: rolePageListDto.status
       },
       relations: ['menus'],
@@ -42,6 +43,7 @@ export class RoleService {
     return await this.roleRepository.find({
       where: {
         name: rolePageListDto.name ? Like(`%${rolePageListDto.name}%`) : undefined,
+        code: rolePageListDto.code ? Like(`%${rolePageListDto.code}%`) : undefined,
         status: rolePageListDto.status
       },
       relations: ['menus'],
@@ -59,7 +61,7 @@ export class RoleService {
 
   async getRoleById(id: string) {
     return await this.roleRepository.findOne({
-      select: ['id', 'name', 'description', 'status'],
+      select: ['id', 'name', 'code', 'description', 'status'],
       where: { id },
       relations: ['menus']
     })
