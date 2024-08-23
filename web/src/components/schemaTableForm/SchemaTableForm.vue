@@ -462,6 +462,7 @@ const handleExportTemplate = async () => {
   writeFileXLSX(workbook, `导入模板.xlsx`)
 }
 
+const importDataModel = defineModel<Record<string, any>>('importDataModel', { required: false })
 const handleImport = async (options: UploadRequestOptions) => {
   const ab = await options.file.arrayBuffer()
   const wb = read(ab)
@@ -475,15 +476,18 @@ const handleImport = async (options: UploadRequestOptions) => {
         if (key == props.tableForm[propsKey]?.editForm?.props?.label) {
           dataItem[propsKey] = item[key]
           if (has(props.tableForm[propsKey]?.editForm, 'importFormatter')) {
-            //@ts-ignore
-            dataItem[propsKey] = props.tableForm[propsKey].editForm.importFormatter(item[key])
+            dataItem[propsKey] = props.tableForm[propsKey]!.editForm!.importFormatter!(item[key])
           }
         }
       }
     }
     importData.push(dataItem)
   }
-  const { execute } = tableSave(props.api.import, { list: importData })
+  importDataModel.value = {
+    ...importDataModel.value,
+    list: importData
+  }
+  const { execute } = tableSave(props.api.import, importDataModel.value)
   return execute(true).then(() => {
     ElMessage.success('导入成功')
     tableListFetch()

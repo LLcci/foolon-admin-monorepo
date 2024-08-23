@@ -2,7 +2,6 @@ import { BaseEntity } from '@/common/entity/base.entity'
 import { ApiProperty } from '@nestjs/swagger'
 import {
   IsEmail,
-  IsEnum,
   IsNotEmpty,
   IsOptional,
   IsPhoneNumber,
@@ -11,22 +10,13 @@ import {
   ValidateIf,
   isNotEmpty
 } from 'class-validator'
-import { Column, Entity, Index, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, Index, JoinTable, ManyToMany } from 'typeorm'
 import { RoleEntity } from '../role/role.entity'
 
 @Entity('sys_user')
 export class UserEntity extends BaseEntity {
-  @PrimaryGeneratedColumn('uuid')
-  @ApiProperty({
-    required: false,
-    description: '用户id,新增时不需要传,更新时必传'
-  })
-  @IsNotEmpty({ message: '用户id不能为空' })
-  @IsString({ message: '用户id必须是字符串' })
-  id: string
-
-  @Index()
-  @Column({ unique: true, comment: '用户账户' })
+  @Index({ unique: true })
+  @Column({ comment: '用户账户' })
   @ApiProperty({
     required: false,
     description: '用户账户,查询时非必传,新增更新时必传'
@@ -113,11 +103,4 @@ export class UserEntity extends BaseEntity {
   @ManyToMany(() => RoleEntity, (role) => role.users)
   @JoinTable()
   roles: RoleEntity[]
-
-  @Index()
-  @Column({ comment: '状态:0-无效,1-有效', default: 1, type: 'tinyint' })
-  @ApiProperty({ required: false, description: '状态:0-无效,1-有效' })
-  @IsEnum([0, 1], { message: '状态:0-无效,1-有效' })
-  @IsOptional()
-  status: 0 | 1
 }

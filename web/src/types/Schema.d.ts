@@ -199,6 +199,30 @@ export interface paths {
     /** id删除字典类型 */
     post: operations['DictTypeController_deleteDictTypeById']
   }
+  '/admin/sys/dictData/page': {
+    /** 分页字典数据列表 */
+    post: operations['DictDataController_getDictDataPageList']
+  }
+  '/admin/sys/dictData/list': {
+    /** 字典数据列表 */
+    post: operations['DictDataController_getDictDataList']
+  }
+  '/admin/sys/dictData/save': {
+    /** 保存字典数据 */
+    post: operations['DictDataController_saveDictData']
+  }
+  '/admin/sys/dictData/import': {
+    /** 导入字典数据 */
+    post: operations['DictDataController_importDictData']
+  }
+  '/admin/sys/dictData/id': {
+    /** id查询字典数据 */
+    get: operations['DictDataController_getDictDataById']
+  }
+  '/admin/sys/dictData/delete': {
+    /** id删除字典数据 */
+    post: operations['DictDataController_deleteDictDataById']
+  }
 }
 
 export type webhooks = Record<string, never>
@@ -543,6 +567,8 @@ export interface components {
       status?: number
       /** @description 角色名称,查询时非必传,新增更新时必传 */
       name?: string
+      /** @description 角色编码,查询时非必传,新增更新时必传 */
+      code?: string
     }
     RoleSaveDto: {
       /** @description id,新增时不需要传,更新时需要传 */
@@ -752,6 +778,97 @@ export interface components {
     DictTypeImportDto: {
       /** @description 字典类型列表 */
       list: components['schemas']['DictTypeEntity'][]
+    }
+    DictDataEntity: {
+      /** @description id,新增时不需要传,更新时需要传 */
+      id?: string
+      /**
+       * @description 是否启用:0-停用,1-启用
+       * @default 1
+       */
+      status?: number
+      /** Format: date-time */
+      createTime?: string
+      /** Format: date-time */
+      updateTime?: string
+      createUserId?: string
+      updateUserId?: string
+      /** Format: date-time */
+      deleteTime?: string
+      /** @description 字典标签 */
+      label: string
+      /** @description 字典值 */
+      value: string
+      /** @description 字典描述 */
+      description: string
+      /** @description 排序 */
+      sort: number
+      /**
+       * @description 是否默认
+       * @default false
+       */
+      default: boolean
+    }
+    DictDataPageListDto: {
+      /**
+       * @description 当前页码
+       * @default 1
+       */
+      currentPage?: number
+      /**
+       * @description 页大小
+       * @default 10
+       */
+      pageSize?: number
+      /**
+       * @description 是否启用:0-停用,1-启用
+       * @default 1
+       */
+      status?: number
+      /** @description 字典类型ID */
+      typeId: string
+      /** @description 字典标签 */
+      label?: string
+      /** @description 字典值 */
+      value?: string
+    }
+    DictDataSaveDto: {
+      /** @description id,新增时不需要传,更新时需要传 */
+      id?: string
+      /**
+       * @description 是否启用:0-停用,1-启用
+       * @default 1
+       */
+      status?: number
+      /** Format: date-time */
+      createTime?: string
+      /** Format: date-time */
+      updateTime?: string
+      createUserId?: string
+      updateUserId?: string
+      /** Format: date-time */
+      deleteTime?: string
+      /** @description 字典标签 */
+      label: string
+      /** @description 字典值 */
+      value: string
+      /** @description 字典描述 */
+      description: string
+      /** @description 排序 */
+      sort: number
+      /**
+       * @description 是否默认
+       * @default false
+       */
+      default: boolean
+      /** @description 字典类型ID */
+      typeId: string
+    }
+    DictDataImportDto: {
+      /** @description 字典类型ID */
+      typeId: string
+      /** @description 字典类型列表 */
+      list: components['schemas']['DictDataEntity'][]
     }
   }
   responses: never
@@ -1725,6 +1842,132 @@ export interface operations {
     }
     responses: {
       /** @description id删除字典类型 */
+      200: {
+        content: {
+          'application/json': components['schemas']['DeleteResult']
+        }
+      }
+    }
+  }
+  /** 分页字典数据列表 */
+  DictDataController_getDictDataPageList: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['DictDataPageListDto']
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': components['schemas']['PageResultDto'] & {
+            records: components['schemas']['DictDataEntity'][]
+          }
+        }
+      }
+    }
+  }
+  /** 字典数据列表 */
+  DictDataController_getDictDataList: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['DictDataPageListDto']
+      }
+    }
+    responses: {
+      /** @description 字典数据列表 */
+      200: {
+        content: {
+          'application/json': components['schemas']['DictDataEntity'][]
+        }
+      }
+    }
+  }
+  /** 保存字典数据 */
+  DictDataController_saveDictData: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['DictDataSaveDto']
+      }
+    }
+    responses: {
+      /** @description 保存字典数据 */
+      200: {
+        content: {
+          'application/json': components['schemas']['DictDataEntity']
+        }
+      }
+    }
+  }
+  /** 导入字典数据 */
+  DictDataController_importDictData: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['DictDataImportDto']
+      }
+    }
+    responses: {
+      /** @description 导入字典数据 */
+      200: {
+        content: {
+          'application/json': components['schemas']['DictDataEntity'][]
+        }
+      }
+    }
+  }
+  /** id查询字典数据 */
+  DictDataController_getDictDataById: {
+    parameters: {
+      query: {
+        id: string
+      }
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    responses: {
+      /** @description id查询字典数据 */
+      200: {
+        content: {
+          'application/json': components['schemas']['DictDataEntity']
+        }
+      }
+    }
+  }
+  /** id删除字典数据 */
+  DictDataController_deleteDictDataById: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    responses: {
+      /** @description id删除字典数据 */
       200: {
         content: {
           'application/json': components['schemas']['DeleteResult']

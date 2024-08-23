@@ -3,7 +3,7 @@ import { RoleEntity } from './role.entity'
 import { PageRequestDto } from '@/common/class/response.dto'
 import { ArrayNotEmpty, IsArray, IsOptional } from 'class-validator'
 
-export class RoleListDto extends PickType(RoleEntity, ['name', 'status']) {}
+export class RoleListDto extends PickType(RoleEntity, ['name', 'code', 'status']) {}
 
 export class RolePageListDto extends IntersectionType(PageRequestDto, RoleListDto) {}
 

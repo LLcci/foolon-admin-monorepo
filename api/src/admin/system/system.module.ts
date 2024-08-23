@@ -32,10 +32,23 @@ import { QueueEvents } from './queues/queues.enents'
 import { TaskController } from './task/task.controller'
 import { TaskService } from './task/task.service'
 import { TaskEntity } from './task/task.entity'
+import { DictTypeEntity } from './dict/dict.type.entity'
+import { DictDataEntity } from './dict/dict.data.entity'
+import { DictTypeController } from './dict/dict.type.controller'
+import { DictTypeService } from './dict/dict.type.service'
+import { DictDataController } from './dict/dict.data.controller'
+import { DictDataService } from './dict/dict.data.service'
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserEntity, MenuEntity, RoleEntity, TaskEntity]),
+    TypeOrmModule.forFeature([
+      UserEntity,
+      MenuEntity,
+      RoleEntity,
+      TaskEntity,
+      DictTypeEntity,
+      DictDataEntity
+    ]),
     BullModule.registerQueueAsync({
       name: QUEUE_NAME,
       imports: [ConfigModule],
@@ -60,7 +73,9 @@ import { TaskEntity } from './task/task.entity'
     OnlineController,
     UploadController,
     QueuesController,
-    TaskController
+    TaskController,
+    DictTypeController,
+    DictDataController
   ],
   providers: [
     LoginService,
@@ -77,7 +92,9 @@ import { TaskEntity } from './task/task.entity'
       provide: 'QuquesConsumer',
       useExisting: QuquesConsumer
     },
-    TaskService
+    TaskService,
+    DictTypeService,
+    DictDataService
   ]
 })
 export class SystemModule {}
