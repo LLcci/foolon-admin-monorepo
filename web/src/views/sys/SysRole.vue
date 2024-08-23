@@ -16,7 +16,7 @@ import { ElInput, ElOption, ElSelect } from 'element-plus'
 import { h, ref } from 'vue'
 import { useMenuList } from './api'
 import { useMenuTree } from './hooks/useMenuTree'
-import FormTree from '@/components/formTree/FormTree.vue'
+import FormTreeOpr from '@/components/formTree/FormTreeOpr.vue'
 
 const api = ref<Api>({
   page: '/admin/sys/role/page',
@@ -64,6 +64,25 @@ const tableForm = ref<
         label: '名称'
       },
       component: h(ElInput, { placeholder: '请输入名称' })
+    }
+  },
+  code: {
+    table: {
+      label: '编码',
+      align: 'center'
+    },
+    editForm: {
+      rule: [{ required: true, message: '请输入编码' }],
+      props: {
+        label: '编码'
+      },
+      component: h(ElInput, { placeholder: '请输入编码' })
+    },
+    searchForm: {
+      props: {
+        label: '编码'
+      },
+      component: h(ElInput, { placeholder: '请输入编码' })
     }
   },
   description: {
@@ -135,12 +154,13 @@ const tableForm = ref<
 const { data: menuList, onFetchResponse: onMenuListResponse } = useMenuList()
 onMenuListResponse(() => {
   const options = useMenuTree(menuList.value)
-  tableForm.value.menuIds!.editForm!.component = h(FormTree, {
-    data: options,
-    defaultExpandAll: true,
-    nodeKey: 'value',
-    showCheckbox: true,
-    checkStrictly: true
+  tableForm.value.menuIds!.editForm!.component = h(FormTreeOpr, {
+    allNodes: menuList.value!.map((item) => item.id) as string[],
+    treeProps: {
+      data: options,
+      checkStrictly: true,
+      defaultExpandAll: true
+    }
   })
 })
 </script>
