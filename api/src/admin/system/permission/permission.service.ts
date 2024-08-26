@@ -29,12 +29,12 @@ export class PermissionService {
     if (!user) {
       throw '用户不存在'
     }
-    if (user.status == 0) {
+    if (user.status == '0') {
       throw '用户已被禁用'
     }
-    user.roles = user.roles.filter((role) => role.status == 1)
+    user.roles = user.roles.filter((role) => role.status == '1')
     user.roles.forEach((role) => {
-      role.menus = role.menus.filter((menu) => menu.status == 1)
+      role.menus = role.menus.filter((menu) => menu.status == '1')
       role.menus = role.menus.sort((a, b) => a.sort - b.sort)
     })
     const permission = await this.userService.getUserPermissions(user.id)

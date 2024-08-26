@@ -17,6 +17,7 @@ import { h, ref } from 'vue'
 import { useMenuList } from './api'
 import { useMenuTree } from './hooks/useMenuTree'
 import FormTreeOpr from '@/components/formTree/FormTreeOpr.vue'
+import { useDictSchema } from '@/hooks/useDict'
 
 const api = ref<Api>({
   page: '/admin/sys/role/page',
@@ -35,7 +36,7 @@ const searchFormModel = ref<
 const editFormModel = ref<
   paths['/admin/sys/role/save']['post']['requestBody']['content']['application/json']
 >({
-  status: 1
+  status: '1'
 })
 
 const tableProps = ref<SchemaTableFormInstance['$props']['tableProps']>({
@@ -103,52 +104,11 @@ const tableForm = ref<
         label: '权限'
       }
     }
-  },
-  status: {
-    table: {
-      label: '状态',
-      formatter(row, column, cellValue) {
-        return cellValue === 1 ? '启用' : '停用'
-      },
-      exportFormatter(value) {
-        return value === 1 ? '启用' : '停用'
-      }
-    },
-    editForm: {
-      rule: [{ required: true, message: '请选择状态' }],
-      props: {
-        label: '状态'
-      },
-      component: h(
-        ElSelect,
-        { placeholder: '请选择状态' },
-        {
-          default: () => [
-            h(ElOption, { value: 1, label: '启用' }),
-            h(ElOption, { value: 0, label: '停用' })
-          ]
-        }
-      ),
-      importFormatter(value) {
-        return value === '启用' ? 1 : 0
-      }
-    },
-    searchForm: {
-      props: {
-        label: '状态'
-      },
-      component: h(
-        ElSelect,
-        { placeholder: '请选择状态' },
-        {
-          default: () => [
-            h(ElOption, { value: 1, label: '启用' }),
-            h(ElOption, { value: 0, label: '停用' })
-          ]
-        }
-      )
-    }
   }
+})
+
+useDictSchema('status', { setDefault: true }).then((res) => {
+  tableForm.value.status = res
 })
 
 const { data: menuList, onFetchResponse: onMenuListResponse } = useMenuList()

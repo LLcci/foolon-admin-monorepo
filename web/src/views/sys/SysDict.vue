@@ -58,6 +58,7 @@ import type {
   SchemaTableForm,
   SchemaTableFormInstance
 } from '@/components/schemaTableForm/types'
+import { useDictSchema } from '@/hooks/useDict'
 import type { paths } from '@/types/Schema'
 import { Setting } from '@element-plus/icons-vue'
 import {
@@ -158,52 +159,12 @@ const tableForm = ref<
       },
       component: h(ElInput, { placeholder: '请输入描述', type: 'textarea' })
     }
-  },
-  status: {
-    table: {
-      label: '状态',
-      formatter(row, column, cellValue) {
-        return cellValue === 1 ? '启用' : '停用'
-      },
-      exportFormatter(value) {
-        return value === 1 ? '启用' : '停用'
-      }
-    },
-    editForm: {
-      rule: [{ required: true, message: '请选择状态' }],
-      props: {
-        label: '状态'
-      },
-      component: h(
-        ElSelect,
-        { placeholder: '请选择状态' },
-        {
-          default: () => [
-            h(ElOption, { value: 1, label: '启用' }),
-            h(ElOption, { value: 0, label: '停用' })
-          ]
-        }
-      ),
-      importFormatter(value) {
-        return value === '启用' ? 1 : 0
-      }
-    },
-    searchForm: {
-      props: {
-        label: '状态'
-      },
-      component: h(
-        ElSelect,
-        { placeholder: '请选择状态' },
-        {
-          default: () => [
-            h(ElOption, { value: 1, label: '启用' }),
-            h(ElOption, { value: 0, label: '停用' })
-          ]
-        }
-      )
-    }
   }
+})
+
+useDictSchema('status', { setDefault: true }).then((res) => {
+  tableForm.value.status = res
+  settingTableForm.value.status = res
 })
 
 const showSetting = ref(false)
@@ -212,7 +173,8 @@ const settingType = ref<
   paths['/admin/sys/dictType/id']['get']['responses']['200']['content']['application/json']
 >({
   name: '',
-  code: ''
+  code: '',
+  data: []
 })
 
 const handleSetting = (
@@ -343,51 +305,6 @@ const settingTableForm = ref<
       importFormatter(value) {
         return value === '是' ? true : false
       }
-    }
-  },
-  status: {
-    table: {
-      label: '状态',
-      formatter(row, column, cellValue) {
-        return cellValue === 1 ? '启用' : '停用'
-      },
-      exportFormatter(value) {
-        return value === 1 ? '启用' : '停用'
-      }
-    },
-    editForm: {
-      rule: [{ required: true, message: '请选择状态' }],
-      props: {
-        label: '状态'
-      },
-      component: h(
-        ElSelect,
-        { placeholder: '请选择状态' },
-        {
-          default: () => [
-            h(ElOption, { value: 1, label: '启用' }),
-            h(ElOption, { value: 0, label: '停用' })
-          ]
-        }
-      ),
-      importFormatter(value) {
-        return value === '启用' ? 1 : 0
-      }
-    },
-    searchForm: {
-      props: {
-        label: '状态'
-      },
-      component: h(
-        ElSelect,
-        { placeholder: '请选择状态' },
-        {
-          default: () => [
-            h(ElOption, { value: 1, label: '启用' }),
-            h(ElOption, { value: 0, label: '停用' })
-          ]
-        }
-      )
     }
   }
 })

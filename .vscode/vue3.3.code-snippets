@@ -4,7 +4,6 @@
     "prefix": "Vue3.3+",
     "body": [
       "<template>",
-      "\t<div>test</div>",
       "</template>\n",
       "<script setup lang='ts'>",
       "</script>\n",

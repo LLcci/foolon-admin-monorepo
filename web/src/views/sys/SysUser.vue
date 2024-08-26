@@ -100,6 +100,8 @@ import type { SchemaFormInstance } from '@/components/schemaForm/types'
 import { useFetch } from '@/hooks/useFetch'
 import { omit } from 'lodash'
 import { useSystem } from '@/stores/useSystem'
+import DictSelectVue from '@/components/dictSelect/DictSelect.vue'
+import { useDictSchema } from '@/hooks/useDict'
 
 const api = ref<Api>({
   page: '/admin/sys/user/page',
@@ -122,7 +124,7 @@ const editFormModel = ref<
     id?: string
   }
 >({
-  status: 1,
+  status: '1',
   password: ''
 })
 
@@ -238,16 +240,7 @@ const phoneComponent: ItemComponent = {
 const statusComponent: ItemComponent = {
   label: '状态',
   rule: [{ required: true, message: '请选择状态' }],
-  component: h(
-    ElSelect,
-    { placeholder: '请选择状态' },
-    {
-      default: () => [
-        h(ElOption, { value: 1, label: '启用' }),
-        h(ElOption, { value: 0, label: '停用' })
-      ]
-    }
-  )
+  component: h(DictSelectVue, { code: 'status' })
 }
 
 const tableForm = ref<
@@ -353,35 +346,10 @@ const tableForm = ref<
       },
       component: phoneComponent.component
     }
-  },
-  status: {
-    table: {
-      label: statusComponent.label,
-      align: 'center',
-      formatter(row, column, cellValue) {
-        return cellValue === 1 ? '启用' : '停用'
-      },
-      exportFormatter(value) {
-        return value === 1 ? '启用' : '停用'
-      }
-    },
-    editForm: {
-      rule: statusComponent.rule,
-      props: {
-        label: statusComponent.label
-      },
-      component: statusComponent.component,
-      importFormatter(value) {
-        return value === '启用' ? 1 : 0
-      }
-    },
-    searchForm: {
-      props: {
-        label: statusComponent.label
-      },
-      component: statusComponent.component
-    }
   }
+})
+useDictSchema('status', { setDefault: true }).then((res) => {
+  tableForm.value.status = res
 })
 
 const pswDialogShow = ref(false)

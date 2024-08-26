@@ -1,4 +1,4 @@
-import { ApiProperty, IntersectionType, PickType } from '@nestjs/swagger'
+import { ApiProperty, IntersectionType, OmitType, PickType } from '@nestjs/swagger'
 import { DictTypeEntity } from './dict.type.entity'
 import { PageRequestDto } from '@/common/class/response.dto'
 import { ArrayNotEmpty, IsArray, IsOptional, IsString } from 'class-validator'
@@ -30,3 +30,5 @@ export class DictTypeImportDto {
   @ArrayNotEmpty({ message: '字典类型列表不能为空' })
   list: DictTypeEntity[]
 }
+
+export class SaveDictTypeDto extends OmitType(DictTypeEntity, ['data']) {}

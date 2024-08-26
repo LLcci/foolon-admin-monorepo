@@ -5,7 +5,7 @@ https://docs.nestjs.com/controllers#controllers
 import { Body, Controller, Get, Post, Query } from '@nestjs/common'
 import { ApiHeader, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { DictTypeService } from './dict.type.service'
-import { DictTypeImportDto, DictTypePageListDto } from './dict.type.dto'
+import { DictTypeImportDto, DictTypePageListDto, SaveDictTypeDto } from './dict.type.dto'
 import { DictTypeEntity } from './dict.type.entity'
 import { DeleteResult } from 'typeorm'
 import { User } from '@/common/decorator/user.decorator'
@@ -52,7 +52,7 @@ export class DictTypeController {
     description: '保存字典类型',
     type: DictTypeEntity
   })
-  async saveDictType(@Body() dictType: DictTypeEntity, @User() user: { id: string }) {
+  async saveDictType(@Body() dictType: SaveDictTypeDto, @User() user: { id: string }) {
     if (!dictType.id) {
       dictType.createUserId = user.id
     }
@@ -102,5 +102,17 @@ export class DictTypeController {
   })
   async deleteDictTypeById(@Body('id') id: string[]) {
     return await this.dictTypeService.deleteDictTypeById(id)
+  }
+
+  @Get('code')
+  @ApiOperation({
+    summary: '根据字典类型编码查询字典类型和数据'
+  })
+  @ApiOkResponse({
+    description: '根据字典类型编码查询字典类型和数据',
+    type: DictTypeEntity
+  })
+  async getDictTypeByCodeWithData(@Query('code') code: string) {
+    return await this.dictTypeService.getDictTypeByCodeWithData(code)
   }
 }

@@ -21,7 +21,7 @@ export class BaseEntity {
   id: string
 
   @Column({
-    type: 'tinyint',
+    type: 'char',
     default: 1,
     comment: '是否启用:0-停用,1-启用'
   })
@@ -32,9 +32,9 @@ export class BaseEntity {
     description: '是否启用:0-停用,1-启用'
   })
   @IsNotEmpty({ message: '是否启用不能为空' })
-  @IsEnum([0, 1], { message: '是否启用必须是为 0 | 1 ' })
+  @IsEnum(['0', '1'], { message: '是否启用必须是为 0 | 1 ' })
   @IsOptional()
-  status: 0 | 1
+  status: '0' | '1'
 
   @Index()
   @CreateDateColumn({ name: 'create_time', comment: '创建时间' })

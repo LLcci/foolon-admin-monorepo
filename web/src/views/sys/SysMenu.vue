@@ -30,6 +30,7 @@ import { h, ref, resolveComponent } from 'vue'
 import { useInterfaceRoutes, useMenuList } from './api'
 import { useComponents } from '@/hooks/useVite'
 import { useMenuTree } from './hooks/useMenuTree'
+import { useDictSchema } from '@/hooks/useDict'
 const { components } = useComponents()
 
 const api = ref<Api>({
@@ -51,7 +52,7 @@ const editFormModel = ref<
 >({
   menuType: 0,
   keepalive: 1,
-  status: 1,
+  status: '1',
   sort: 0
 })
 
@@ -334,52 +335,6 @@ const tableForm = ref<
       }
     }
   },
-  status: {
-    table: {
-      label: '状态',
-      align: 'center',
-      formatter(row, column, cellValue) {
-        return cellValue === 1 ? '启用' : '停用'
-      },
-      exportFormatter(value) {
-        return value === 1 ? '启用' : '停用'
-      }
-    },
-    editForm: {
-      rule: [{ required: true, message: '请选择状态' }],
-      props: {
-        label: '状态'
-      },
-      component: h(
-        ElSelect,
-        { placeholder: '请选择状态' },
-        {
-          default: () => [
-            h(ElOption, { value: 1, label: '启用' }),
-            h(ElOption, { value: 0, label: '停用' })
-          ]
-        }
-      ),
-      importFormatter(value) {
-        return value === '启用' ? 1 : 0
-      }
-    },
-    searchForm: {
-      props: {
-        label: '状态'
-      },
-      component: h(
-        ElSelect,
-        { placeholder: '请选择状态' },
-        {
-          default: () => [
-            h(ElOption, { value: 1, label: '启用' }),
-            h(ElOption, { value: 0, label: '停用' })
-          ]
-        }
-      )
-    }
-  },
   sort: {
     table: {
       label: '排序',
@@ -393,6 +348,10 @@ const tableForm = ref<
       component: h(ElInputNumber, { placeholder: '排序' })
     }
   }
+})
+
+useDictSchema('status', { setDefault: true }).then((res) => {
+  tableForm.value.status = res
 })
 
 const {
@@ -433,7 +392,6 @@ onInterfaceRoutesResponse(() => {
 })
 
 const onMenuIdFetch = () => {
-  console.log(editFormModel.value.menuType)
   if (editFormModel.value.menuType == 3) {
     if (tableForm.value.parentId?.editForm?.rule) {
       tableForm.value.parentId.editForm.rule[0].required = false

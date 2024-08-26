@@ -199,6 +199,10 @@ export interface paths {
     /** id删除字典类型 */
     post: operations['DictTypeController_deleteDictTypeById']
   }
+  '/admin/sys/dictType/code': {
+    /** 根据字典类型编码查询字典类型和数据 */
+    get: operations['DictTypeController_getDictTypeByCodeWithData']
+  }
   '/admin/sys/dictData/page': {
     /** 分页字典数据列表 */
     post: operations['DictDataController_getDictDataPageList']
@@ -244,7 +248,7 @@ export interface components {
        * @description 是否启用:0-停用,1-启用
        * @default 1
        */
-      status?: number
+      status?: string
       /** Format: date-time */
       createTime?: string
       /** Format: date-time */
@@ -290,7 +294,7 @@ export interface components {
        * @description 是否启用:0-停用,1-启用
        * @default 1
        */
-      status?: number
+      status?: string
       /** Format: date-time */
       createTime?: string
       /** Format: date-time */
@@ -315,7 +319,7 @@ export interface components {
        * @description 是否启用:0-停用,1-启用
        * @default 1
        */
-      status?: number
+      status?: string
       /** Format: date-time */
       createTime?: string
       /** Format: date-time */
@@ -354,7 +358,7 @@ export interface components {
        * @description 是否启用:0-停用,1-启用
        * @default 1
        */
-      status?: number
+      status?: string
       /** @description 用户账户,查询时非必传,新增更新时必传 */
       username?: string
       /** @description 用户名,查询时非必传,新增更新时必传 */
@@ -365,7 +369,7 @@ export interface components {
        * @description 是否启用:0-停用,1-启用
        * @default 1
        */
-      status?: number
+      status?: string
       /** Format: date-time */
       createTime?: string
       /** Format: date-time */
@@ -396,7 +400,7 @@ export interface components {
        * @description 是否启用:0-停用,1-启用
        * @default 1
        */
-      status?: number
+      status?: string
       /** Format: date-time */
       createTime?: string
       /** Format: date-time */
@@ -435,7 +439,7 @@ export interface components {
        * @description 是否启用:0-停用,1-启用
        * @default 1
        */
-      status?: number
+      status?: string
       /** Format: date-time */
       createTime?: string
       /** Format: date-time */
@@ -485,7 +489,7 @@ export interface components {
        * @description 是否启用:0-停用,1-启用
        * @default 1
        */
-      status?: number
+      status?: string
       /** Format: date-time */
       createTime?: string
       /** Format: date-time */
@@ -541,7 +545,7 @@ export interface components {
        * @description 是否启用:0-停用,1-启用
        * @default 1
        */
-      status?: number
+      status?: string
       /** @description 名称:类型为菜单时必填 */
       name?: string
     }
@@ -564,7 +568,7 @@ export interface components {
        * @description 是否启用:0-停用,1-启用
        * @default 1
        */
-      status?: number
+      status?: string
       /** @description 角色名称,查询时非必传,新增更新时必传 */
       name?: string
       /** @description 角色编码,查询时非必传,新增更新时必传 */
@@ -577,7 +581,7 @@ export interface components {
        * @description 是否启用:0-停用,1-启用
        * @default 1
        */
-      status?: number
+      status?: string
       /** Format: date-time */
       createTime?: string
       /** Format: date-time */
@@ -688,7 +692,7 @@ export interface components {
        * @description 是否启用:0-停用,1-启用
        * @default 1
        */
-      status?: number
+      status?: string
       /** Format: date-time */
       createTime?: string
       /** Format: date-time */
@@ -723,61 +727,13 @@ export interface components {
        * @description 是否启用:0-停用,1-启用
        * @default 1
        */
-      status?: number
+      status?: string
       /** @description 查询时非必传,新增更新时需要传 */
       name?: string
     }
     TaskImportDto: {
       /** @description 定时任务列表 */
       list: components['schemas']['TaskEntity'][]
-    }
-    DictTypeEntity: {
-      /** @description id,新增时不需要传,更新时需要传 */
-      id?: string
-      /**
-       * @description 是否启用:0-停用,1-启用
-       * @default 1
-       */
-      status?: number
-      /** Format: date-time */
-      createTime?: string
-      /** Format: date-time */
-      updateTime?: string
-      createUserId?: string
-      updateUserId?: string
-      /** Format: date-time */
-      deleteTime?: string
-      /** @description 字典类型名称 */
-      name: string
-      /** @description 字典类型编码 */
-      code: string
-      /** @description 字典类型描述 */
-      description?: string
-    }
-    DictTypePageListDto: {
-      /**
-       * @description 当前页码
-       * @default 1
-       */
-      currentPage?: number
-      /**
-       * @description 页大小
-       * @default 10
-       */
-      pageSize?: number
-      /**
-       * @description 是否启用:0-停用,1-启用
-       * @default 1
-       */
-      status?: number
-      /** @description 字典类型名称 */
-      name?: string
-      /** @description 字典类型编码 */
-      code?: string
-    }
-    DictTypeImportDto: {
-      /** @description 字典类型列表 */
-      list: components['schemas']['DictTypeEntity'][]
     }
     DictDataEntity: {
       /** @description id,新增时不需要传,更新时需要传 */
@@ -786,7 +742,7 @@ export interface components {
        * @description 是否启用:0-停用,1-启用
        * @default 1
        */
-      status?: number
+      status?: string
       /** Format: date-time */
       createTime?: string
       /** Format: date-time */
@@ -809,6 +765,79 @@ export interface components {
        */
       default: boolean
     }
+    DictTypeEntity: {
+      /** @description id,新增时不需要传,更新时需要传 */
+      id?: string
+      /**
+       * @description 是否启用:0-停用,1-启用
+       * @default 1
+       */
+      status?: string
+      /** Format: date-time */
+      createTime?: string
+      /** Format: date-time */
+      updateTime?: string
+      createUserId?: string
+      updateUserId?: string
+      /** Format: date-time */
+      deleteTime?: string
+      /** @description 字典类型名称 */
+      name: string
+      /** @description 字典类型编码 */
+      code: string
+      /** @description 字典类型描述 */
+      description?: string
+      /** @description 字典数据 */
+      data: readonly components['schemas']['DictDataEntity'][]
+    }
+    DictTypePageListDto: {
+      /**
+       * @description 当前页码
+       * @default 1
+       */
+      currentPage?: number
+      /**
+       * @description 页大小
+       * @default 10
+       */
+      pageSize?: number
+      /**
+       * @description 是否启用:0-停用,1-启用
+       * @default 1
+       */
+      status?: string
+      /** @description 字典类型名称 */
+      name?: string
+      /** @description 字典类型编码 */
+      code?: string
+    }
+    SaveDictTypeDto: {
+      /** @description id,新增时不需要传,更新时需要传 */
+      id?: string
+      /**
+       * @description 是否启用:0-停用,1-启用
+       * @default 1
+       */
+      status?: string
+      /** Format: date-time */
+      createTime?: string
+      /** Format: date-time */
+      updateTime?: string
+      createUserId?: string
+      updateUserId?: string
+      /** Format: date-time */
+      deleteTime?: string
+      /** @description 字典类型名称 */
+      name: string
+      /** @description 字典类型编码 */
+      code: string
+      /** @description 字典类型描述 */
+      description?: string
+    }
+    DictTypeImportDto: {
+      /** @description 字典类型列表 */
+      list: components['schemas']['DictTypeEntity'][]
+    }
     DictDataPageListDto: {
       /**
        * @description 当前页码
@@ -824,7 +853,7 @@ export interface components {
        * @description 是否启用:0-停用,1-启用
        * @default 1
        */
-      status?: number
+      status?: string
       /** @description 字典类型ID */
       typeId: string
       /** @description 字典标签 */
@@ -839,7 +868,7 @@ export interface components {
        * @description 是否启用:0-停用,1-启用
        * @default 1
        */
-      status?: number
+      status?: string
       /** Format: date-time */
       createTime?: string
       /** Format: date-time */
@@ -1778,7 +1807,7 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': components['schemas']['DictTypeEntity']
+        'application/json': components['schemas']['SaveDictTypeDto']
       }
     }
     responses: {
@@ -1845,6 +1874,26 @@ export interface operations {
       200: {
         content: {
           'application/json': components['schemas']['DeleteResult']
+        }
+      }
+    }
+  }
+  /** 根据字典类型编码查询字典类型和数据 */
+  DictTypeController_getDictTypeByCodeWithData: {
+    parameters: {
+      query: {
+        code: string
+      }
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    responses: {
+      /** @description 根据字典类型编码查询字典类型和数据 */
+      200: {
+        content: {
+          'application/json': components['schemas']['DictTypeEntity']
         }
       }
     }

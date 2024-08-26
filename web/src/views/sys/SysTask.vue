@@ -17,6 +17,7 @@ import { h, ref } from 'vue'
 import JsonEditorVue from 'json-editor-vue3'
 import { useConsumerMethod } from './api/queues'
 import CronForm from '@/components/cronInput/CronForm.vue'
+import { useDictSchema } from '@/hooks/useDict'
 
 const api = ref<Api>({
   page: '/admin/sys/task/page',
@@ -36,7 +37,7 @@ const editFormModel = ref<
   name: '',
   cron: '',
   method: '',
-  status: 1
+  status: '1'
 })
 
 const tableForm = ref<
@@ -119,52 +120,11 @@ const tableForm = ref<
       // @ts-ignore
       component: h(CronForm, { inputProps: { placeholder: '请设置cron' } })
     }
-  },
-  status: {
-    table: {
-      label: '状态',
-      formatter(row, column, cellValue) {
-        return cellValue === 1 ? '启用' : '停用'
-      },
-      exportFormatter(value) {
-        return value === 1 ? '启用' : '停用'
-      }
-    },
-    editForm: {
-      rule: [{ required: true, message: '请选择状态' }],
-      props: {
-        label: '状态'
-      },
-      component: h(
-        ElSelect,
-        { placeholder: '请选择状态' },
-        {
-          default: () => [
-            h(ElOption, { value: 1, label: '启用' }),
-            h(ElOption, { value: 0, label: '停用' })
-          ]
-        }
-      ),
-      importFormatter(value) {
-        return value === '启用' ? 1 : 0
-      }
-    },
-    searchForm: {
-      props: {
-        label: '状态'
-      },
-      component: h(
-        ElSelect,
-        { placeholder: '请选择状态' },
-        {
-          default: () => [
-            h(ElOption, { value: 1, label: '启用' }),
-            h(ElOption, { value: 0, label: '停用' })
-          ]
-        }
-      )
-    }
   }
+})
+
+useDictSchema('status', { setDefault: true }).then((res) => {
+  tableForm.value.status = res
 })
 
 const { data: methods, onFetchResponse: onMethodResponse } = useConsumerMethod()

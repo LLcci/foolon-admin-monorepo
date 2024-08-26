@@ -6,7 +6,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { DictTypeEntity } from './dict.type.entity'
 import { Like, Repository } from 'typeorm'
-import { DictTypePageListDto } from './dict.type.dto'
+import { DictTypePageListDto, SaveDictTypeDto } from './dict.type.dto'
 import { PageResultDto } from '@/common/class/response.dto'
 
 @Injectable()
@@ -46,7 +46,7 @@ export class DictTypeService {
     })
   }
 
-  async saveDictType(dictType: DictTypeEntity) {
+  async saveDictType(dictType: SaveDictTypeDto) {
     return await this.dictTypeRepository.save(dictType)
   }
 
@@ -57,8 +57,16 @@ export class DictTypeService {
   async getDictTypeById(id: string) {
     return await this.dictTypeRepository.findOne({
       select: ['id', 'name', 'code', 'description', 'status'],
-      where: { id },
-      relations: ['data']
+      where: { id }
+    })
+  }
+
+  async getDictTypeByCodeWithData(code: string) {
+    return await this.dictTypeRepository.findOne({
+      select: ['id', 'name', 'code', 'description', 'status'],
+      where: { code },
+      relations: ['data'],
+      order: { data: { sort: 'ASC' } }
     })
   }
 

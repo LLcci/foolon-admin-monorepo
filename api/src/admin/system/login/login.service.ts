@@ -41,7 +41,7 @@ export class LoginService {
     if (loginDto.password != decryptedPassword) {
       throw '密码错误'
     }
-    if (user.status != 1) {
+    if (user.status != '1') {
       throw '用户已禁用'
     }
     const payload = { id: user.id }

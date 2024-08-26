@@ -54,7 +54,7 @@ export class TaskService {
       if (task.id) {
         await this.queuesService.removeRepeatableByKey(task.id)
       }
-      if (taskRes.status == 1) {
+      if (taskRes.status == '1') {
         const job = new JobDto()
         job.name = taskRes.name
         job.data = taskRes.data || {}
@@ -75,7 +75,7 @@ export class TaskService {
       const taskRes = await manager.save(TaskEntity, task)
       const jobs: JobDto[] = []
       for (const item of taskRes) {
-        if (item.status == 1) {
+        if (item.status == '1') {
           const job = new JobDto()
           job.name = item.name
           job.data = item.data || {}
@@ -121,7 +121,7 @@ export class TaskService {
       if (!task) {
         throw '任务不存在'
       }
-      task.status = 1
+      task.status = '1'
       await manager.save(task)
       const job = new JobDto()
       job.name = task.name
@@ -143,7 +143,7 @@ export class TaskService {
       if (!task) {
         throw '任务不存在'
       }
-      task.status = 0
+      task.status = '0'
       await manager.save(task)
       await this.queuesService.removeRepeatableByKey(task.id)
     })

@@ -26,7 +26,7 @@ export class DictTypeEntity extends BaseEntity {
   @IsString({ message: '字典类型编码必须是字符串' })
   code: string
 
-  @Column({ comment: '字典类型描述' })
+  @Column({ comment: '字典类型描述', nullable: true })
   @ApiProperty({
     required: false,
     description: '字典类型描述'
@@ -35,6 +35,7 @@ export class DictTypeEntity extends BaseEntity {
   @IsOptional()
   description?: string
 
+  @ApiProperty({ description: '字典数据', readOnly: true, type: DictDataEntity, isArray: true })
   @OneToMany(() => DictDataEntity, (data) => data.type)
   data: DictDataEntity[]
 }
