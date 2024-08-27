@@ -51,7 +51,6 @@ export type FormItems<T> = Partial<
  * 简单表单
  * @param {FormProps} props ElementUI表单属性,https://element-plus.org/zh-CN/component/form.html#form-attributes
  * @param {FormItems} formItems 表单项目及对应的组件
- * @param {ButtonItem[]} buttons 按钮组,不传默认显示提交和重置按钮
  */
 export default interface SchemaForm<T extends FormModel> {
   /**
