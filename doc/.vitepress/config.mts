@@ -94,7 +94,19 @@ export default defineConfig({
           items: [
             { text: '介绍', link: '/webDoc/index' },
             { text: '路由', link: '/webDoc/route' },
-            { text: '自定义组件', link: '/webDoc/component' },
+            {
+              text: '自定义组件',
+              items: [
+                { text: '布局组件(MainLayout)', link: '/webDoc/components/MainLayout' },
+                { text: '递归菜单数(UserMenuTree)', link: '/webDoc/components/UserMenuTree' },
+                { text: '图片上传(FormImgUpload)', link: '/webDoc/components/FormImgUpload' },
+                { text: '数选择器(FormTree)', link: '/webDoc/components/FormTree' },
+                { text: '图标选择器(IconSelect)', link: '/webDoc/components/IconSelect' },
+                { text: '表单(SchemaForm)', link: '/webDoc/components/SchemaForm' },
+                { text: '表格(SchemaTable)', link: '/webDoc/components/SchemaTable' },
+                { text: '表单表格(SchemaTableForm)', link: '/webDoc/components/SchemaTableForm' }
+              ]
+            },
             { text: '自定义指令', link: '/webDoc/directive' },
             { text: '常见问题', link: '/webDoc/FAQ' }
           ]
