@@ -3,5 +3,5 @@ export type UserMenuTreeType = {
   index?: string
   name: string
   icon?: string
-  children: SubMenuTreeType[]
+  children: UserMenuTreeType[]
 }
