@@ -489,6 +489,7 @@ const handleImport = async (options: UploadRequestOptions) => {
   }
   const { execute } = tableSave(props.api.import, importDataModel.value)
   return execute(true).then(() => {
+    emits('onTableSaveSuccess')
     ElMessage.success('导入成功')
     tableListFetch()
   })
