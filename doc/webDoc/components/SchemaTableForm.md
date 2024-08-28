@@ -1,6 +1,6 @@
 # 表单表格(SchemaTableForm)
 
-`/web/src/components/schemaTableForm/SchemaTableForm.vue`该组件对上述的 [表单组件(SchemaForm)](/webDoc/component/SchemaForm) 和 [表格组件(SchemaTable)](/webDoc/component/SchemaTable) 进行了二次封装，除了这两个组件的基础功能外，还提供了增删改查、导入导出等功能，同时会根据用户权限控制按钮显示。
+`/web/src/components/schemaTableForm/SchemaTableForm.vue`该组件对上述的 [表单组件(SchemaForm)](/webDoc/components/SchemaForm) 和 [表格组件(SchemaTable)](/webDoc/components/SchemaTable) 进行了二次封装，除了这两个组件的基础功能外，还提供了增删改查、导入导出等功能，同时会根据用户权限控制按钮显示。
 
 示例：foolon admin 中的 CRUD 页面均使用该组件。
 
