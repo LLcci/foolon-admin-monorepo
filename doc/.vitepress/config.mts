@@ -104,7 +104,10 @@ export default defineConfig({
                 { text: '图标选择器(IconSelect)', link: '/webDoc/components/IconSelect' },
                 { text: '表单(SchemaForm)', link: '/webDoc/components/SchemaForm' },
                 { text: '表格(SchemaTable)', link: '/webDoc/components/SchemaTable' },
-                { text: '表单表格(SchemaTableForm)', link: '/webDoc/components/SchemaTableForm' }
+                { text: '表单表格(SchemaTableForm)', link: '/webDoc/components/SchemaTableForm' },
+                { text: 'cron表达式(CronForm)', link: '/webDoc/components/CronForm' },
+                { text: '数操作选择器(FormTreeOpr)', link: '/webDoc/components/FormTreeOpr' },
+                { text: '字典选择器(DictSelect)', link: '/webDoc/components/DictSelect' }
               ]
             },
             { text: '自定义指令', link: '/webDoc/directive' },
