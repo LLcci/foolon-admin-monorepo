@@ -64,7 +64,7 @@ export class DictTypeService {
   async getDictTypeByCodeWithData(code: string) {
     return await this.dictTypeRepository.findOne({
       select: ['id', 'name', 'code', 'description', 'status'],
-      where: { code },
+      where: { code, status: '1', data: { status: '1' } },
       relations: ['data'],
       order: { data: { sort: 'ASC' } }
     })
