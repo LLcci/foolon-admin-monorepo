@@ -23,8 +23,10 @@ export class PermissionService {
 
   async getPermission(id: string) {
     const user = await this.userRepository.findOne({
-      where: { id },
-      relations: ['roles', 'roles.menus']
+      select: ['id', 'email', 'phone', 'realname', 'roles', 'username'],
+      where: { id, roles: { status: '1', menus: { status: '1' } } },
+      relations: ['roles', 'roles.menus'],
+      order: { roles: { menus: { sort: 'ASC' } } }
     })
     if (!user) {
       throw '用户不存在'
@@ -32,11 +34,6 @@ export class PermissionService {
     if (user.status == '0') {
       throw '用户已被禁用'
     }
-    user.roles = user.roles.filter((role) => role.status == '1')
-    user.roles.forEach((role) => {
-      role.menus = role.menus.filter((menu) => menu.status == '1')
-      role.menus = role.menus.sort((a, b) => a.sort - b.sort)
-    })
     const permission = await this.userService.getUserPermissions(user.id)
     await this.redisService.setUserPermissions(user.id, permission)
     return user
