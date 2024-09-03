@@ -23,7 +23,7 @@ export class PermissionService {
 
   async getPermission(id: string) {
     const user = await this.userRepository.findOne({
-      select: ['id', 'email', 'phone', 'realname', 'roles', 'username'],
+      select: ['id', 'email', 'phone', 'realname', 'roles', 'username', 'avatar'],
       where: { id, roles: { status: '1', menus: { status: '1' } } },
       relations: ['roles', 'roles.menus'],
       order: { roles: { menus: { sort: 'ASC' } } }
