@@ -34,7 +34,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayInit, OnGate
   async disconnectByToken(token: string) {
     const sockets = await this.server.fetchSockets()
     const userSocket = sockets.find((socket) => socket.handshake.auth.token === `Bearer ${token}`)
-    userSocket.disconnect(true)
+    userSocket?.disconnect(true)
   }
 
   async handleConnection(socket: Socket) {
