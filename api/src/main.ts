@@ -51,7 +51,7 @@ async function bootstrap() {
       .build()
     const documents = SwaggerModule.createDocument(app, options)
     SwaggerModule.setup('swagger-api', app, documents)
-    fs.writeFileSync('./swagger-spec.json', JSON.stringify(documents))
+    fs.writeFileSync('./upload/swagger-spec.json', JSON.stringify(documents))
   }
   app.enableCors({ origin: '*' })
   await app.listen(process.env.SERVER_PORT, '0.0.0.0')

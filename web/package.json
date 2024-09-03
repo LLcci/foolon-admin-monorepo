@@ -8,7 +8,7 @@
     "build": "run-p type-check \"build-only {@}\" --",
     "docker:image": "pnpm run build && docker build -t foolon-admin-web .",
     "docker:compose:deploy": "pnpm run build && docker-compose up -d --build",
-    "openapi-typescript": "npx openapi-typescript ../api/swagger-spec.json -o ./src/types/Schema.d.ts && cd ../ && pnpm run format",
+    "openapi-typescript": "npx openapi-typescript http://127.0.0.1:8080/swagger-spec.json -o ./src/types/Schema.d.ts && cd ../ && pnpm run format",
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit --skipLibCheck",
