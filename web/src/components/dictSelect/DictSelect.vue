@@ -32,7 +32,7 @@ onFetchFinally(() => {
     return
   }
   for (const item of data.value?.data ?? []) {
-    if (item.default) {
+    if (item.default && !modelValue.value) {
       modelValue.value = item.value
     }
   }
