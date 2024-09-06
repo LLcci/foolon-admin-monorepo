@@ -22,13 +22,13 @@
 
 ### Events
 
-| 名称                 | 说明                                   | 类型         |
-| -------------------- | -------------------------------------- | ------------ |
-| onTableListSuccess   | 获取分页数据成功后的回调               | `() => void` |
-| onTableSaveSuccess   | 保存数据成功后的回调，新增、编辑、导入 | `() => void` |
-| onTableDeleteSuccess | 删除数据成功后的回调                   | `() => void` |
-| onTableExportSuccess | 导出数据成功后的回调                   | `() => void` |
-| onTableIdSuccess     | 查询详情成功后的回调                   | `() => void` |
+| 名称                 | 说明                                       | 类型              |
+| -------------------- | ------------------------------------------ | ----------------- |
+| onTableListSuccess   | 获取分页数据成功后的回调                   | `() => void`      |
+| onTableSaveSuccess   | 保存数据成功后的回调，新增、编辑、导入     | `() => void`      |
+| onTableDeleteSuccess | 删除数据成功后的回调                       | `() => void`      |
+| onTableExportSuccess | 导出数据成功后的回调                       | `() => void`      |
+| onTableIdSuccess     | 查询详情成功后的回调，参数为接口返回的数据 | `(value) => void` |
 
 ### Expose
 
