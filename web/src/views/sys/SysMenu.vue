@@ -81,12 +81,18 @@ const tableForm = ref<
                 editFormModel.value.parentId = undefined
                 editFormModel.value.perms = undefined
                 editFormModel.value.openType = undefined
+                if (tableForm.value.path?.editForm?.rule) {
+                  tableForm.value.path.editForm.rule[0].required = true
+                }
                 break
               case 1:
                 editFormModel.value.perms = undefined
                 editFormModel.value.openType = undefined
                 if (tableForm.value.parentId?.editForm?.rule) {
                   tableForm.value.parentId.editForm.rule[0].required = true
+                }
+                if (tableForm.value.path?.editForm?.rule) {
+                  tableForm.value.path.editForm.rule[0].required = true
                 }
                 break
               case 2:
@@ -96,6 +102,9 @@ const tableForm = ref<
                 editFormModel.value.openType = undefined
                 if (tableForm.value.parentId?.editForm?.rule) {
                   tableForm.value.parentId.editForm.rule[0].required = true
+                }
+                if (tableForm.value.path?.editForm?.rule) {
+                  tableForm.value.path.editForm.rule[0].required = false
                 }
                 break
               case 3:
@@ -107,6 +116,9 @@ const tableForm = ref<
                   tableForm.value.parentId.editForm.rule[0].required = false
                 }
                 editFormModel.value.openType = 1
+                if (tableForm.value.path?.editForm?.rule) {
+                  tableForm.value.path.editForm.rule[0].required = true
+                }
                 break
               default:
                 break
@@ -261,6 +273,7 @@ const tableForm = ref<
       align: 'center'
     },
     editForm: {
+      rule: [{ required: true, message: '请输入路径' }],
       props: {
         label: '路径'
       },
