@@ -158,7 +158,7 @@ const props = withDefaults(
 )
 
 const emits = defineEmits([
-  'onTableListSuccess',
+  'onTablePageSuccess',
   'onTableSaveSuccess',
   'onTableDeleteSuccess',
   'onTableExportSuccess',
@@ -191,7 +191,7 @@ if (props.searchOnCreate) {
   tableListFetch()
 }
 tableListOnFetchResponse(() => {
-  emits('onTableListSuccess')
+  emits('onTablePageSuccess')
   pagination.value.total = tableData.value?.total || 0
 })
 /**
@@ -349,7 +349,7 @@ const handleDialog = async (title: '新增' | '编辑' | '查看', form: FormMod
     const { data, error } = await tableId(props.api.id, form.id)
     if (error.value) return
     Object.assign(editFormModel.value, data.value)
-    emits('onTableIdSuccess')
+    emits('onTableIdSuccess', data.value)
   }
   dialogVisible.value = true
 }
