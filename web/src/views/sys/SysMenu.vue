@@ -85,12 +85,18 @@ const tableForm = ref<
               case 1:
                 editFormModel.value.perms = undefined
                 editFormModel.value.openType = undefined
+                if (tableForm.value.parentId?.editForm?.rule) {
+                  tableForm.value.parentId.editForm.rule[0].required = true
+                }
                 break
               case 2:
                 editFormModel.value.icon = undefined
                 editFormModel.value.path = undefined
                 editFormModel.value.component = undefined
                 editFormModel.value.openType = undefined
+                if (tableForm.value.parentId?.editForm?.rule) {
+                  tableForm.value.parentId.editForm.rule[0].required = true
+                }
                 break
               case 3:
                 editFormModel.value.icon = undefined
