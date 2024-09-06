@@ -85,10 +85,14 @@ export class LoggerService implements NestLoggerService {
 
   // 错误日志记录
   error(message: string, stack?: string): Logger {
+    const err = new Error()
+    const stackErr = err.stack.split('\n')
+    const line = stackErr[2]
+    const fileInfo = line.trim().match(/at (.*) \((.*):(\d+):(\d+)\)/)
     return this.logger.error({
       message,
       meta: {
-        file: `${stack}`
+        file: `${stack ?? basename(fileInfo[2])} ${fileInfo[1]} ${fileInfo[3]}:${fileInfo[4]}`
       }
     })
   }

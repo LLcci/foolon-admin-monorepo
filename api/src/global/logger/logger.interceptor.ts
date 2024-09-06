@@ -1,5 +1,11 @@
 import { LoggerService } from '@/global/logger/logger.service'
-import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common'
+import {
+  Injectable,
+  NestInterceptor,
+  ExecutionContext,
+  CallHandler,
+  HttpException
+} from '@nestjs/common'
 import { Observable } from 'rxjs'
 import { tap } from 'rxjs/operators'
 
@@ -20,7 +26,11 @@ export class LoggerInterceptor implements NestInterceptor {
         (data) =>
           this.logger.log(`响应结果: ${req.method} ${req.url} data:${JSON.stringify(data)}`),
         (err) => {
-          this.logger.error(`响应错误: ${req.method} ${req.url} data:${JSON.stringify(err)}`)
+          if (!(err instanceof HttpException)) {
+            this.logger.error(err)
+          } else {
+            this.logger.error(`响应错误: ${req.method} ${req.url} data:${err.message}`)
+          }
         }
       )
     )
