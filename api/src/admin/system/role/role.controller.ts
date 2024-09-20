@@ -13,6 +13,7 @@ import { MenuService } from '../menu/menu.service'
 import { omit } from 'lodash'
 import validateArrObj from '@/common/utils/validateArrObj'
 import { ApiPaginatedResponse } from '@/common/decorator/pageRequest.decorator'
+import { UserEntity } from '../user/user.entity'
 
 @ApiTags('角色管理')
 @ApiHeader({
@@ -59,13 +60,16 @@ export class RoleController {
   })
   async saveRole(@Body() role: RoleSaveDto, @User() user: { id: string }) {
     const roleEntity = new RoleEntity()
-    const menus = await this.menuService.getMenusById(role.menuIds)
-    if (!role.id) {
-      role.createUserId = user.id
+    if (role.menuIds) {
+      roleEntity.menus = await this.menuService.getMenusById(role.menuIds)
     }
-    role.updateUserId = user.id
+    const userEntity = new UserEntity()
+    userEntity.id = user.id
+    if (!role.id) {
+      role.createUser = userEntity
+    }
+    role.updateUser = userEntity
     Object.assign(roleEntity, omit(role, 'menuIds'))
-    roleEntity.menus = menus
     return await this.roleService.saveRole(roleEntity)
   }
 
@@ -81,13 +85,15 @@ export class RoleController {
   async importRole(@Body() role: RoleImportDto, @User() user: { id: string }) {
     const roleList: RoleEntity[] = []
     await validateArrObj(role.list, RoleSaveDto)
+    const userEntity = new UserEntity()
+    userEntity.id = user.id
     for (const item of role.list) {
       const menus = await this.menuService.getMenusById(item.menuIds)
       const roleItem = new RoleEntity()
       if (!item.id) {
-        item.createUserId = user.id
+        item.createUser = userEntity
       }
-      item.updateUserId = user.id
+      item.updateUser = userEntity
       Object.assign(roleItem, omit(item, 'menuIds'))
       roleItem.menus = menus
       roleList.push(roleItem)

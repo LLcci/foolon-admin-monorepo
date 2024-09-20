@@ -13,6 +13,7 @@ import validateArrObj from '@/common/utils/validateArrObj'
 import { ApiPaginatedResponse } from '@/common/decorator/pageRequest.decorator'
 import { omit } from 'lodash'
 import { DictTypeService } from './dict.type.service'
+import { UserEntity } from '../user/user.entity'
 
 @ApiTags('字典数据管理')
 @ApiHeader({
@@ -60,10 +61,12 @@ export class DictDataController {
   async saveDictData(@Body() dictData: DictDataSaveDto, @User() user: { id: string }) {
     const dictDataEntity = new DictDataEntity()
     dictDataEntity.type = await this.dictTypeService.getDictTypeById(dictData.typeId)
+    const userEntity = new UserEntity()
+    userEntity.id = user.id
     if (!dictData.id) {
-      dictData.createUserId = user.id
+      dictData.createUser = userEntity
     }
-    dictData.updateUserId = user.id
+    dictData.updateUser = userEntity
     Object.assign(dictDataEntity, omit(dictData, 'typeId'))
     return await this.dictDataService.saveDictData(dictDataEntity)
   }
@@ -80,12 +83,14 @@ export class DictDataController {
   async importDictData(@Body() dictData: DictDataImportDto, @User() user: { id: string }) {
     await validateArrObj(dictData.list, DictDataEntity)
     const dictType = await this.dictTypeService.getDictTypeById(dictData.typeId)
+    const userEntity = new UserEntity()
+    userEntity.id = user.id
     for (const item of dictData.list) {
       item.type = dictType
       if (!item.id) {
-        item.createUserId = user.id
+        item.createUser = userEntity
       }
-      item.updateUserId = user.id
+      item.updateUser = userEntity
     }
     return await this.dictDataService.importDictData(dictData.list)
   }

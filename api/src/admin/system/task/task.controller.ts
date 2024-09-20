@@ -11,6 +11,7 @@ import { TaskImportDto, TaskPageListDto } from './task.dto'
 import { User } from '@/common/decorator/user.decorator'
 import validateArrObj from '@/common/utils/validateArrObj'
 import { DeleteResult } from 'typeorm'
+import { UserEntity } from '../user/user.entity'
 
 @ApiTags('定时任务管理')
 @ApiHeader({
@@ -53,10 +54,12 @@ export class TaskController {
     type: TaskEntity
   })
   async saveTask(@Body() task: TaskEntity, @User() user: { id: string }) {
+    const userEntity = new UserEntity()
+    userEntity.id = user.id
     if (!task.id) {
-      task.createUserId = user.id
+      task.createUser = userEntity
     }
-    task.updateUserId = user.id
+    task.updateUser = userEntity
     return await this.taskService.saveTask(task)
   }
 
@@ -71,11 +74,13 @@ export class TaskController {
   })
   async importTask(@Body() task: TaskImportDto, @User() user: { id: string }) {
     await validateArrObj(task.list, TaskEntity)
+    const userEntity = new UserEntity()
+    userEntity.id = user.id
     for (const item of task.list) {
       if (!item.id) {
-        item.createUserId = user.id
+        item.createUser = userEntity
       }
-      item.updateUserId = user.id
+      item.updateUser = userEntity
     }
     return await this.taskService.importTask(task.list)
   }

@@ -18,7 +18,7 @@ export class RoleSaveDto extends OmitType(RoleEntity, ['menus']) {
     message: '菜单ids必须是数组'
   })
   @IsOptional()
-  menuIds: string[]
+  menuIds?: string[]
 }
 
 export class RoleImportDto {

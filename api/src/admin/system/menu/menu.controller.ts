@@ -13,6 +13,7 @@ import { RedisService } from '@/global/redis/redis.service'
 import { User } from '@/common/decorator/user.decorator'
 import validateArrObj from '@/common/utils/validateArrObj'
 import { ApiPaginatedResponse } from '@/common/decorator/pageRequest.decorator'
+import { UserEntity } from '../user/user.entity'
 
 @ApiTags('菜单管理')
 @ApiHeader({
@@ -69,10 +70,12 @@ export class MenuController {
     type: MenuEntity
   })
   async saveMenu(@Body() menu: MenuEntity, @User() user: { id: string }) {
+    const userEntity = new UserEntity()
+    userEntity.id = user.id
     if (!menu.id) {
-      menu.createUserId = user.id
+      menu.createUser = userEntity
     }
-    menu.updateUserId = user.id
+    menu.updateUser = userEntity
     return await this.menuService.saveMenu(menu)
   }
 
@@ -87,11 +90,13 @@ export class MenuController {
   })
   async importMenu(@Body() menu: MenuSaveDto, @User() user: { id: string }) {
     await validateArrObj(menu.list, MenuEntity)
+    const userEntity = new UserEntity()
+    userEntity.id = user.id
     for (const item of menu.list) {
       if (!item.id) {
-        item.createUserId = user.id
+        item.createUser = userEntity
       }
-      item.updateUserId = user.id
+      item.updateUser = userEntity
     }
     return await this.menuService.importMenu(menu.list)
   }

@@ -1,3 +1,4 @@
+import { UserEntity } from '@/admin/system/user/user.entity'
 import { ApiProperty } from '@nestjs/swagger'
 import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator'
 import {
@@ -5,6 +6,8 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Index,
+  JoinColumn,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm'
@@ -46,19 +49,15 @@ export class BaseEntity {
   @ApiProperty({ required: false, readOnly: true })
   updateTime: Date
 
-  @Index()
-  @Column({ name: 'create_user_id', comment: '创建用户id' })
-  @ApiProperty({ required: false, readOnly: true })
-  createUserId: string
+  @ApiProperty({ required: false, readOnly: true, description: '创建用户', type: () => UserEntity })
+  @OneToOne(() => UserEntity)
+  @JoinColumn()
+  createUser: UserEntity
 
-  @Index()
-  @Column({
-    nullable: true,
-    name: 'update_user_id',
-    comment: '更新用户id'
-  })
-  @ApiProperty({ required: false, readOnly: true })
-  updateUserId: string
+  @ApiProperty({ required: false, readOnly: true, description: '更新用户', type: () => UserEntity })
+  @OneToOne(() => UserEntity)
+  @JoinColumn()
+  updateUser: UserEntity
 
   @Index()
   @DeleteDateColumn({ name: 'delete_time', comment: '删除时间', nullable: true })

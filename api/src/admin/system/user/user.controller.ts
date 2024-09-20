@@ -62,8 +62,10 @@ export class UserController {
     summary: '创建用户'
   })
   async createUser(@Body() userCreateDto: UserCreateDto, @User() user: { id: string }) {
-    userCreateDto.createUserId = user.id
-    userCreateDto.updateUserId = user.id
+    const userEnt = new UserEntity()
+    userEnt.id = user.id
+    userCreateDto.createUser = userEnt
+    userCreateDto.updateUser = userEnt
     const userEntity = await this.userService.userSaveDto2Entity(userCreateDto)
     await this.userService.saveUser(userEntity)
     return '创建用户成功'
@@ -74,7 +76,9 @@ export class UserController {
     summary: '更新用户'
   })
   async updateUser(@Body() userUpdateDto: UserUpdateDto, @User() user: { id: string }) {
-    userUpdateDto.updateUserId = user.id
+    const userEnt = new UserEntity()
+    userEnt.id = user.id
+    userUpdateDto.updateUser = userEnt
     const userEntity = new UserEntity()
     Object.assign(userEntity, omit(userUpdateDto, ['roleIds']))
     userEntity.roles = []
@@ -93,9 +97,11 @@ export class UserController {
     if (updatePasswordDto.password !== updatePasswordDto.confirmPassword) {
       throw '两次密码不一致'
     }
+    const userEnt = new UserEntity()
+    userEnt.id = user.id
     const userEntity = new UserEntity()
     userEntity.id = updatePasswordDto.id
-    userEntity.updateUserId = user.id
+    userEntity.updateUser = userEnt
     const { iv, salt, encryptedPassword } = await encrypt(updatePasswordDto.password)
     userEntity.salt = salt
     userEntity.iv = iv
@@ -111,9 +117,11 @@ export class UserController {
   async importUser(@Body() userImportDto: UserImportDto, @User() user: { id: string }) {
     await validateArrObj(userImportDto.list, UserCreateDto)
     const userEntities: UserEntity[] = []
+    const userEnt = new UserEntity()
+    userEnt.id = user.id
     for (const item of userImportDto.list) {
-      item.createUserId = user.id
-      item.updateUserId = user.id
+      item.createUser = userEnt
+      item.updateUser = userEnt
       const userEntity = await this.userService.userSaveDto2Entity(item)
       userEntities.push(userEntity)
     }

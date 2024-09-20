@@ -11,6 +11,7 @@ import { DeleteResult } from 'typeorm'
 import { User } from '@/common/decorator/user.decorator'
 import validateArrObj from '@/common/utils/validateArrObj'
 import { ApiPaginatedResponse } from '@/common/decorator/pageRequest.decorator'
+import { UserEntity } from '../user/user.entity'
 
 @ApiTags('字典类型管理')
 @ApiHeader({
@@ -53,10 +54,12 @@ export class DictTypeController {
     type: DictTypeEntity
   })
   async saveDictType(@Body() dictType: SaveDictTypeDto, @User() user: { id: string }) {
+    const userEntity = new UserEntity()
+    userEntity.id = user.id
     if (!dictType.id) {
-      dictType.createUserId = user.id
+      dictType.createUser = userEntity
     }
-    dictType.updateUserId = user.id
+    dictType.updateUser = userEntity
     return await this.dictTypeService.saveDictType(dictType)
   }
 
@@ -71,11 +74,13 @@ export class DictTypeController {
   })
   async importDictType(@Body() dictType: DictTypeImportDto, @User() user: { id: string }) {
     await validateArrObj(dictType.list, DictTypeEntity)
+    const userEntity = new UserEntity()
+    userEntity.id = user.id
     for (const item of dictType.list) {
       if (!item.id) {
-        item.createUserId = user.id
+        item.createUser = userEntity
       }
-      item.updateUserId = user.id
+      item.updateUser = userEntity
     }
     return await this.dictTypeService.importDictType(dictType.list)
   }
