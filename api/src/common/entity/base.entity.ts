@@ -6,8 +6,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Index,
-  JoinColumn,
-  OneToOne,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm'
@@ -50,13 +49,11 @@ export class BaseEntity {
   updateTime: Date
 
   @ApiProperty({ required: false, readOnly: true, description: '创建用户', type: () => UserEntity })
-  @OneToOne(() => UserEntity)
-  @JoinColumn()
+  @ManyToOne(() => UserEntity)
   createUser: UserEntity
 
   @ApiProperty({ required: false, readOnly: true, description: '更新用户', type: () => UserEntity })
-  @OneToOne(() => UserEntity)
-  @JoinColumn()
+  @ManyToOne(() => UserEntity)
   updateUser: UserEntity
 
   @Index()
