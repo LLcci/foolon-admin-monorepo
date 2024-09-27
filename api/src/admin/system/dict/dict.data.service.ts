@@ -58,7 +58,7 @@ export class DictDataService {
 
   async getDictDataById(id: string) {
     return await this.dictDataRepository.findOne({
-      select: ['id', 'label', 'value', 'description', 'status'],
+      select: ['id', 'label', 'value', 'description', 'status', 'default'],
       where: { id }
     })
   }
