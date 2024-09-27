@@ -39,7 +39,7 @@
       </el-popconfirm>
     </template>
   </schemaTableForm>
-  <el-drawer v-model="showSetting" :title="settingType.name" size="50%">
+  <el-drawer v-model="showSetting" :title="settingType.name" destroy-on-close size="50%">
     <schemaTableForm
       v-model:search-form-model="settingSearchFormModel"
       v-model:edit-form-model="settingEditFormModel"
