@@ -127,17 +127,10 @@ export class UserService {
    * @returns 用户权限数组
    */
   async getUserPermissions(id: string) {
-    const user = await this.userRepository
-      .createQueryBuilder('user')
-      .select(['user.id'])
-      .leftJoinAndSelect('user.roles', 'roles')
-      .leftJoinAndSelect('roles.menus', 'menus')
-      .where('user.id = :id', { id: id })
-      .andWhere('user.status = 1')
-      .andWhere('roles.status = 1')
-      .andWhere('menus.status = 1')
-      .andWhere('menus.menuType = 2')
-      .getOne()
+    const user = await this.userRepository.findOne({
+      where: { id, status: '1', roles: { status: '1', menus: { status: '1', menuType: 2 } } },
+      relations: ['roles', 'roles.menus']
+    })
     let permission: string[] = []
     if (user) {
       user.roles.forEach((role) => {
