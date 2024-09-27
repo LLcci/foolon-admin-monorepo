@@ -23,14 +23,16 @@ export class BaseEntity {
   id: string
 
   @Column({
-    type: 'char',
-    default: 1,
+    type: 'enum',
+    enum: ['0', '1'],
+    default: '1',
     comment: '是否启用:0-停用,1-启用'
   })
   @Index()
   @ApiProperty({
     required: false,
     default: 1,
+    enum: ['0', '1'],
     description: '是否启用:0-停用,1-启用'
   })
   @IsNotEmpty({ message: '是否启用不能为空' })
