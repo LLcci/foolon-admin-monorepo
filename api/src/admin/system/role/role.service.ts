@@ -5,10 +5,11 @@ https://docs.nestjs.com/providers#services
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { RoleEntity } from './role.entity'
-import { In, Like, Repository } from 'typeorm'
+import { DataSource, In, Like, Repository } from 'typeorm'
 import { RolePageListDto } from './role.dto'
 import { UserEntity } from '../user/user.entity'
 import { PageResultDto } from '@/common/class/response.dto'
+import { isNotIn } from 'class-validator'
 
 @Injectable()
 export class RoleService {
@@ -16,7 +17,8 @@ export class RoleService {
     @InjectRepository(RoleEntity)
     private readonly roleRepository: Repository<RoleEntity>,
     @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>
+    private readonly userRepository: Repository<UserEntity>,
+    private readonly dataSource: DataSource
   ) {}
 
   async getRolePageList(rolePageListDto: RolePageListDto) {
@@ -74,14 +76,22 @@ export class RoleService {
   }
 
   async deleteRoleById(id: string[]) {
-    const user = await this.userRepository
-      .createQueryBuilder('user')
-      .leftJoinAndSelect('user.roles', 'role')
-      .where('role.id in (:...ids)', { ids: id })
-      .getMany()
-    if (user.length) {
-      throw `${user.map((item) => item.username).join(',')}账户已绑定该角色，无法删除`
-    }
-    return await this.roleRepository.delete(id)
+    return await this.dataSource.transaction(async (manager) => {
+      const userIds = await manager.find(UserEntity, {
+        select: ['id'],
+        where: { roles: { id: In(id) } }
+      })
+      if (userIds.length) {
+        const users = await manager.find(UserEntity, {
+          where: { id: In(userIds.map((item) => item.id)) },
+          relations: { roles: true }
+        })
+        for (const user of users) {
+          user.roles = user.roles.filter((role) => isNotIn(role.id, id))
+        }
+        await manager.save(UserEntity, users)
+      }
+      return await manager.delete(RoleEntity, id)
+    })
   }
 }
