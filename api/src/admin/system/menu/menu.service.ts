@@ -6,16 +6,16 @@ import { Injectable } from '@nestjs/common'
 import { MenuPageListDto, MenuTree } from './menu.dto'
 import { MenuEntity } from './menu.entity'
 import { InjectRepository } from '@nestjs/typeorm'
-import { In, Like, Repository } from 'typeorm'
+import { DataSource, In, Like, Repository } from 'typeorm'
 import { RoleEntity } from '../role/role.entity'
+import { isNotIn } from 'class-validator'
 
 @Injectable()
 export class MenuService {
   constructor(
     @InjectRepository(MenuEntity)
     private readonly menuRepository: Repository<MenuEntity>,
-    @InjectRepository(RoleEntity)
-    private readonly roleRepository: Repository<RoleEntity>
+    private readonly dataSource: DataSource
   ) {}
 
   async getMenuList(menuPageListDto: MenuPageListDto) {
@@ -76,19 +76,27 @@ export class MenuService {
   }
 
   async deleteMenuById(id: string[]) {
-    const roles = await this.roleRepository
-      .createQueryBuilder('role')
-      .leftJoinAndSelect('role.menus', 'menu')
-      .where('menu.id in (:...ids)', { ids: id })
-      .getMany()
-    if (roles.length) {
-      throw `${roles.map((item) => item.name).join(',')}角色已绑定该菜单，无法删除`
-    }
-    const allChildMenuList: MenuEntity[] = []
-    for (const item of id) {
-      await this.getAllChildMenu(allChildMenuList, item)
-    }
-    return await this.menuRepository.delete([...id, ...allChildMenuList.map((item) => item.id)])
+    return await this.dataSource.transaction(async (manager) => {
+      const roleIds = await manager.find(RoleEntity, {
+        select: ['id'],
+        where: { menus: { id: In(id) } }
+      })
+      if (roleIds.length) {
+        const roles = await manager.find(RoleEntity, {
+          where: { id: In(roleIds.map((item) => item.id)) },
+          relations: { menus: true }
+        })
+        for (const role of roles) {
+          role.menus = role.menus.filter((menu) => isNotIn(menu.id, id))
+        }
+        await manager.save(RoleEntity, roles)
+      }
+      const allChildMenuList: MenuEntity[] = []
+      for (const item of id) {
+        await this.getAllChildMenu(allChildMenuList, item)
+      }
+      return await manager.delete(MenuEntity, [...id, ...allChildMenuList.map((item) => item.id)])
+    })
   }
 
   async getMenuTree(menuTree: MenuTree[], list: MenuEntity[], temp: MenuTree) {
