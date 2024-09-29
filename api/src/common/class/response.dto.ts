@@ -65,7 +65,7 @@ export class PageRequestDto {
   @IsNotEmpty({ message: '当前页码不能为空' })
   @IsNumber({}, { message: '当前页码必须是数字' })
   @IsOptional()
-  currentPage: number
+  currentPage: number = 1
 
   @ApiProperty({
     required: false,
@@ -75,5 +75,5 @@ export class PageRequestDto {
   @IsNotEmpty({ message: '当前页码不能为空' })
   @IsNumber({}, { message: '当前页码必须是数字' })
   @IsOptional()
-  pageSize: number
+  pageSize: number = 10
 }

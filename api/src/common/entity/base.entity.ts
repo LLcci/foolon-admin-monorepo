@@ -38,7 +38,7 @@ export class BaseEntity {
   @IsNotEmpty({ message: '是否启用不能为空' })
   @IsEnum(['0', '1'], { message: '是否启用必须是为 0 | 1 ' })
   @IsOptional()
-  status: '0' | '1'
+  status: '0' | '1' = '1'
 
   @Index()
   @CreateDateColumn({ name: 'create_time', comment: '创建时间' })
