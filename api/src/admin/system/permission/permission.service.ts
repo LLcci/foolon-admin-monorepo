@@ -11,6 +11,7 @@ import decrypt from '@/common/utils/decrypt'
 import encrypt from '@/common/utils/encrypt'
 import { RedisService } from '@/global/redis/redis.service'
 import { UserService } from '../user/user.service'
+import { RoleService } from '../role/role.service'
 
 @Injectable()
 export class PermissionService {
@@ -18,15 +19,14 @@ export class PermissionService {
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
     private readonly redisService: RedisService,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    private readonly roleService: RoleService
   ) {}
 
   async getPermission(id: string) {
     const user = await this.userRepository.findOne({
       select: ['id', 'email', 'phone', 'realname', 'roles', 'username', 'avatar'],
-      where: { id, roles: { status: '1', menus: { status: '1' } } },
-      relations: ['roles', 'roles.menus'],
-      order: { roles: { menus: { sort: 'ASC' } } }
+      where: { id }
     })
     if (!user) {
       throw '用户不存在'
@@ -34,6 +34,7 @@ export class PermissionService {
     if (user.status == '0') {
       throw '用户已被禁用'
     }
+    user.roles = await this.roleService.getRolesByUserId(user.id)
     const permission = await this.userService.getUserPermissions(user.id)
     await this.redisService.setUserPermissions(user.id, permission)
     return user

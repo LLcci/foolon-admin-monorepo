@@ -94,4 +94,11 @@ export class RoleService {
       return await manager.delete(RoleEntity, id)
     })
   }
+
+  async getRolesByUserId(id: string) {
+    return await this.roleRepository.find({
+      where: { users: { id }, status: '1', menus: { status: '1' } },
+      relations: { menus: true }
+    })
+  }
 }
