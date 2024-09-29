@@ -35,7 +35,7 @@ export class PermissionService {
       throw '用户已被禁用'
     }
     user.roles = await this.roleService.getRolesByUserId(user.id)
-    const permission = await this.userService.getUserPermissions(user.id)
+    const permission = await this.userService.getUserPermissions(user.roles)
     await this.redisService.setUserPermissions(user.id, permission)
     return user
   }

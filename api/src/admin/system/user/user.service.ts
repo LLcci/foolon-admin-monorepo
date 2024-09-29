@@ -12,6 +12,7 @@ import { RedisService } from '@/global/redis/redis.service'
 import { RoleService } from '../role/role.service'
 import { omit, uniq } from 'lodash'
 import { PageResultDto } from '@/common/class/response.dto'
+import { RoleEntity } from '../role/role.entity'
 
 @Injectable()
 export class UserService {
@@ -122,24 +123,20 @@ export class UserService {
   }
 
   /**
-   * 根据用户id获取用户权限
-   * @param id 用户id
+   * 根据用户角色获取用户权限
+   * @param roles 用户角色
    * @returns 用户权限数组
    */
-  async getUserPermissions(id: string) {
-    const user = await this.userRepository.findOne({
-      where: { id, status: '1', roles: { status: '1', menus: { status: '1', menuType: 2 } } },
-      relations: ['roles', 'roles.menus']
-    })
+  async getUserPermissions(roles: RoleEntity[]) {
     let permission: string[] = []
-    if (user) {
-      user.roles.forEach((role) => {
-        role.menus.forEach((menu) => {
+    roles.forEach((role) => {
+      role.menus.forEach((menu) => {
+        if (menu.menuType == 2) {
           permission.push(...menu.perms)
-        })
+        }
       })
-      permission = uniq(permission)
-    }
+    })
+    permission = uniq(permission)
     return permission
   }
 
