@@ -98,7 +98,8 @@ export class RoleService {
   async getRolesByUserId(id: string) {
     return await this.roleRepository.find({
       where: { users: { id }, status: '1', menus: { status: '1' } },
-      relations: { menus: true }
+      relations: { menus: true },
+      order: { menus: { sort: 'ASC' } }
     })
   }
 }
