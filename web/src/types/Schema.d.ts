@@ -4,6 +4,86 @@
  */
 
 export interface paths {
+  '/admin/archery/trainer/page': {
+    /** 分页教练列表 */
+    post: operations['TrainerController_getTrainerPageList']
+  }
+  '/admin/archery/trainer/list': {
+    /** 教练列表 */
+    post: operations['TrainerController_getTrainerList']
+  }
+  '/admin/archery/trainer/save': {
+    /** 保存教练 */
+    post: operations['TrainerController_saveTrainer']
+  }
+  '/admin/archery/trainer/import': {
+    /** 导入教练 */
+    post: operations['TrainerController_importTrainer']
+  }
+  '/admin/archery/trainer/id': {
+    /** id查询教练 */
+    get: operations['TrainerController_getTrainerById']
+  }
+  '/admin/archery/trainer/delete': {
+    /** id删除教练 */
+    post: operations['TrainerController_deleteTrainerById']
+  }
+  '/admin/archery/trainer/user/students': {
+    /** 根据用户id查询教练的学员 */
+    get: operations['TrainerController_getStudentsByUserId']
+  }
+  '/admin/archery/student/page': {
+    /** 分页学员列表 */
+    post: operations['StudentController_getStudentPageList']
+  }
+  '/admin/archery/student/list': {
+    /** 学员列表 */
+    post: operations['StudentController_getStudentList']
+  }
+  '/admin/archery/student/save': {
+    /** 保存学员 */
+    post: operations['StudentController_saveStudent']
+  }
+  '/admin/archery/student/import': {
+    /** 导入学员 */
+    post: operations['StudentController_importStudent']
+  }
+  '/admin/archery/student/id': {
+    /** id查询学员 */
+    get: operations['StudentController_getStudentById']
+  }
+  '/admin/archery/student/delete': {
+    /** id删除学员 */
+    post: operations['StudentController_deleteStudentById']
+  }
+  '/admin/archery/scoring/page': {
+    /** 分页计分本列表 */
+    post: operations['ScoringController_getScoringPageList']
+  }
+  '/admin/archery/scoring/save': {
+    /** 保存计分本 */
+    post: operations['ScoringController_saveScoring']
+  }
+  '/admin/archery/scoring/student/save': {
+    /** 学员保存计分本 */
+    post: operations['ScoringController_saveScoringByStudent']
+  }
+  '/admin/archery/scoring/student/page': {
+    /** 学员分页计分本列表 */
+    post: operations['ScoringController_getScoringPageListByStudent']
+  }
+  '/admin/archery/scoring/trainer/page': {
+    /** 教练分页计分本列表 */
+    post: operations['ScoringController_getScoringPageListByTrainer']
+  }
+  '/admin/archery/scoring/id': {
+    /** id查询计分本 */
+    get: operations['ScoringController_getScoringById']
+  }
+  '/admin/archery/scoring/delete': {
+    /** id删除计分本 */
+    post: operations['ScoringController_deleteScoringById']
+  }
   '/admin/sys/user/page': {
     /** 分页用户列表 */
     post: operations['UserController_getUserPageList']
@@ -247,14 +327,17 @@ export interface components {
       /**
        * @description 是否启用:0-停用,1-启用
        * @default 1
+       * @enum {string}
        */
-      status?: string
+      status?: '0' | '1'
       /** Format: date-time */
       createTime?: string
       /** Format: date-time */
       updateTime?: string
-      createUserId?: string
-      updateUserId?: string
+      /** @description 创建用户 */
+      createUser?: components['schemas']['UserEntity']
+      /** @description 更新用户 */
+      updateUser?: components['schemas']['UserEntity']
       /** Format: date-time */
       deleteTime?: string
       /** @description 父菜单id */
@@ -293,14 +376,17 @@ export interface components {
       /**
        * @description 是否启用:0-停用,1-启用
        * @default 1
+       * @enum {string}
        */
-      status?: string
+      status?: '0' | '1'
       /** Format: date-time */
       createTime?: string
       /** Format: date-time */
       updateTime?: string
-      createUserId?: string
-      updateUserId?: string
+      /** @description 创建用户 */
+      createUser?: components['schemas']['UserEntity']
+      /** @description 更新用户 */
+      updateUser?: components['schemas']['UserEntity']
       /** Format: date-time */
       deleteTime?: string
       /** @description 角色名称,查询时非必传,新增更新时必传 */
@@ -318,14 +404,17 @@ export interface components {
       /**
        * @description 是否启用:0-停用,1-启用
        * @default 1
+       * @enum {string}
        */
-      status?: string
+      status?: '0' | '1'
       /** Format: date-time */
       createTime?: string
       /** Format: date-time */
       updateTime?: string
-      createUserId?: string
-      updateUserId?: string
+      /** @description 创建用户 */
+      createUser?: components['schemas']['UserEntity']
+      /** @description 更新用户 */
+      updateUser?: components['schemas']['UserEntity']
       /** Format: date-time */
       deleteTime?: string
       /** @description 用户账户,查询时非必传,新增更新时必传 */
@@ -343,6 +432,343 @@ export interface components {
       /** @description 角色列表 */
       roles: readonly components['schemas']['RoleEntity'][]
     }
+    TrainerEntity: {
+      /** @description id,新增时不需要传,更新时需要传 */
+      id?: string
+      /**
+       * @description 是否启用:0-停用,1-启用
+       * @default 1
+       * @enum {string}
+       */
+      status?: '0' | '1'
+      /** Format: date-time */
+      createTime?: string
+      /** Format: date-time */
+      updateTime?: string
+      /** @description 创建用户 */
+      createUser?: components['schemas']['UserEntity']
+      /** @description 更新用户 */
+      updateUser?: components['schemas']['UserEntity']
+      /** Format: date-time */
+      deleteTime?: string
+      /** @description 描述 */
+      description?: string
+      /** @description 用户信息 */
+      user: components['schemas']['UserEntity']
+      /** @description 学员信息 */
+      students: readonly components['schemas']['StudentEntity'][]
+    }
+    StudentEntity: {
+      /** @description id,新增时不需要传,更新时需要传 */
+      id?: string
+      /**
+       * @description 是否启用:0-停用,1-启用
+       * @default 1
+       * @enum {string}
+       */
+      status?: '0' | '1'
+      /** Format: date-time */
+      createTime?: string
+      /** Format: date-time */
+      updateTime?: string
+      /** @description 创建用户 */
+      createUser?: components['schemas']['UserEntity']
+      /** @description 更新用户 */
+      updateUser?: components['schemas']['UserEntity']
+      /** Format: date-time */
+      deleteTime?: string
+      /** @description 描述 */
+      description?: string
+      /** @description 用户信息 */
+      user: components['schemas']['UserEntity']
+      /** @description 教练信息 */
+      trainer: components['schemas']['TrainerEntity']
+      /** @description 计分本 */
+      scorings: readonly string[]
+    }
+    TrainerPageListDto: {
+      /**
+       * @description 当前页码
+       * @default 1
+       */
+      currentPage?: number
+      /**
+       * @description 页大小
+       * @default 10
+       */
+      pageSize?: number
+      /**
+       * @description 是否启用:0-停用,1-启用
+       * @default 1
+       * @enum {string}
+       */
+      status?: '0' | '1'
+      /** @description 用户id */
+      userId?: string
+    }
+    TrainerListDto: {
+      /**
+       * @description 是否启用:0-停用,1-启用
+       * @default 1
+       * @enum {string}
+       */
+      status?: '0' | '1'
+      /** @description 用户id */
+      userId?: string
+    }
+    TrainerSaveDto: {
+      /** @description id,新增时不需要传,更新时需要传 */
+      id?: string
+      /**
+       * @description 是否启用:0-停用,1-启用
+       * @default 1
+       * @enum {string}
+       */
+      status?: '0' | '1'
+      /** @description 描述 */
+      description?: string
+      /** @description 用户id */
+      userId: string
+    }
+    TrainerImportDto: {
+      /** @description 教练列表 */
+      list: components['schemas']['TrainerSaveDto'][]
+    }
+    DeleteResult: Record<string, never>
+    StudentPageListDto: {
+      /**
+       * @description 当前页码
+       * @default 1
+       */
+      currentPage?: number
+      /**
+       * @description 页大小
+       * @default 10
+       */
+      pageSize?: number
+      /**
+       * @description 是否启用:0-停用,1-启用
+       * @default 1
+       * @enum {string}
+       */
+      status?: '0' | '1'
+      /** @description 用户id */
+      userId?: string
+      /** @description 教员id */
+      trainerId?: string
+    }
+    StudentListDto: {
+      /**
+       * @description 是否启用:0-停用,1-启用
+       * @default 1
+       * @enum {string}
+       */
+      status?: '0' | '1'
+      /** @description 用户id */
+      userId?: string
+      /** @description 教员id */
+      trainerId?: string
+    }
+    StudentSaveDto: {
+      /** @description id,新增时不需要传,更新时需要传 */
+      id?: string
+      /**
+       * @description 是否启用:0-停用,1-启用
+       * @default 1
+       * @enum {string}
+       */
+      status?: '0' | '1'
+      /** @description 描述 */
+      description?: string
+      /** @description 用户id */
+      userId: string
+      /** @description 教员id */
+      trainerId: string
+    }
+    StudentImportDto: {
+      /** @description 学员列表 */
+      list: components['schemas']['StudentSaveDto'][]
+    }
+    /** @enum {string} */
+    弓类型: '反曲弓' | '复合弓' | '光弓' | '传统弓'
+    /** @enum {string} */
+    射箭距离: '8' | '10' | '18' | '30' | '50' | '70' | '90'
+    /** @enum {string} */
+    靶纸类型:
+      | '40三联'
+      | '40全环'
+      | '60半环'
+      | '60全环'
+      | '80半环'
+      | '80全环'
+      | '122全环'
+      | '完美300'
+    ScoringValuesEntity: {
+      /** @description id,新增时不需要传,更新时需要传 */
+      id?: string
+      /** @description 环值 */
+      values: ('1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | 'X' | 'M')[]
+      /** Format: date-time */
+      createTime?: string
+    }
+    ScoringTypeEntity: {
+      /** @description id,新增时不需要传,更新时需要传 */
+      id?: string
+      /**
+       * @description 是否启用:0-停用,1-启用
+       * @default 1
+       * @enum {string}
+       */
+      status?: '0' | '1'
+      /** Format: date-time */
+      createTime?: string
+      /** Format: date-time */
+      updateTime?: string
+      /** @description 创建用户 */
+      createUser?: components['schemas']['UserEntity']
+      /** @description 更新用户 */
+      updateUser?: components['schemas']['UserEntity']
+      /** Format: date-time */
+      deleteTime?: string
+      /**
+       * @description 弓类型
+       * @default 反曲弓
+       */
+      bowType: components['schemas']['弓类型']
+      /**
+       * @description 射箭距离
+       * @default 8
+       */
+      distance: components['schemas']['射箭距离']
+      /**
+       * @description 靶纸类型
+       * @default 40三联
+       */
+      targetPaper: components['schemas']['靶纸类型']
+      /** @description 组数量 */
+      groupNum: number
+      /** @description 单组箭数量 */
+      singleGroupArrowNum: number
+      values: components['schemas']['ScoringValuesEntity'][]
+      /** @description 学员信息 */
+      student?: components['schemas']['StudentEntity']
+    }
+    ScoringPageListDto: {
+      /**
+       * @description 当前页码
+       * @default 1
+       */
+      currentPage?: number
+      /**
+       * @description 页大小
+       * @default 10
+       */
+      pageSize?: number
+      /**
+       * @description 是否启用:0-停用,1-启用
+       * @default 1
+       * @enum {string}
+       */
+      status?: '0' | '1'
+      /** @description 用户 */
+      studentId?: string
+      /** @description 弓类型 */
+      bowType?: components['schemas']['弓类型']
+      /** @description 射箭距离 */
+      distance?: components['schemas']['射箭距离']
+      /** @description 靶纸类型 */
+      targetPaper?: components['schemas']['靶纸类型']
+      /** @description 计分日期 */
+      scoringDate?: string[]
+    }
+    ScoringSaveDto: {
+      /** @description id,新增时不需要传,更新时需要传 */
+      id?: string
+      /**
+       * @description 是否启用:0-停用,1-启用
+       * @default 1
+       * @enum {string}
+       */
+      status?: '0' | '1'
+      /** Format: date-time */
+      createTime?: string
+      /** Format: date-time */
+      updateTime?: string
+      /** @description 创建用户 */
+      createUser?: components['schemas']['UserEntity']
+      /** @description 更新用户 */
+      updateUser?: components['schemas']['UserEntity']
+      /** Format: date-time */
+      deleteTime?: string
+      /**
+       * @description 弓类型
+       * @default 反曲弓
+       */
+      bowType: components['schemas']['弓类型']
+      /**
+       * @description 射箭距离
+       * @default 8
+       */
+      distance: components['schemas']['射箭距离']
+      /**
+       * @description 靶纸类型
+       * @default 40三联
+       */
+      targetPaper: components['schemas']['靶纸类型']
+      /** @description 组数量 */
+      groupNum: number
+      /** @description 单组箭数量 */
+      singleGroupArrowNum: number
+      /** @description 学员id */
+      studentId: string
+      /** @description 环值 */
+      values: ('0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | 'X' | 'M')[][]
+    }
+    ScoringSaveByStudentDto: {
+      /** Format: date-time */
+      createTime?: string
+      /** Format: date-time */
+      updateTime?: string
+      /** @description 创建用户 */
+      createUser?: components['schemas']['UserEntity']
+      /** @description 更新用户 */
+      updateUser?: components['schemas']['UserEntity']
+      /** Format: date-time */
+      deleteTime?: string
+      /**
+       * @description 弓类型
+       * @default 反曲弓
+       */
+      bowType: components['schemas']['弓类型']
+      /**
+       * @description 射箭距离
+       * @default 8
+       */
+      distance: components['schemas']['射箭距离']
+      /**
+       * @description 靶纸类型
+       * @default 40三联
+       */
+      targetPaper: components['schemas']['靶纸类型']
+      /** @description 组数量 */
+      groupNum: number
+      /** @description 单组箭数量 */
+      singleGroupArrowNum: number
+      /** @description 环值 */
+      values: ('0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | 'X' | 'M')[][]
+    }
+    PageRequestDto: {
+      /**
+       * @description 当前页码
+       * @default 1
+       */
+      currentPage?: number
+      /**
+       * @description 页大小
+       * @default 10
+       */
+      pageSize?: number
+    }
     UserPageListDto: {
       /**
        * @description 当前页码
@@ -357,8 +783,9 @@ export interface components {
       /**
        * @description 是否启用:0-停用,1-启用
        * @default 1
+       * @enum {string}
        */
-      status?: string
+      status?: '0' | '1'
       /** @description 用户账户,查询时非必传,新增更新时必传 */
       username?: string
       /** @description 用户名,查询时非必传,新增更新时必传 */
@@ -368,14 +795,17 @@ export interface components {
       /**
        * @description 是否启用:0-停用,1-启用
        * @default 1
+       * @enum {string}
        */
-      status?: string
+      status?: '0' | '1'
       /** Format: date-time */
       createTime?: string
       /** Format: date-time */
       updateTime?: string
-      createUserId?: string
-      updateUserId?: string
+      /** @description 创建用户 */
+      createUser?: components['schemas']['UserEntity']
+      /** @description 更新用户 */
+      updateUser?: components['schemas']['UserEntity']
       /** Format: date-time */
       deleteTime?: string
       /** @description 用户账户,查询时非必传,新增更新时必传 */
@@ -399,14 +829,17 @@ export interface components {
       /**
        * @description 是否启用:0-停用,1-启用
        * @default 1
+       * @enum {string}
        */
-      status?: string
+      status?: '0' | '1'
       /** Format: date-time */
       createTime?: string
       /** Format: date-time */
       updateTime?: string
-      createUserId?: string
-      updateUserId?: string
+      /** @description 创建用户 */
+      createUser?: components['schemas']['UserEntity']
+      /** @description 更新用户 */
+      updateUser?: components['schemas']['UserEntity']
       /** Format: date-time */
       deleteTime?: string
       /** @description 用户名,查询时非必传,新增更新时必传 */
@@ -438,14 +871,17 @@ export interface components {
       /**
        * @description 是否启用:0-停用,1-启用
        * @default 1
+       * @enum {string}
        */
-      status?: string
+      status?: '0' | '1'
       /** Format: date-time */
       createTime?: string
       /** Format: date-time */
       updateTime?: string
-      createUserId?: string
-      updateUserId?: string
+      /** @description 创建用户 */
+      createUser?: components['schemas']['UserEntity']
+      /** @description 更新用户 */
+      updateUser?: components['schemas']['UserEntity']
       /** Format: date-time */
       deleteTime?: string
       /** @description 用户账户,查询时非必传,新增更新时必传 */
@@ -461,7 +897,6 @@ export interface components {
       /** @description 角色ids */
       roleIds?: string[]
     }
-    DeleteResult: Record<string, never>
     LoginDto: {
       /** @description 用户账户,查询时非必传,新增更新时必传 */
       username?: string
@@ -488,14 +923,17 @@ export interface components {
       /**
        * @description 是否启用:0-停用,1-启用
        * @default 1
+       * @enum {string}
        */
-      status?: string
+      status?: '0' | '1'
       /** Format: date-time */
       createTime?: string
       /** Format: date-time */
       updateTime?: string
-      createUserId?: string
-      updateUserId?: string
+      /** @description 创建用户 */
+      createUser?: components['schemas']['UserEntity']
+      /** @description 更新用户 */
+      updateUser?: components['schemas']['UserEntity']
       /** Format: date-time */
       deleteTime?: string
       /** @description 父菜单id */
@@ -544,8 +982,9 @@ export interface components {
       /**
        * @description 是否启用:0-停用,1-启用
        * @default 1
+       * @enum {string}
        */
-      status?: string
+      status?: '0' | '1'
       /** @description 名称:类型为菜单时必填 */
       name?: string
     }
@@ -567,8 +1006,9 @@ export interface components {
       /**
        * @description 是否启用:0-停用,1-启用
        * @default 1
+       * @enum {string}
        */
-      status?: string
+      status?: '0' | '1'
       /** @description 角色名称,查询时非必传,新增更新时必传 */
       name?: string
       /** @description 角色编码,查询时非必传,新增更新时必传 */
@@ -580,14 +1020,17 @@ export interface components {
       /**
        * @description 是否启用:0-停用,1-启用
        * @default 1
+       * @enum {string}
        */
-      status?: string
+      status?: '0' | '1'
       /** Format: date-time */
       createTime?: string
       /** Format: date-time */
       updateTime?: string
-      createUserId?: string
-      updateUserId?: string
+      /** @description 创建用户 */
+      createUser?: components['schemas']['UserEntity']
+      /** @description 更新用户 */
+      updateUser?: components['schemas']['UserEntity']
       /** Format: date-time */
       deleteTime?: string
       /** @description 角色名称,查询时非必传,新增更新时必传 */
@@ -691,14 +1134,17 @@ export interface components {
       /**
        * @description 是否启用:0-停用,1-启用
        * @default 1
+       * @enum {string}
        */
-      status?: string
+      status?: '0' | '1'
       /** Format: date-time */
       createTime?: string
       /** Format: date-time */
       updateTime?: string
-      createUserId?: string
-      updateUserId?: string
+      /** @description 创建用户 */
+      createUser?: components['schemas']['UserEntity']
+      /** @description 更新用户 */
+      updateUser?: components['schemas']['UserEntity']
       /** Format: date-time */
       deleteTime?: string
       /** @description 查询时非必传,新增更新时需要传 */
@@ -726,8 +1172,9 @@ export interface components {
       /**
        * @description 是否启用:0-停用,1-启用
        * @default 1
+       * @enum {string}
        */
-      status?: string
+      status?: '0' | '1'
       /** @description 查询时非必传,新增更新时需要传 */
       name?: string
     }
@@ -741,14 +1188,17 @@ export interface components {
       /**
        * @description 是否启用:0-停用,1-启用
        * @default 1
+       * @enum {string}
        */
-      status?: string
+      status?: '0' | '1'
       /** Format: date-time */
       createTime?: string
       /** Format: date-time */
       updateTime?: string
-      createUserId?: string
-      updateUserId?: string
+      /** @description 创建用户 */
+      createUser?: components['schemas']['UserEntity']
+      /** @description 更新用户 */
+      updateUser?: components['schemas']['UserEntity']
       /** Format: date-time */
       deleteTime?: string
       /** @description 字典标签 */
@@ -771,14 +1221,17 @@ export interface components {
       /**
        * @description 是否启用:0-停用,1-启用
        * @default 1
+       * @enum {string}
        */
-      status?: string
+      status?: '0' | '1'
       /** Format: date-time */
       createTime?: string
       /** Format: date-time */
       updateTime?: string
-      createUserId?: string
-      updateUserId?: string
+      /** @description 创建用户 */
+      createUser?: components['schemas']['UserEntity']
+      /** @description 更新用户 */
+      updateUser?: components['schemas']['UserEntity']
       /** Format: date-time */
       deleteTime?: string
       /** @description 字典类型名称 */
@@ -804,8 +1257,9 @@ export interface components {
       /**
        * @description 是否启用:0-停用,1-启用
        * @default 1
+       * @enum {string}
        */
-      status?: string
+      status?: '0' | '1'
       /** @description 字典类型名称 */
       name?: string
       /** @description 字典类型编码 */
@@ -817,14 +1271,17 @@ export interface components {
       /**
        * @description 是否启用:0-停用,1-启用
        * @default 1
+       * @enum {string}
        */
-      status?: string
+      status?: '0' | '1'
       /** Format: date-time */
       createTime?: string
       /** Format: date-time */
       updateTime?: string
-      createUserId?: string
-      updateUserId?: string
+      /** @description 创建用户 */
+      createUser?: components['schemas']['UserEntity']
+      /** @description 更新用户 */
+      updateUser?: components['schemas']['UserEntity']
       /** Format: date-time */
       deleteTime?: string
       /** @description 字典类型名称 */
@@ -852,8 +1309,9 @@ export interface components {
       /**
        * @description 是否启用:0-停用,1-启用
        * @default 1
+       * @enum {string}
        */
-      status?: string
+      status?: '0' | '1'
       /** @description 字典类型ID */
       typeId: string
       /** @description 字典标签 */
@@ -867,14 +1325,17 @@ export interface components {
       /**
        * @description 是否启用:0-停用,1-启用
        * @default 1
+       * @enum {string}
        */
-      status?: string
+      status?: '0' | '1'
       /** Format: date-time */
       createTime?: string
       /** Format: date-time */
       updateTime?: string
-      createUserId?: string
-      updateUserId?: string
+      /** @description 创建用户 */
+      createUser?: components['schemas']['UserEntity']
+      /** @description 更新用户 */
+      updateUser?: components['schemas']['UserEntity']
       /** Format: date-time */
       deleteTime?: string
       /** @description 字典标签 */
@@ -912,6 +1373,425 @@ export type $defs = Record<string, never>
 export type external = Record<string, never>
 
 export interface operations {
+  /** 分页教练列表 */
+  TrainerController_getTrainerPageList: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['TrainerPageListDto']
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': components['schemas']['PageResultDto'] & {
+            records: components['schemas']['TrainerEntity'][]
+          }
+        }
+      }
+    }
+  }
+  /** 教练列表 */
+  TrainerController_getTrainerList: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['TrainerListDto']
+      }
+    }
+    responses: {
+      /** @description 教练列表 */
+      200: {
+        content: {
+          'application/json': components['schemas']['TrainerEntity'][]
+        }
+      }
+    }
+  }
+  /** 保存教练 */
+  TrainerController_saveTrainer: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['TrainerSaveDto']
+      }
+    }
+    responses: {
+      /** @description 保存教练 */
+      200: {
+        content: {
+          'application/json': components['schemas']['TrainerEntity']
+        }
+      }
+    }
+  }
+  /** 导入教练 */
+  TrainerController_importTrainer: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['TrainerImportDto']
+      }
+    }
+    responses: {
+      /** @description 导入教练 */
+      200: {
+        content: {
+          'application/json': components['schemas']['TrainerEntity'][]
+        }
+      }
+    }
+  }
+  /** id查询教练 */
+  TrainerController_getTrainerById: {
+    parameters: {
+      query: {
+        id: string
+      }
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    responses: {
+      /** @description id查询教练 */
+      200: {
+        content: {
+          'application/json': components['schemas']['TrainerEntity']
+        }
+      }
+    }
+  }
+  /** id删除教练 */
+  TrainerController_deleteTrainerById: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    responses: {
+      /** @description id删除教练 */
+      200: {
+        content: {
+          'application/json': components['schemas']['DeleteResult']
+        }
+      }
+    }
+  }
+  /** 根据用户id查询教练的学员 */
+  TrainerController_getStudentsByUserId: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    responses: {
+      /** @description 根据用户id查询教练的学员 */
+      200: {
+        content: {
+          'application/json': components['schemas']['TrainerEntity']
+        }
+      }
+    }
+  }
+  /** 分页学员列表 */
+  StudentController_getStudentPageList: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['StudentPageListDto']
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': components['schemas']['PageResultDto'] & {
+            records: components['schemas']['StudentEntity'][]
+          }
+        }
+      }
+    }
+  }
+  /** 学员列表 */
+  StudentController_getStudentList: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['StudentListDto']
+      }
+    }
+    responses: {
+      /** @description 学员列表 */
+      200: {
+        content: {
+          'application/json': components['schemas']['StudentEntity'][]
+        }
+      }
+    }
+  }
+  /** 保存学员 */
+  StudentController_saveStudent: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['StudentSaveDto']
+      }
+    }
+    responses: {
+      /** @description 保存学员 */
+      200: {
+        content: {
+          'application/json': components['schemas']['StudentEntity']
+        }
+      }
+    }
+  }
+  /** 导入学员 */
+  StudentController_importStudent: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['StudentImportDto']
+      }
+    }
+    responses: {
+      /** @description 导入学员 */
+      200: {
+        content: {
+          'application/json': components['schemas']['StudentEntity'][]
+        }
+      }
+    }
+  }
+  /** id查询学员 */
+  StudentController_getStudentById: {
+    parameters: {
+      query: {
+        id: string
+      }
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    responses: {
+      /** @description id查询学员 */
+      200: {
+        content: {
+          'application/json': components['schemas']['StudentEntity']
+        }
+      }
+    }
+  }
+  /** id删除学员 */
+  StudentController_deleteStudentById: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    responses: {
+      /** @description id删除学员 */
+      200: {
+        content: {
+          'application/json': components['schemas']['DeleteResult']
+        }
+      }
+    }
+  }
+  /** 分页计分本列表 */
+  ScoringController_getScoringPageList: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ScoringPageListDto']
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': components['schemas']['PageResultDto'] & {
+            records: components['schemas']['ScoringTypeEntity'][]
+          }
+        }
+      }
+    }
+  }
+  /** 保存计分本 */
+  ScoringController_saveScoring: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ScoringSaveDto']
+      }
+    }
+    responses: {
+      /** @description 保存计分本 */
+      200: {
+        content: {
+          'application/json': components['schemas']['ScoringTypeEntity']
+        }
+      }
+    }
+  }
+  /** 学员保存计分本 */
+  ScoringController_saveScoringByStudent: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ScoringSaveByStudentDto']
+      }
+    }
+    responses: {
+      /** @description 学员保存计分本 */
+      200: {
+        content: {
+          'application/json': components['schemas']['ScoringTypeEntity']
+        }
+      }
+    }
+  }
+  /** 学员分页计分本列表 */
+  ScoringController_getScoringPageListByStudent: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PageRequestDto']
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': components['schemas']['PageResultDto'] & {
+            records: components['schemas']['ScoringTypeEntity'][]
+          }
+        }
+      }
+    }
+  }
+  /** 教练分页计分本列表 */
+  ScoringController_getScoringPageListByTrainer: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ScoringPageListDto']
+      }
+    }
+    responses: {
+      200: {
+        content: {
+          'application/json': components['schemas']['PageResultDto'] & {
+            records: components['schemas']['ScoringTypeEntity'][]
+          }
+        }
+      }
+    }
+  }
+  /** id查询计分本 */
+  ScoringController_getScoringById: {
+    parameters: {
+      query: {
+        id: string
+      }
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    responses: {
+      /** @description id查询计分本 */
+      200: {
+        content: {
+          'application/json': components['schemas']['ScoringTypeEntity']
+        }
+      }
+    }
+  }
+  /** id删除计分本 */
+  ScoringController_deleteScoringById: {
+    parameters: {
+      header?: {
+        /** @description Bearer token */
+        Authorization?: string
+      }
+    }
+    responses: {
+      /** @description id删除计分本 */
+      200: {
+        content: {
+          'application/json': components['schemas']['DeleteResult']
+        }
+      }
+    }
+  }
   /** 分页用户列表 */
   UserController_getUserPageList: {
     parameters: {

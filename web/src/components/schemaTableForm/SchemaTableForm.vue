@@ -162,7 +162,10 @@ const emits = defineEmits([
   'onTableSaveSuccess',
   'onTableDeleteSuccess',
   'onTableExportSuccess',
-  'onTableIdSuccess'
+  'onTableIdSuccess',
+  'onEdit',
+  'onLook',
+  'onCreate'
 ])
 
 const pagination = ref<Pagination>({
@@ -264,7 +267,8 @@ const searForm = computed(() => {
     if (props.tableForm[key]?.searchForm) {
       formProps.formItems[key] = {
         props: props.tableForm[key]?.searchForm?.props,
-        component: props.tableForm[key]?.searchForm?.component as VNode
+        component: props.tableForm[key]?.searchForm?.component as VNode,
+        comProps: props.tableForm[key]?.searchForm?.comProps
       }
     }
   }
@@ -313,7 +317,8 @@ const editForm = computed(() => {
       formProps.formItems[key] = {
         props: props.tableForm[key]?.editForm?.props,
         component: props.tableForm[key]?.editForm?.component as VNode,
-        vIf: props.tableForm[key]?.editForm?.vIf
+        vIf: props.tableForm[key]?.editForm?.vIf,
+        comProps: props.tableForm[key]?.editForm?.comProps
       }
     }
   }
@@ -341,15 +346,22 @@ const dialogTitle = ref<'新增' | '编辑' | '查看'>('新增')
 const handleDialog = async (title: '新增' | '编辑' | '查看', form: FormModel) => {
   dialogTitle.value = title
   Object.assign(editForm.value.props, { disabled: false })
-  if (title == '查看') {
-    Object.assign(editForm.value.props, { disabled: true })
-  }
   editFormModel.value = { ..._editFormModel }
   if (title === '编辑' || title === '查看') {
     const { data, error } = await tableId(props.api.id, form.id)
     if (error.value) return
     Object.assign(editFormModel.value, data.value)
     emits('onTableIdSuccess', data.value)
+    if (title == '查看') {
+      Object.assign(editForm.value.props, { disabled: true })
+      emits('onLook')
+    }
+    if (title == '编辑') {
+      emits('onEdit')
+    }
+  }
+  if (title == '新增') {
+    emits('onCreate')
   }
   dialogVisible.value = true
 }

@@ -6,7 +6,12 @@
         v-bind="item?.props"
         :prop="index"
       >
-        <component :is="item?.component" v-model="formModel[index as string]"> </component>
+        <component
+          :is="item?.component"
+          v-bind="item?.comProps"
+          v-model="formModel[index as string]"
+        >
+        </component>
       </el-form-item>
     </template>
     <el-form-item v-if="props.form.props.showButtonSlot">

@@ -2,7 +2,7 @@ import type { FormModel } from '@/types'
 import type { TableColumnInstance } from 'element-plus'
 import type { FormItemProps } from '@/components/schemaForm/types'
 import type { FormItemRule } from 'element-plus'
-import type { VNode } from 'vue'
+import type { Ref, VNode } from 'vue'
 
 export type Table = Omit<TableColumnInstance['$props'], 'prop'> & {
   /**
@@ -31,7 +31,11 @@ export type EditForm = {
   /**
    * 表单项目组件
    */
-  component?: VNode
+  component?: VNode | Ref
+  /**
+   *
+   */
+  comProps?: Record<string, any>
   /**
    * 导入数据格式化
    * @param value 当前参数值
@@ -58,7 +62,11 @@ export type SearchForm = {
   /**
    * 表单项目组件
    */
-  component?: VNode
+  component?: VNode | Ref
+  /**
+   *
+   */
+  comProps?: Record<string, any>
 }
 
 export type SchemaTableForm<T extends FormModel> = Partial<

@@ -38,7 +38,11 @@ export type FormItems<T> = Partial<
       /**
        * 组件
        */
-      component: VNode
+      component: VNode | Ref
+      /**
+       * 组件props
+       */
+      comProps?: Record<string, any>
       /**
        * 等同于v-if
        */
