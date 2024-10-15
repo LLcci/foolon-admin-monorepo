@@ -60,8 +60,8 @@ export class UploadController {
     if (!file) {
       throw '文件上传失败'
     }
-    if (file.size > 51200) {
-      const quality = Math.floor(file.size / 51200)
+    if (file.size > 204792) {
+      const quality = Math.floor((204792 / file.size) * 100)
       await compressImg2Webp(file.path, quality)
       await deleteFile(file.path)
       return `${file.filename.split('.')[0]}.webp`

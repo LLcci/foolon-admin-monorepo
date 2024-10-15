@@ -92,7 +92,7 @@ import type { paths } from '@/types/Schema'
 import { ElAvatar, ElInput, ElMessage, ElOption, ElSelect, type FormItemRule } from 'element-plus'
 import { h, ref, type VNode } from 'vue'
 import { useRoleList } from './api/role'
-import FormImgUpload from '@/components/formImgUpload/FormImgUpload.vue'
+import FormAvatarUpload from '@/components/formAvatarUpload/FormAvatarUpload.vue'
 import { useImgDelete } from './api/user'
 import { useUser } from '@/stores/useUser'
 import type SchemaForm from '@/components/schemaForm/types'
@@ -141,18 +141,13 @@ type ItemComponent = {
 
 const avatarComponent: ItemComponent = {
   label: '头像',
-  component: h(FormImgUpload, {
+  component: h(FormAvatarUpload, {
     uploadProps: {
       action: `${import.meta.env.VITE_API_URL}/admin/sys/upload/img`,
       headers: { Authorization: `Bearer ${useUser().token}` },
       name: 'file',
       'on-error': (err) => {
         ElMessage.error(JSON.parse(err.message).message)
-      },
-      'on-handle-delete': (imageUrl) => {
-        if (imageUrl) {
-          useImgDelete(imageUrl)
-        }
       }
     }
   })

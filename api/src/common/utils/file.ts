@@ -37,7 +37,7 @@ export function compressImg2Webp(filePath: string, quality: number) {
     })
     readStream.on('end', () => {
       sharp(Buffer.concat(data), { animated: true })
-        .webp({ effort: 6, quality })
+        .webp({ effort: 6, quality, lossless: true })
         .toFile(`${filePath.split('.')[0]}.webp`)
         .then(() => {
           resolve(`${filePath.split('.')[0]}.webp`)

@@ -195,7 +195,7 @@ import UserMenuTree from '../userMenuTree/UserMenuTree.vue'
 import { useUser } from '@/stores/useUser'
 import schemaForm from '../schemaForm/SchemaForm.vue'
 import type SchemaForm from '../schemaForm/types'
-import FormImgUpload from '@/components/formImgUpload/FormImgUpload.vue'
+import FormAvatarUpload from '@/components/formAvatarUpload/FormAvatarUpload.vue'
 import { useImgDelete } from '@/views/sys/api/user'
 import type { SchemaFormInstance } from '../schemaForm/types'
 import type { paths } from '@/types/Schema'
@@ -330,18 +330,13 @@ const userInfoForm = ref<SchemaForm<typeof userInfoFormModel.value>>({
       props: {
         label: '头像'
       },
-      component: h(FormImgUpload, {
+      component: h(FormAvatarUpload, {
         uploadProps: {
           action: `${import.meta.env.VITE_API_URL}/admin/sys/upload/img`,
           headers: { Authorization: `Bearer ${useUser().token}` },
           name: 'file',
           'on-error': (err) => {
             ElMessage.error(JSON.parse(err.message).message)
-          },
-          'on-handle-delete': (imageUrl) => {
-            if (imageUrl) {
-              useImgDelete(imageUrl)
-            }
           }
         }
       })
