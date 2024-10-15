@@ -1,6 +1,6 @@
-# 图片上传(FormImgUpload)
+# 头像上传(FormAvatarUpload)
 
-`/web/src/components/formImgUpload/FormImgUpload.vue`该组件对 [Element Plus 的 Upload 上传组件](https://element-plus.org/zh-CN/component/upload.html) 进行了二次封装，提供了可与 [Element Plus 的 Form 组件](https://element-plus.org/zh-CN/component/form.html) 配合使用的图片上传功能。
+`/web/src/components/formAvatarUpload/FormAvatarUpload.vue`该组件对 [Element Plus 的 Upload 上传组件](https://element-plus.org/zh-CN/component/upload.html) 进行了二次封装，提供了可与 [Element Plus 的 Form 组件](https://element-plus.org/zh-CN/component/form.html) 配合使用的图片上传功能。
 
 ## API
 

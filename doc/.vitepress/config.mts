@@ -99,7 +99,7 @@ export default defineConfig({
               items: [
                 { text: '布局组件(MainLayout)', link: '/webDoc/components/MainLayout' },
                 { text: '递归菜单数(UserMenuTree)', link: '/webDoc/components/UserMenuTree' },
-                { text: '图片上传(FormImgUpload)', link: '/webDoc/components/FormImgUpload' },
+                { text: '图片上传(FormAvatarUpload)', link: '/webDoc/components/FormAvatarUpload' },
                 { text: '数选择器(FormTree)', link: '/webDoc/components/FormTree' },
                 { text: '图标选择器(IconSelect)', link: '/webDoc/components/IconSelect' },
                 { text: '表单(SchemaForm)', link: '/webDoc/components/SchemaForm' },
