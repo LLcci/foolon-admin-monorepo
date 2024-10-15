@@ -45,7 +45,7 @@ const api = ref<Api>({
 
 const searchFormModel = ref<
   paths['/admin/sys/menu/page']['post']['requestBody']['content']['application/json']
->({})
+>({ status: '1' })
 
 const editFormModel = ref<
   paths['/admin/sys/menu/save']['post']['requestBody']['content']['application/json']

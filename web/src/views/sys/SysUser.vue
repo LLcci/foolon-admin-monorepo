@@ -117,7 +117,7 @@ const schemaTableFormRef = ref<SchemaTableFormInstance>()
 
 const searchFormModel = ref<
   paths['/admin/sys/user/page']['post']['requestBody']['content']['application/json']
->({})
+>({ status: '1' })
 
 const editFormModel = ref<
   paths['/admin/sys/user/create']['post']['requestBody']['content']['application/json'] & {

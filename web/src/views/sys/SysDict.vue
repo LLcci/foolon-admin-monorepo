@@ -96,7 +96,7 @@ const api = ref<Api>({
 
 const searchFormModel = ref<
   paths['/admin/sys/dictType/page']['post']['requestBody']['content']['application/json']
->({})
+>({ status: '1' })
 
 const editFormModel = ref<
   paths['/admin/sys/dictType/save']['post']['requestBody']['content']['application/json']
@@ -200,7 +200,8 @@ const settingApi = ref<Api>({
 const settingSearchFormModel = ref<
   paths['/admin/sys/dictData/page']['post']['requestBody']['content']['application/json']
 >({
-  typeId: ''
+  typeId: '',
+  status: '1'
 })
 
 const settingEditFormModel = ref<
