@@ -25,14 +25,14 @@ export class LoggerInterceptor implements NestInterceptor {
       tap(
         (data) =>
           this.logger.log(
-            `响应结果: ${req.method} ${req.url} userId:${req.user?.id ?? ''} data:${JSON.stringify(data)}`
+            `响应结果: ${req.method} ${req.url} ip:${req.ip} userId:${req.user?.id ?? ''} data:${JSON.stringify(data)}`
           ),
         (err) => {
           if (!(err instanceof HttpException)) {
             this.logger.error(err)
           } else {
             this.logger.error(
-              `响应错误: ${req.method} ${req.url} userId:${req.user?.id ?? ''} data:${err.message}`
+              `响应错误: ${req.method} ${req.url} ip:${req.ip} userId:${req.user?.id ?? ''} data:${err.message}`
             )
           }
         }
