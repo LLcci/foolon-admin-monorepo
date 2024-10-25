@@ -2,6 +2,7 @@
 https://docs.nestjs.com/providers#services
 */
 
+import { timerSchema } from '@/admin/archery/timer/timer.schema'
 import {
   REDIS_CODE_EX,
   REDIS_CODE_PREFIX,
@@ -16,10 +17,13 @@ import { LoggerService } from '@/global/logger/logger.service'
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { RedisClientOptions, createClient, RedisClientType } from 'redis'
+import { Client } from 'redis-om'
 
 @Injectable()
 export class RedisService implements OnModuleInit {
   public client: RedisClientType
+  public OMClient
+  public timerRepository
 
   constructor(
     private logger: LoggerService,
@@ -31,15 +35,18 @@ export class RedisService implements OnModuleInit {
     this.client = createClient(this.options) as RedisClientType
     this.client.on('error', (err) => this.logger.error('redis连接失败', err))
     await this.client.connect()
+    this.OMClient = await new Client().use(this.client)
+    this.timerRepository = this.OMClient.fetchRepository(timerSchema)
+    await this.timerRepository.createIndex()
     this.logger.log('redis连接成功')
   }
 
-  async setRoutes(routes: string) {
-    return await this.client.set(REDIS_ROUTE_PREFIX, routes)
+  async setRoutes(routes: string[]) {
+    return await this.client.sAdd(REDIS_ROUTE_PREFIX, routes)
   }
 
   async getRoutes() {
-    return (await this.client.get(REDIS_ROUTE_PREFIX)).split(',')
+    return await this.client.sMembers(REDIS_ROUTE_PREFIX)
   }
 
   async setCode(codeId: string, text: string) {
@@ -94,9 +101,8 @@ export class RedisService implements OnModuleInit {
   }
 
   async setUserPermissions(id: string, permissions: string[]) {
-    return await this.client.set(`${REDIS_USER_PERMISSION_PREFIX}${id}`, permissions.join(','), {
-      EX: REDIS_TOKEN_EX
-    })
+    await this.client.sAdd(`${REDIS_USER_PERMISSION_PREFIX}${id}`, permissions)
+    await this.client.expire(`${REDIS_USER_PERMISSION_PREFIX}${id}`, REDIS_TOKEN_EX)
   }
 
   async checkUserPermissions(id: string, permission: string) {
@@ -105,7 +111,7 @@ export class RedisService implements OnModuleInit {
   }
 
   async getUserPermissions(id: string) {
-    return (await this.client.get(`${REDIS_USER_PERMISSION_PREFIX}${id}`)).split(',')
+    return await this.client.sMembers(`${REDIS_USER_PERMISSION_PREFIX}${id}`)
   }
 
   async deleteUserPermissions(id: string) {

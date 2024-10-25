@@ -68,6 +68,6 @@ async function bootstrap() {
     .map((item) => item.path.replace(/\\/g, '/'))
     .filter((item) => !item.includes('/swagger-api'))
   const redis = app.get(RedisService)
-  redis.setRoutes(routes.join(','))
+  redis.setRoutes(routes)
 }
 bootstrap()
