@@ -40,7 +40,7 @@ services:
     container_name: mysql-container
     restart: always
     # 指定使用mysql官方Docker镜像
-    image: mysql
+    image: mysql:8.4.3
     # 端口映射，将宿主机的3306端口映射到容器的3306端口
     ports:
       - '3306:3306'

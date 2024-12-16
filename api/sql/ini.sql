@@ -3,15 +3,15 @@
 
  Source Server         : localhost
  Source Server Type    : MySQL
- Source Server Version : 80200
+ Source Server Version : 80403
  Source Host           : localhost:3306
  Source Schema         : foolon-admin
 
  Target Server Type    : MySQL
- Target Server Version : 80200
+ Target Server Version : 80403
  File Encoding         : 65001
 
- Date: 27/09/2024 14:41:37
+ Date: 16/12/2024 12:42:36
 */
 
 SET NAMES utf8mb4;
