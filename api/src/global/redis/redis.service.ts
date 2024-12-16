@@ -1,8 +1,6 @@
 /*
 https://docs.nestjs.com/providers#services
 */
-
-import { timerSchema } from '@/admin/archery/timer/timer.schema'
 import {
   REDIS_CODE_EX,
   REDIS_CODE_PREFIX,
@@ -17,13 +15,10 @@ import { LoggerService } from '@/global/logger/logger.service'
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { RedisClientOptions, createClient, RedisClientType } from 'redis'
-import { Client } from 'redis-om'
 
 @Injectable()
 export class RedisService implements OnModuleInit {
   public client: RedisClientType
-  public OMClient
-  public timerRepository
 
   constructor(
     private logger: LoggerService,
@@ -35,9 +30,6 @@ export class RedisService implements OnModuleInit {
     this.client = createClient(this.options) as RedisClientType
     this.client.on('error', (err) => this.logger.error('redis连接失败', err))
     await this.client.connect()
-    this.OMClient = await new Client().use(this.client)
-    this.timerRepository = this.OMClient.fetchRepository(timerSchema)
-    await this.timerRepository.createIndex()
     this.logger.log('redis连接成功')
   }
 
