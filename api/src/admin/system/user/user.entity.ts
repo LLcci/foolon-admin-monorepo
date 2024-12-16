@@ -69,9 +69,6 @@ export class UserEntity extends BaseEntity {
   @Column({ comment: '密码盐' })
   salt: string
 
-  @Column({ comment: '初始向量' })
-  iv: string
-
   @Column({ nullable: true, comment: '头像' })
   @ApiProperty({ required: false, description: '头像' })
   @IsString({ message: '头像地址必须是字符串' })

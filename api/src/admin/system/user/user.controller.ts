@@ -19,8 +19,8 @@ import validateArrObj from '@/common/utils/validateArrObj'
 import { omit } from 'lodash'
 import { DeleteResult } from 'typeorm'
 import { RoleService } from '../role/role.service'
-import encrypt from '@/common/utils/encrypt'
 import { ApiPaginatedResponse } from '@/common/decorator/pageRequest.decorator'
+import * as bcrypt from 'bcrypt'
 
 @ApiTags('用户管理')
 @ApiHeader({
@@ -102,10 +102,9 @@ export class UserController {
     const userEntity = new UserEntity()
     userEntity.id = updatePasswordDto.id
     userEntity.updateUser = userEnt
-    const { iv, salt, encryptedPassword } = await encrypt(updatePasswordDto.password)
+    const salt = await bcrypt.genSalt()
+    userEntity.password = await bcrypt.hash(updatePasswordDto.password, salt)
     userEntity.salt = salt
-    userEntity.iv = iv
-    userEntity.password = encryptedPassword
     await this.userService.saveUser(userEntity)
     return '更新用户密码成功'
   }

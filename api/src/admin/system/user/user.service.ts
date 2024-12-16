@@ -7,12 +7,12 @@ import { UserEntity } from '@/admin/system/user/user.entity'
 import { Injectable } from '@nestjs/common'
 import { Like, Repository } from 'typeorm'
 import { InjectRepository } from '@nestjs/typeorm'
-import encrypt from '@/common/utils/encrypt'
 import { RedisService } from '@/global/redis/redis.service'
 import { RoleService } from '../role/role.service'
 import { omit, uniq } from 'lodash'
 import { PageResultDto } from '@/common/class/response.dto'
 import { RoleEntity } from '../role/role.entity'
+import * as bcrypt from 'bcrypt'
 
 @Injectable()
 export class UserService {
@@ -74,7 +74,7 @@ export class UserService {
   async saveUser(userEntity: UserEntity) {
     const user = await this.userRepository.save(userEntity)
     const userInfo = await this.userRepository.findOne({ where: { id: user.id } })
-    await this.redisService.setUserInfoVersion(userInfo.id, userInfo.iv)
+    await this.redisService.setUserInfoVersion(userInfo.id, userInfo.salt)
     return userInfo
   }
 
@@ -109,12 +109,11 @@ export class UserService {
       throw `${userCreateDto.username} 用户账户已存在`
     }
     // 加密密码
-    const { iv, salt, encryptedPassword } = await encrypt(userCreateDto.password)
-    userCreateDto.password = encryptedPassword
+    const salt = await bcrypt.genSalt()
+    userCreateDto.password = await bcrypt.hash(userCreateDto.password, salt)
     const userEntity = new UserEntity()
     Object.assign(userEntity, omit(userCreateDto, ['roleIds']))
     userEntity.salt = salt
-    userEntity.iv = iv
     userEntity.roles = []
     if (userCreateDto.roleIds?.length > 0) {
       userEntity.roles = await this.roleService.getRolesById(userCreateDto.roleIds)

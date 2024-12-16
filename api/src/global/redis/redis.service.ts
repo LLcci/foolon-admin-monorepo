@@ -70,22 +70,22 @@ export class RedisService implements OnModuleInit {
   }
 
   async checkToken(token: string) {
-    const redisUserIv = await this.getToken(token)
-    if (!redisUserIv) {
+    const redisUserSalt = await this.getToken(token)
+    if (!redisUserSalt) {
       return { errMsg: '登录已过期，请重新登录' }
     }
     const payload = await this.jwtService.verifyAsync<{ id: string }>(token, {
       secret: JWT_SECRET
     })
-    const userIv = await this.getUserInfoVersion(payload.id)
-    if (userIv !== redisUserIv) {
+    const userSalt = await this.getUserInfoVersion(payload.id)
+    if (userSalt !== redisUserSalt) {
       return { errMsg: '密码已修改，请重新登录' }
     }
     return { payload, errMsg: '' }
   }
 
-  async setUserInfoVersion(id: string, iv: string) {
-    return await this.client.set(`${REDIS_USERID_PREFIX}${id}`, iv)
+  async setUserInfoVersion(id: string, salt: string) {
+    return await this.client.set(`${REDIS_USERID_PREFIX}${id}`, salt)
   }
 
   async getUserInfoVersion(id: string) {

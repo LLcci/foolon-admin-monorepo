@@ -14,7 +14,7 @@ export class UserListDto extends PickType(UserEntity, ['username', 'realname', '
 
 export class UserPageListDto extends IntersectionType(PageRequestDto, UserListDto) {}
 
-export class UserCreateDto extends OmitType(UserEntity, ['id', 'salt', 'iv', 'roles']) {
+export class UserCreateDto extends OmitType(UserEntity, ['id', 'salt', 'roles']) {
   @ApiProperty({
     required: false,
     description: '角色ids',
@@ -26,13 +26,7 @@ export class UserCreateDto extends OmitType(UserEntity, ['id', 'salt', 'iv', 'ro
   roleIds?: string[]
 }
 
-export class UserUpdateDto extends OmitType(UserEntity, [
-  'salt',
-  'iv',
-  'roles',
-  'password',
-  'username'
-]) {
+export class UserUpdateDto extends OmitType(UserEntity, ['salt', 'roles', 'password', 'username']) {
   @ApiProperty({
     required: false,
     description: '角色ids',
@@ -109,7 +103,7 @@ export class UserImportDto {
   list: UserCreateDto[]
 }
 
-export class UserSelectDto extends OmitType(UserEntity, ['password', 'salt', 'iv', 'roles']) {
+export class UserSelectDto extends OmitType(UserEntity, ['password', 'salt', 'roles']) {
   @ApiProperty({
     required: false,
     description: '角色ids',

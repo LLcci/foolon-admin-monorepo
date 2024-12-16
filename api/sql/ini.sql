@@ -11,7 +11,7 @@
  Target Server Version : 80403
  File Encoding         : 65001
 
- Date: 16/12/2024 12:42:36
+ Date: 16/12/2024 15:07:02
 */
 
 SET NAMES utf8mb4;
@@ -323,7 +323,6 @@ CREATE TABLE `sys_user`  (
   `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '密码',
   `realname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户名',
   `salt` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '密码盐',
-  `iv` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '初始向量',
   `avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '头像',
   `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '邮箱',
   `phone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '手机号',
@@ -349,7 +348,7 @@ CREATE TABLE `sys_user`  (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES ('2024-02-27 16:02:03.690395', '2024-09-04 11:30:53.000000', 'ad59b6ce-18e3-46cb-815f-179159402b57', 'admin', '01155809c819138cadf59601b1023ebd', '超级管理员', '498e09246d1f7de6b3f71f3cbd1dcb17', '01cd2922368f1417b78d0e336f97f542', 'img-1725420598191-841110600.webp', '', '', NULL, NULL, NULL, '1');
+INSERT INTO `sys_user` VALUES ('2024-02-27 16:02:03.690395', '2024-12-16 15:04:30.000000', 'ad59b6ce-18e3-46cb-815f-179159402b57', 'admin', '$2b$10$CynObk0L2Psl6GFfYBYDc.7zyz.E7.15JNXUPb8PjVrnkbaD2RY.K', '超级管理员', '$2b$10$CynObk0L2Psl6GFfYBYDc.', 'img-1725420598191-841110600.webp', '', '', NULL, NULL, 'ad59b6ce-18e3-46cb-815f-179159402b57', '1');
 
 -- ----------------------------
 -- Table structure for sys_user_roles_sys_role
