@@ -16,8 +16,6 @@ export class RoleService {
   constructor(
     @InjectRepository(RoleEntity)
     private readonly roleRepository: Repository<RoleEntity>,
-    @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>,
     private readonly dataSource: DataSource
   ) {}
 

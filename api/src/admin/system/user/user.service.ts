@@ -12,7 +12,7 @@ import { RoleService } from '../role/role.service'
 import { omit, uniq } from 'lodash'
 import { PageResultDto } from '@/common/class/response.dto'
 import { RoleEntity } from '../role/role.entity'
-import * as bcrypt from 'bcrypt'
+import * as bcrypt from 'bcryptjs'
 
 @Injectable()
 export class UserService {

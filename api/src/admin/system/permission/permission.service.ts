@@ -10,7 +10,7 @@ import { UpdateUserInfoDto, UpdateUserPasswordDto } from './permission.dto'
 import { RedisService } from '@/global/redis/redis.service'
 import { UserService } from '../user/user.service'
 import { RoleService } from '../role/role.service'
-import * as bcrypt from 'bcrypt'
+import * as bcrypt from 'bcryptjs'
 
 @Injectable()
 export class PermissionService {

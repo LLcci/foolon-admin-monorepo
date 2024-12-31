@@ -20,7 +20,7 @@ import { omit } from 'lodash'
 import { DeleteResult } from 'typeorm'
 import { RoleService } from '../role/role.service'
 import { ApiPaginatedResponse } from '@/common/decorator/pageRequest.decorator'
-import * as bcrypt from 'bcrypt'
+import * as bcrypt from 'bcryptjs'
 
 @ApiTags('用户管理')
 @ApiHeader({

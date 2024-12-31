@@ -11,7 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import * as svgCaptcha from 'svg-captcha'
 import { nanoid } from 'nanoid'
-import * as bcrypt from 'bcrypt'
+import * as bcrypt from 'bcryptjs'
 @Injectable()
 export class LoginService {
   constructor(
