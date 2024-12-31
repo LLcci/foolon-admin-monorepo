@@ -86,7 +86,7 @@ export const useUser = defineStore(
       if (data.value) {
         userInfo.value = data.value
         data.value.roles.forEach((item) => {
-          userMenus.value = item.menus.filter((item) => item.menuType != 2)
+          userMenus.value.push(...item.menus.filter((item) => item.menuType != 2))
           const module = import.meta.glob('/src/views/**/*.vue')
           item.menus.forEach((item) => {
             if (item.perms?.length) {
