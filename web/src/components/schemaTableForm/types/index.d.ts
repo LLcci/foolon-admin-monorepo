@@ -13,7 +13,7 @@ export type Table = Omit<TableColumnInstance['$props'], 'prop'> & {
   exportFormatter?: (value: any) => any
 }
 
-export type EditForm = {
+export type EditForm<T> = {
   /**
    * 表单校验规则
    */
@@ -81,7 +81,7 @@ export type SchemaTableForm<T extends FormModel> = Partial<
       /**
        * 编辑表单
        */
-      editForm?: EditForm
+      editForm?: EditForm<T>
       /**
        * 查询表单
        */
