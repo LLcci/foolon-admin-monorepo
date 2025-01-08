@@ -32,6 +32,7 @@ export class LoginService {
     await this.redisService.deleteCode(loginDto.codeId)
     let user = new UserEntity()
     user = await this.userRepository.findOne({
+      select: ['id', 'password', 'salt'],
       where: { username: loginDto.username }
     })
     if (!user) {

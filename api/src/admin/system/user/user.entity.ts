@@ -25,7 +25,7 @@ export class UserEntity extends BaseEntity {
   @IsOptional()
   username: string
 
-  @Column({ comment: '密码' })
+  @Column({ comment: '密码', select: false })
   @ApiProperty({ required: true, description: '密码' })
   @IsNotEmpty({ message: '密码不能为空' })
   @IsString({ message: '密码必须是字符串' })
@@ -66,7 +66,7 @@ export class UserEntity extends BaseEntity {
   @IsOptional()
   realname: string
 
-  @Column({ comment: '密码盐' })
+  @Column({ comment: '密码盐', select: false })
   salt: string
 
   @Column({ nullable: true, comment: '头像' })

@@ -47,7 +47,10 @@ export class PermissionService {
     if (updateUserPasswordDto.newPassword !== updateUserPasswordDto.confirmPassword) {
       throw '两次输入密码不一致'
     }
-    const user = await this.userRepository.findOneOrFail({ where: { id } })
+    const user = await this.userRepository.findOneOrFail({
+      select: ['password', 'id'],
+      where: { id }
+    })
     const isMatch = await bcrypt.compare(updateUserPasswordDto.oldPassword, user.password)
     if (!isMatch) {
       throw '旧密码错误'

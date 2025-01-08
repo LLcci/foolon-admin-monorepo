@@ -73,7 +73,10 @@ export class UserService {
 
   async saveUser(userEntity: UserEntity) {
     const user = await this.userRepository.save(userEntity)
-    const userInfo = await this.userRepository.findOne({ where: { id: user.id } })
+    const userInfo = await this.userRepository.findOne({
+      select: ['salt', 'id'],
+      where: { id: user.id }
+    })
     await this.redisService.setUserInfoVersion(userInfo.id, userInfo.salt)
     return userInfo
   }
