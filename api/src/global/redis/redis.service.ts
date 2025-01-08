@@ -57,7 +57,7 @@ export class RedisService implements OnModuleInit {
 
   async setToken(token: string, userIv: string) {
     return await this.client.set(`${REDIS_TOKEN_PREFIX}${token}`, userIv, {
-      EX: REDIS_TOKEN_EX
+      EX: REDIS_TOKEN_EX ?? undefined
     })
   }
 
@@ -94,7 +94,9 @@ export class RedisService implements OnModuleInit {
 
   async setUserPermissions(id: string, permissions: string[]) {
     await this.client.sAdd(`${REDIS_USER_PERMISSION_PREFIX}${id}`, permissions)
-    await this.client.expire(`${REDIS_USER_PERMISSION_PREFIX}${id}`, REDIS_TOKEN_EX)
+    if (REDIS_TOKEN_EX) {
+      await this.client.expire(`${REDIS_USER_PERMISSION_PREFIX}${id}`, REDIS_TOKEN_EX)
+    }
   }
 
   async checkUserPermissions(id: string, permission: string) {
