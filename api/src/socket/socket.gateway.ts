@@ -50,7 +50,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayInit, OnGate
     }
     socket.handshake.auth['user'] = payload
     this.logger.log(
-      `客户端:${socket.id}; 用户id:${payload?.id}; IP:${socket.handshake.address}; 连接成功 `
+      `客户端:${socket.id}; 用户id:${payload?.id}; IP:${socket.handshake.address}${socket.handshake.headers['x-real-ip'] ? `,${socket.handshake.headers['x-real-ip']}` : ''}${socket.handshake.headers['x-forwarded-for'] ? `,${socket.handshake.headers['x-forwarded-for']}` : ''}; 连接成功 `
     )
   }
 
@@ -60,7 +60,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayInit, OnGate
       secret: JWT_SECRET
     })
     this.logger.log(
-      `客户端:${socket.id}; 用户id:${payload?.id}; IP:${socket.handshake.address}; 断开连接 `
+      `客户端:${socket.id}; 用户id:${payload?.id}; IP:${socket.handshake.address}${socket.handshake.headers['x-real-ip'] ? `,${socket.handshake.headers['x-real-ip']}` : ''}${socket.handshake.headers['x-forwarded-for'] ? `,${socket.handshake.headers['x-forwarded-for']}` : ''}; 断开连接 `
     )
   }
 

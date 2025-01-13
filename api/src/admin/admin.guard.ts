@@ -15,12 +15,14 @@ import {
 import { Reflector } from '@nestjs/core'
 import extractTokenFromHeader from '@/common/utils/extractTokenFromHeader'
 import { PERMISSION } from '@/common/constants/permission.constants'
+import { LoggerService } from '@/global/logger/logger.service'
 
 @Injectable()
 export class AdminGuard implements CanActivate {
   constructor(
     private readonly redisService: RedisService,
-    private readonly reflector: Reflector
+    private readonly reflector: Reflector,
+    private readonly logger: LoggerService
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -33,10 +35,16 @@ export class AdminGuard implements CanActivate {
     const request = context.switchToHttp().getRequest()
     const token = extractTokenFromHeader(request.headers.authorization)
     if (!request.headers.authorization) {
+      this.logger.error(
+        `未登录，请进行登录: ${request.method} ${request.url} ip:${request.ip}${request.headers['x-real-ip'] ? `,${request.headers['x-real-ip']}` : ''}${request.headers['x-forwarded-for'] ? `,${request.headers['x-forwarded-for']}` : ''}`
+      )
       throw new UnauthorizedException('未登录，请进行登录')
     }
     const { payload, errMsg } = await this.redisService.checkToken(token)
     if (errMsg) {
+      this.logger.error(
+        `${errMsg}: ${request.method} ${request.url} ip:${request.ip}${request.headers['x-real-ip'] ? `,${request.headers['x-real-ip']}` : ''}${request.headers['x-forwarded-for'] ? `,${request.headers['x-forwarded-for']}` : ''}`
+      )
       throw new UnauthorizedException(errMsg)
     }
     request['user'] = payload
@@ -51,6 +59,9 @@ export class AdminGuard implements CanActivate {
       request.url.split('?')[0]
     )
     if (!checkPermission) {
+      this.logger.error(
+        `权限不足: ${request.method} ${request.url} ip:${request.ip}${request.headers['x-real-ip'] ? `,${request.headers['x-real-ip']}` : ''}${request.headers['x-forwarded-for'] ? `,${request.headers['x-forwarded-for']}` : ''} userId:${request.user?.id ?? ''}`
+      )
       throw new ForbiddenException('权限不足')
     }
     return true

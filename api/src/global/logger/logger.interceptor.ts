@@ -17,7 +17,7 @@ export class LoggerInterceptor implements NestInterceptor {
     const req = context.switchToHttp().getRequest()
 
     this.logger.log(
-      `请求接口: ${req.method} ${req.url} userId:${req.user?.id ?? ''} data:${JSON.stringify(req.body)} query:${JSON.stringify(
+      `请求接口: ${req.method} ${req.url} ip:${req.ip}${req.headers['x-real-ip'] ? `,${req.headers['x-real-ip']}` : ''}${req.headers['x-forwarded-for'] ? `,${req.headers['x-forwarded-for']}` : ''} userId:${req.user?.id ?? ''} data:${JSON.stringify(req.body)} query:${JSON.stringify(
         req.query
       )} params:${JSON.stringify(req.params)}`
     )
@@ -25,14 +25,14 @@ export class LoggerInterceptor implements NestInterceptor {
       tap(
         (data) =>
           this.logger.log(
-            `响应结果: ${req.method} ${req.url} ip:${req.ip} userId:${req.user?.id ?? ''} data:${JSON.stringify(data)}`
+            `响应结果: ${req.method} ${req.url} ip:${req.ip}${req.headers['x-real-ip'] ? `,${req.headers['x-real-ip']}` : ''}${req.headers['x-forwarded-for'] ? `,${req.headers['x-forwarded-for']}` : ''} userId:${req.user?.id ?? ''} data:${JSON.stringify(data)}`
           ),
         (err) => {
           if (!(err instanceof HttpException)) {
             this.logger.error(err)
           } else {
             this.logger.error(
-              `响应错误: ${req.method} ${req.url} ip:${req.ip} userId:${req.user?.id ?? ''} data:${err.message}`
+              `响应错误: ${req.method} ${req.url} ip:${req.ip}${req.headers['x-real-ip'] ? `,${req.headers['x-real-ip']}` : ''}${req.headers['x-forwarded-for'] ? `,${req.headers['x-forwarded-for']}` : ''} userId:${req.user?.id ?? ''} data:${err.message}`
             )
           }
         }
