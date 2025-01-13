@@ -93,6 +93,7 @@ export class RedisService implements OnModuleInit {
   }
 
   async setUserPermissions(id: string, permissions: string[]) {
+    await this.client.del(`${REDIS_USER_PERMISSION_PREFIX}${id}`)
     await this.client.sAdd(`${REDIS_USER_PERMISSION_PREFIX}${id}`, permissions)
     if (REDIS_TOKEN_EX) {
       await this.client.expire(`${REDIS_USER_PERMISSION_PREFIX}${id}`, REDIS_TOKEN_EX)
