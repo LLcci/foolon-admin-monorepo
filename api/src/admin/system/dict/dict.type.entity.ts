@@ -36,6 +36,8 @@ export class DictTypeEntity extends BaseEntity {
   description?: string
 
   @ApiProperty({ description: '字典数据', readOnly: true, type: DictDataEntity, isArray: true })
-  @OneToMany(() => DictDataEntity, (data) => data.type)
+  @OneToMany(() => DictDataEntity, (data) => data.type, {
+    createForeignKeyConstraints: false
+  })
   data: DictDataEntity[]
 }

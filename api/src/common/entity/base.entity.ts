@@ -31,7 +31,6 @@ export class BaseEntity {
   @Index()
   @ApiProperty({
     required: false,
-    default: 1,
     enum: ['0', '1'],
     description: '是否启用:0-停用,1-启用'
   })
@@ -51,11 +50,15 @@ export class BaseEntity {
   updateTime: Date
 
   @ApiProperty({ required: false, readOnly: true, description: '创建用户', type: () => UserEntity })
-  @ManyToOne(() => UserEntity)
+  @ManyToOne(() => UserEntity, {
+    createForeignKeyConstraints: false
+  })
   createUser: UserEntity
 
   @ApiProperty({ required: false, readOnly: true, description: '更新用户', type: () => UserEntity })
-  @ManyToOne(() => UserEntity)
+  @ManyToOne(() => UserEntity, {
+    createForeignKeyConstraints: false
+  })
   updateUser: UserEntity
 
   @Index()

@@ -41,10 +41,14 @@ export class RoleEntity extends BaseEntity {
     type: MenuEntity,
     isArray: true
   })
-  @ManyToMany(() => MenuEntity, (menu) => menu.roles)
+  @ManyToMany(() => MenuEntity, (menu) => menu.roles, {
+    createForeignKeyConstraints: false
+  })
   @JoinTable()
   menus: MenuEntity[]
 
-  @ManyToMany(() => UserEntity, (user) => user.roles)
+  @ManyToMany(() => UserEntity, (user) => user.roles, {
+    createForeignKeyConstraints: false
+  })
   users: UserEntity[]
 }

@@ -97,7 +97,9 @@ export class UserEntity extends BaseEntity {
     type: RoleEntity,
     isArray: true
   })
-  @ManyToMany(() => RoleEntity, (role) => role.users)
+  @ManyToMany(() => RoleEntity, (role) => role.users, {
+    createForeignKeyConstraints: false
+  })
   @JoinTable()
   roles: RoleEntity[]
 }

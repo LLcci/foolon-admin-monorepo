@@ -36,6 +36,8 @@ export class DictDataEntity extends BaseEntity {
   @IsBoolean({ message: '是否默认必须为布尔值' })
   default: boolean
 
-  @ManyToOne(() => DictTypeEntity, (type) => type.data)
+  @ManyToOne(() => DictTypeEntity, (type) => type.data, {
+    createForeignKeyConstraints: false
+  })
   type: DictTypeEntity
 }

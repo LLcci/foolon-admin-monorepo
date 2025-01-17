@@ -2,7 +2,7 @@
 https://docs.nestjs.com/providers#services
 */
 
-import { Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { UserEntity } from '../user/user.entity'
 import { Repository } from 'typeorm'
@@ -35,6 +35,9 @@ export class PermissionService {
     }
     user.roles = await this.roleService.getRolesByUserId(user.id)
     const permission = await this.userService.getUserPermissions(user.roles)
+    if (!permission.length) {
+      throw new BadRequestException('您没有任何权限，请联系系统管理员')
+    }
     await this.redisService.setUserPermissions(user.id, permission)
     return user
   }

@@ -102,6 +102,8 @@ export class MenuEntity extends BaseEntity {
   @IsEnum([0, 1], { message: '是否缓存必须是为 0 | 1 ' })
   keepalive: 0 | 1
 
-  @ManyToMany(() => RoleEntity, (role) => role.menus)
+  @ManyToMany(() => RoleEntity, (role) => role.menus, {
+    createForeignKeyConstraints: false
+  })
   roles: RoleEntity[]
 }
