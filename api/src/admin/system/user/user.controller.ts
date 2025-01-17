@@ -12,7 +12,7 @@ import {
 } from '@/admin/system/user/user.dto'
 import { UserService } from '@/admin/system/user/user.service'
 import { User } from '@/common/decorator/user.decorator'
-import { Body, Controller, Get, Post, Query } from '@nestjs/common'
+import { BadRequestException, Body, Controller, Get, Post, Query } from '@nestjs/common'
 import { ApiHeader, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { UserEntity } from './user.entity'
 import validateArrObj from '@/common/utils/validateArrObj'
@@ -95,7 +95,7 @@ export class UserController {
   })
   async updatePassword(@Body() updatePasswordDto: UpdatePasswordDto, @User() user: { id: string }) {
     if (updatePasswordDto.password !== updatePasswordDto.confirmPassword) {
-      throw '两次密码不一致'
+      throw new BadRequestException('两次密码不一致')
     }
     const userEnt = new UserEntity()
     userEnt.id = user.id

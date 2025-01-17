@@ -2,7 +2,7 @@
 https://docs.nestjs.com/providers#services
 */
 
-import { BadRequestException, Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { UserEntity } from '../user/user.entity'
 import { Repository } from 'typeorm'
@@ -28,10 +28,10 @@ export class PermissionService {
       where: { id }
     })
     if (!user) {
-      throw '用户不存在'
+      throw new UnauthorizedException('用户不存在')
     }
     if (user.status == '0') {
-      throw '用户已被禁用'
+      throw new UnauthorizedException('用户已被禁用')
     }
     user.roles = await this.roleService.getRolesByUserId(user.id)
     const permission = await this.userService.getUserPermissions(user.roles)
@@ -48,7 +48,7 @@ export class PermissionService {
 
   async updatePassword(id: string, updateUserPasswordDto: UpdateUserPasswordDto) {
     if (updateUserPasswordDto.newPassword !== updateUserPasswordDto.confirmPassword) {
-      throw '两次输入密码不一致'
+      throw new BadRequestException('两次输入密码不一致')
     }
     const user = await this.userRepository.findOneOrFail({
       select: ['password', 'id'],
@@ -56,7 +56,7 @@ export class PermissionService {
     })
     const isMatch = await bcrypt.compare(updateUserPasswordDto.oldPassword, user.password)
     if (!isMatch) {
-      throw '旧密码错误'
+      throw new BadRequestException('旧密码错误')
     }
     const salt = await bcrypt.genSalt()
     const encryptedPassword = await bcrypt.hash(updateUserPasswordDto.newPassword, salt)

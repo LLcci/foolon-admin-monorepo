@@ -4,7 +4,7 @@ https://docs.nestjs.com/providers#services
 
 import { UserPageListDto, UserCreateDto } from '@/admin/system/user/user.dto'
 import { UserEntity } from '@/admin/system/user/user.entity'
-import { Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { Like, Repository } from 'typeorm'
 import { InjectRepository } from '@nestjs/typeorm'
 import { RedisService } from '@/global/redis/redis.service'
@@ -109,7 +109,7 @@ export class UserService {
       where: { username: userCreateDto.username }
     })
     if (oldUser) {
-      throw `${userCreateDto.username} 用户账户已存在`
+      throw new BadRequestException(`${userCreateDto.username} 用户账户已存在`)
     }
     // 加密密码
     const salt = await bcrypt.genSalt()

@@ -2,7 +2,7 @@
 https://docs.nestjs.com/providers#services
 */
 
-import { Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { TaskEntity } from './task.entity'
 import { DataSource, In, Like, Repository } from 'typeorm'
@@ -119,7 +119,7 @@ export class TaskService {
     return await this.dataSource.transaction(async (manager) => {
       const task = await manager.findOne(TaskEntity, { where: { id } })
       if (!task) {
-        throw '任务不存在'
+        throw new BadRequestException('任务不存在')
       }
       task.status = '1'
       await manager.save(task)
@@ -141,7 +141,7 @@ export class TaskService {
     return await this.dataSource.transaction(async (manager) => {
       const task = await manager.findOne(TaskEntity, { where: { id } })
       if (!task) {
-        throw '任务不存在'
+        throw new BadRequestException('任务不存在')
       }
       task.status = '0'
       await manager.save(task)

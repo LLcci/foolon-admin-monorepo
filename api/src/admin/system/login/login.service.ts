@@ -5,7 +5,7 @@ https://docs.nestjs.com/providers#services
 import { LoginDto } from '@/admin/system/login/login.dto'
 import { UserEntity } from '@/admin/system/user/user.entity'
 import { RedisService } from '@/global/redis/redis.service'
-import { Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
@@ -24,10 +24,10 @@ export class LoginService {
   async login(loginDto: LoginDto) {
     const redisCode = await this.redisService.getCode(loginDto.codeId)
     if (!redisCode) {
-      throw '验证码已过期'
+      throw new BadRequestException('验证码已过期')
     }
     if (loginDto.code != redisCode) {
-      throw '验证码错误'
+      throw new BadRequestException('验证码错误')
     }
     await this.redisService.deleteCode(loginDto.codeId)
     let user = new UserEntity()
@@ -36,14 +36,14 @@ export class LoginService {
       where: { username: loginDto.username }
     })
     if (!user) {
-      throw '用户未注册'
+      throw new BadRequestException('用户未注册')
     }
     const isMatch = await bcrypt.compare(loginDto.password, user.password)
     if (!isMatch) {
-      throw '密码错误'
+      throw new BadRequestException('密码错误')
     }
     if (user.status != '1') {
-      throw '用户已禁用'
+      throw new BadRequestException('用户已禁用')
     }
     const payload = { id: user.id }
     const token = await this.jwtService.signAsync(payload)

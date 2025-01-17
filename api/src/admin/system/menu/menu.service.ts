@@ -2,7 +2,7 @@
 https://docs.nestjs.com/providers#services
 */
 
-import { Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { MenuPageListDto, MenuTree } from './menu.dto'
 import { MenuEntity } from './menu.entity'
 import { InjectRepository } from '@nestjs/typeorm'
@@ -30,7 +30,7 @@ export class MenuService {
       const exist = await this.menuRepository.find({
         where: { path: menu.path }
       })
-      if (exist.length) throw `${menu.path} 菜单路径已存在`
+      if (exist.length) throw new BadRequestException(`${menu.path} 菜单路径已存在`)
     }
     return await this.menuRepository.save(menu)
   }
@@ -41,7 +41,7 @@ export class MenuService {
         const exist = await this.menuRepository.find({
           where: { path: item.path }
         })
-        if (exist.length) throw `${item.path} 菜单路径已存在`
+        if (exist.length) throw new BadRequestException(`${item.path} 菜单路径已存在`)
       }
     }
     return await this.menuRepository.save(menu)

@@ -1,5 +1,6 @@
 import { compressImg2Webp, deleteFile } from '@/common/utils/file'
 import {
+  BadRequestException,
   Controller,
   FileTypeValidator,
   Get,
@@ -58,7 +59,7 @@ export class UploadController {
     file: Express.Multer.File
   ) {
     if (!file) {
-      throw '文件上传失败'
+      throw new BadRequestException('文件上传失败')
     }
     if (file.size > 204792) {
       const quality = Math.floor((204792 / file.size) * 100)
@@ -75,7 +76,7 @@ export class UploadController {
       await deleteFile(`./upload/${filename}`)
       return '删除成功'
     } catch (error) {
-      throw `删除失败,${error}`
+      throw new BadRequestException(`删除失败,${error}`)
     }
   }
 }
