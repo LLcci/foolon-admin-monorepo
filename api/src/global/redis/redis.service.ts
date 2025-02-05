@@ -34,6 +34,7 @@ export class RedisService implements OnModuleInit {
   }
 
   async setRoutes(routes: string[]) {
+    await this.client.del(REDIS_ROUTE_PREFIX)
     return await this.client.sAdd(REDIS_ROUTE_PREFIX, routes)
   }
 
