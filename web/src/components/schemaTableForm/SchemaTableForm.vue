@@ -2,7 +2,11 @@
   <schemaForm ref="searchFormRef" v-model="searchFormModel" :form="searForm">
     <template #default>
       <slot name="searchButtons">
-        <el-button type="primary" v-permissions="props.api.page" @click="handleSearch"
+        <el-button
+          type="primary"
+          v-permissions="props.api.page"
+          :loading="tableLoading"
+          @click="handleSearch"
           >查询</el-button
         >
         <el-button type="default" v-permissions="props.api.page" @click="handleReset"
