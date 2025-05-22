@@ -30,3 +30,7 @@ export const REDIS_CODE_EX = 60
  * 用户权限前缀
  */
 export const REDIS_USER_PERMISSION_PREFIX = `${REDIS_PREFIX}permission:`
+/**
+ * 字典前缀
+ */
+export const REDIS_DICT_PREFIX = `${REDIS_PREFIX}dict:`

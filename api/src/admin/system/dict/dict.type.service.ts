@@ -5,15 +5,17 @@ https://docs.nestjs.com/providers#services
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { DictTypeEntity } from './dict.type.entity'
-import { Like, Repository } from 'typeorm'
+import { In, Like, Repository } from 'typeorm'
 import { DictTypePageListDto, SaveDictTypeDto } from './dict.type.dto'
 import { PageResultDto } from '@/common/class/response.dto'
+import { RedisService } from '@/global/redis/redis.service'
 
 @Injectable()
 export class DictTypeService {
   constructor(
     @InjectRepository(DictTypeEntity)
-    private readonly dictTypeRepository: Repository<DictTypeEntity>
+    private readonly dictTypeRepository: Repository<DictTypeEntity>,
+    private readonly redisService: RedisService
   ) {}
 
   async getDictTypePageList(dictTypePageListDto: DictTypePageListDto) {
@@ -47,11 +49,21 @@ export class DictTypeService {
   }
 
   async saveDictType(dictType: SaveDictTypeDto) {
-    return await this.dictTypeRepository.save(dictType)
+    const dict = await this.dictTypeRepository.save(dictType)
+    const dictWidthData = await this.getDictTypeByIdWithData(dict.id)
+    if (dictWidthData) {
+      await this.redisService.setDictByCode(dictWidthData)
+    }
+    return dict
   }
 
   async importDictType(dictType: DictTypeEntity[]) {
-    return await this.dictTypeRepository.save(dictType)
+    const dict = await this.dictTypeRepository.save(dictType)
+    const dictWidthData = await this.getDictTypeListByIdsWithData(dict.map((item) => item.id))
+    if (dictWidthData && dictWidthData.length > 0) {
+      await this.redisService.mSetDictByCode(dictWidthData)
+    }
+    return dict
   }
 
   async getDictTypeById(id: string) {
@@ -61,16 +73,44 @@ export class DictTypeService {
     })
   }
 
-  async getDictTypeByCodeWithData(code: string) {
+  async getDictTypeByIdWithData(id: string) {
     return await this.dictTypeRepository.findOne({
       select: ['id', 'name', 'code', 'description', 'status'],
-      where: { code, status: '1', data: { status: '1' } },
+      where: { id, status: '1', data: { status: '1' } },
       relations: ['data'],
       order: { data: { sort: 'ASC' } }
     })
   }
 
+  async getDictTypeListByIdsWithData(ids: string[]) {
+    return await this.dictTypeRepository.find({
+      select: ['id', 'name', 'code', 'description', 'status'],
+      where: { id: In(ids), status: '1', data: { status: '1' } },
+      relations: ['data'],
+      order: { data: { sort: 'ASC' } }
+    })
+  }
+
+  async getDictTypeByCodeWithData(code: string) {
+    return await this.redisService.getDictByCode(code)
+  }
+
   async deleteDictTypeById(id: string[]) {
-    return await this.dictTypeRepository.delete(id)
+    const dictWidthData = await this.getDictTypeListByIdsWithData(id)
+    if (dictWidthData && dictWidthData.length > 0) {
+      await this.redisService.mDeleteDictByCode(dictWidthData.map((item) => item.code))
+    }
+    const result = await this.dictTypeRepository.delete(id)
+    return result
+  }
+
+  async initDictToRedis() {
+    const dictTypeList = await this.dictTypeRepository.find({
+      select: ['id', 'name', 'code', 'description', 'status'],
+      where: { status: '1', data: { status: '1' } },
+      relations: ['data'],
+      order: { data: { sort: 'ASC' } }
+    })
+    await this.redisService.initDictList(dictTypeList)
   }
 }

@@ -1,9 +1,11 @@
 /*
 https://docs.nestjs.com/providers#services
 */
+import { DictTypeEntity } from '@/admin/system/dict/dict.type.entity'
 import {
   REDIS_CODE_EX,
   REDIS_CODE_PREFIX,
+  REDIS_DICT_PREFIX,
   REDIS_ROUTE_PREFIX,
   REDIS_TOKEN_EX,
   REDIS_TOKEN_PREFIX,
@@ -112,5 +114,39 @@ export class RedisService implements OnModuleInit {
 
   async deleteUserPermissions(id: string) {
     return await this.client.del(`${REDIS_USER_PERMISSION_PREFIX}${id}`)
+  }
+
+  async initDictList(dictList: DictTypeEntity[]) {
+    const map: Record<string, string> = {}
+    dictList.forEach((dictType) => {
+      map[`${REDIS_DICT_PREFIX}${dictType.code}`] = JSON.stringify(dictType)
+    })
+    return await this.client.mSet(map)
+  }
+
+  async getDictByCode(code: string) {
+    const dictType = await this.client.get(`${REDIS_DICT_PREFIX}${code}`)
+    return dictType ? JSON.parse(dictType) : null
+  }
+
+  async deleteDictByCode(code: string) {
+    return await this.client.del(`${REDIS_DICT_PREFIX}${code}`)
+  }
+
+  async mDeleteDictByCode(code: string[]) {
+    const keys = code.map((item) => `${REDIS_DICT_PREFIX}${item}`)
+    return await this.client.del(keys)
+  }
+
+  async setDictByCode(dictType: DictTypeEntity) {
+    return await this.client.set(`${REDIS_DICT_PREFIX}${dictType.code}`, JSON.stringify(dictType))
+  }
+
+  async mSetDictByCode(dictType: DictTypeEntity[]) {
+    const map: Record<string, string> = {}
+    dictType.forEach((dict) => {
+      map[`${REDIS_DICT_PREFIX}${dict.code}`] = JSON.stringify(dict)
+    })
+    return await this.client.mSet(map)
   }
 }

@@ -2,7 +2,7 @@
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { Body, Controller, Get, Post, Query } from '@nestjs/common'
+import { Body, Controller, Get, OnApplicationBootstrap, Post, Query } from '@nestjs/common'
 import { ApiHeader, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { DictTypeService } from './dict.type.service'
 import { DictTypeImportDto, DictTypePageListDto, SaveDictTypeDto } from './dict.type.dto'
@@ -20,8 +20,11 @@ import { UserEntity } from '../user/user.entity'
   example: 'Bearer token'
 })
 @Controller('dictType')
-export class DictTypeController {
+export class DictTypeController implements OnApplicationBootstrap {
   constructor(private readonly dictTypeService: DictTypeService) {}
+  async onApplicationBootstrap() {
+    await this.dictTypeService.initDictToRedis()
+  }
 
   @Post('page')
   @ApiOperation({
