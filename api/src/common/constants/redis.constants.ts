@@ -34,3 +34,7 @@ export const REDIS_USER_PERMISSION_PREFIX = `${REDIS_PREFIX}permission:`
  * 字典前缀
  */
 export const REDIS_DICT_PREFIX = `${REDIS_PREFIX}dict:`
+/**
+ * 全部字典code
+ */
+export const REDIS_DICT_ALL_CODE = `${REDIS_PREFIX}dict:all:code`

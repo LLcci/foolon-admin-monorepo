@@ -113,4 +113,8 @@ export class DictTypeService {
     })
     await this.redisService.initDictList(dictTypeList)
   }
+
+  async getAllDict() {
+    return await this.redisService.getAllDict()
+  }
 }

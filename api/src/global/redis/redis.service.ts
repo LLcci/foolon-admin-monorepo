@@ -5,6 +5,7 @@ import { DictTypeEntity } from '@/admin/system/dict/dict.type.entity'
 import {
   REDIS_CODE_EX,
   REDIS_CODE_PREFIX,
+  REDIS_DICT_ALL_CODE,
   REDIS_DICT_PREFIX,
   REDIS_ROUTE_PREFIX,
   REDIS_TOKEN_EX,
@@ -120,7 +121,23 @@ export class RedisService implements OnModuleInit {
     dictList.forEach((dictType) => {
       map[`${REDIS_DICT_PREFIX}${dictType.code}`] = JSON.stringify(dictType)
     })
+    map[REDIS_DICT_ALL_CODE] = dictList.map((dictType) => dictType.code).join(',')
     return await this.client.mSet(map)
+  }
+
+  async setDictAllCode(code: string[]) {
+    return await this.client.set(REDIS_DICT_ALL_CODE, code.join(','))
+  }
+
+  async getAllDict() {
+    const dictCodes = await this.client.get(REDIS_DICT_ALL_CODE)
+    if (!dictCodes) {
+      return []
+    }
+    const dictTypeList = await this.client.mGet(
+      dictCodes.split(',').map((code) => `${REDIS_DICT_PREFIX}${code}`)
+    )
+    return dictTypeList.map((dictType) => JSON.parse(dictType)) as DictTypeEntity[]
   }
 
   async getDictByCode(code: string) {

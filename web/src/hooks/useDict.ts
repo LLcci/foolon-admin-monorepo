@@ -1,17 +1,19 @@
 import type { paths } from '@/types/Schema'
 import { useFetch } from './useFetch'
 import type { EditForm, SearchForm, Table } from '@/components/schemaTableForm/types'
-import { h } from 'vue'
+import { h, ref } from 'vue'
 import DictSelect from '@/components/dictSelect/DictSelect.vue'
+import { useDict } from '@/stores/useDict'
+import { createEventHook, type UseFetchReturn } from '@vueuse/core'
 
-export const useDictSchema = async (
+export const useDictSchema = async <T>(
   code: string,
   editFormSelectPorps?: Record<string, any>,
   searchFormSelectPorps?: Record<string, any>,
   tableData?: Table
 ) => {
   const { data } = await useDictList(code)
-  if (!data.value) return
+  if (!data.value) throw new Error('字典类型不存在')
   const table: Table = {
     label: data.value.name,
     formatter(row, column, cellValue, index) {
@@ -39,7 +41,7 @@ export const useDictSchema = async (
   const editFormSelectPorpsData = { ...editFormSelectPorps }
   Object.assign(editFormSelectPorpsData, defaultSelectPorps)
 
-  const editForm: EditForm = {
+  const editForm: EditForm<T> = {
     props: { label: data.value.name },
     rule: [{ required: true, message: `请选择${data.value.name}` }],
     component: h(DictSelect, editFormSelectPorpsData),
@@ -66,6 +68,23 @@ export const useDictSchema = async (
 }
 
 export const useDictList = (code: string) => {
+  if (useDict().dictMap.has(code)) {
+    const isFetching = ref(true)
+    const simulateFetch = createEventHook()
+    const data = ref<
+      paths['/admin/sys/dictType/code']['get']['responses']['200']['content']['application/json']
+    >(useDict().dictMap.get(code)!)
+    simulateFetch.trigger(data.value)
+    isFetching.value = false
+    return { data, onFetchFinally: simulateFetch.on, isFetching } as UseFetchReturn<
+      paths['/admin/sys/dictType/code']['get']['responses']['200']['content']['application/json']
+    > &
+      PromiseLike<
+        UseFetchReturn<
+          paths['/admin/sys/dictType/code']['get']['responses']['200']['content']['application/json']
+        >
+      >
+  }
   return useFetch<
     paths['/admin/sys/dictType/code']['get']['responses']['200']['content']['application/json']
   >(`/admin/sys/dictType/code?code=${code}`).get()

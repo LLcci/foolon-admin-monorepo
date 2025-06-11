@@ -21,6 +21,7 @@ import { permissions } from './hooks/useDirectives'
 import { useUser } from './stores/useUser'
 
 import './sockets'
+import { useDict } from './stores/useDict'
 
 const app = createApp(App)
 
@@ -44,6 +45,7 @@ app.use(router)
 
 if (useUser().token) {
   useUser().getPermissions()
+  useDict().initDictMap()
 }
 
 app.directive('permissions', permissions)

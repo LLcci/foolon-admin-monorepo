@@ -12,6 +12,7 @@ import { User } from '@/common/decorator/user.decorator'
 import validateArrObj from '@/common/utils/validateArrObj'
 import { ApiPaginatedResponse } from '@/common/decorator/pageRequest.decorator'
 import { UserEntity } from '../user/user.entity'
+import { Permission } from '@/common/decorator/permission.decorator'
 
 @ApiTags('字典类型管理')
 @ApiHeader({
@@ -122,5 +123,19 @@ export class DictTypeController implements OnApplicationBootstrap {
   })
   async getDictTypeByCodeWithData(@Query('code') code: string) {
     return await this.dictTypeService.getDictTypeByCodeWithData(code)
+  }
+
+  @Permission()
+  @Get('all')
+  @ApiOperation({
+    summary: '查询所有字典类型和数据'
+  })
+  @ApiOkResponse({
+    description: '查询所有字典类型和数据',
+    type: DictTypeEntity,
+    isArray: true
+  })
+  async getAllDict() {
+    return await this.dictTypeService.getAllDict()
   }
 }

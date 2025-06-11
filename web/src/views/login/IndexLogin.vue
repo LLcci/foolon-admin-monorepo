@@ -56,6 +56,7 @@ import type { LoginForm } from './types'
 import { useUser } from '@/stores/useUser'
 import { useSystem } from '@/stores/useSystem'
 import { useRouter } from 'vue-router'
+import { useDict } from '@/stores/useDict'
 
 const router = useRouter()
 
@@ -96,6 +97,7 @@ async function onSubmit() {
     await goLogin(true)
     useUser().setToken(loginData.value?.token as string)
     await useUser().getPermissions()
+    await useDict().initDictMap()
     router.replace('/')
   } catch (error) {
     console.error(error)
