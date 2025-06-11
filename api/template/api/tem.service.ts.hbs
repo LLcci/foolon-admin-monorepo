@@ -1,0 +1,67 @@
+/*
+https://docs.nestjs.com/providers#services
+*/
+
+import { Injectable } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
+import { {{capitalName}}Entity } from './{{name}}.entity'
+import { Repository, Not, MoreThan, LessThan, MoreThanOrEqual, LessThanOrEqual, Like } from 'typeorm'
+import { {{capitalName}}PageListDto } from './{{name}}.dto'
+import { PageResultDto } from '@/common/class/response.dto'
+
+@Injectable()
+export class {{capitalName}}Service {
+  constructor(
+    @InjectRepository({{capitalName}}Entity)
+    private readonly {{name}}Repository: Repository<{{capitalName}}Entity>
+  ) {}
+
+  async get{{capitalName}}PageList({{name}}PageListDto: {{capitalName}}PageListDto) {
+    const [{{name}}s, total] = await this.{{name}}Repository.findAndCount({
+      select: [{{selectFields}}],
+      where: {
+        {{queryFields}}
+        status: {{name}}PageListDto.status
+      },
+      order: { createTime: 'DESC' },
+      skip: {{name}}PageListDto.pageSize * ({{name}}PageListDto.currentPage - 1),
+      take: {{name}}PageListDto.pageSize
+    })
+    return new PageResultDto<{{capitalName}}Entity>(
+      {{name}}s,
+      total,
+      {{name}}PageListDto.currentPage,
+      {{name}}PageListDto.pageSize
+    )
+  }
+
+  async get{{capitalName}}List({{name}}PageListDto: {{capitalName}}PageListDto) {
+    return await this.{{name}}Repository.find({
+      select: [{{selectFields}}],
+      where: {
+        {{queryFields}}
+        status: {{name}}PageListDto.status
+      },
+      order: { createTime: 'DESC' }
+    })
+  }
+
+  async save{{capitalName}}({{name}}: {{capitalName}}Entity) {
+    return await this.{{name}}Repository.save({{name}})
+  }
+
+  async import{{capitalName}}({{name}}: {{capitalName}}Entity[]) {
+    return await this.{{name}}Repository.save({{name}})
+  }
+
+  async get{{capitalName}}ById(id: string) {
+    return await this.{{name}}Repository.findOne({
+      select: [{{detailFields}}],
+      where: { id },
+    })
+  }
+
+  async delete{{capitalName}}ById(id: string[]) {
+    return await this.{{name}}Repository.delete(id)
+  }
+}

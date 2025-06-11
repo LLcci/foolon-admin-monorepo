@@ -1,0 +1,139 @@
+/*
+https://docs.nestjs.com/controllers#controllers
+*/
+
+import { Body, Controller, Get, Post, Query } from '@nestjs/common'
+import { ApiHeader, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { {{capitalName}}Service } from './{{name}}.service'
+import { {{capitalName}}Entity } from './{{name}}.entity'
+import { {{capitalName}}ImportDto, {{capitalName}}PageListDto, {{capitalName}}SaveDto } from './{{name}}.dto'
+import { User } from '@/common/decorator/user.decorator'
+import { DeleteResult } from 'typeorm'
+import { UserEntity } from '@/admin/system/user/user.entity'
+import { ApiPaginatedResponse } from '@/common/decorator/pageRequest.decorator'
+import validateArrObj from '@/common/utils/validateArrObj'
+
+@ApiTags('{{description}}')
+@ApiHeader({
+  name: 'Authorization',
+  description: 'Bearer token',
+  example: 'Bearer token'
+})
+@Controller('{{capitalName}}')
+export class {{capitalName}}Controller {
+  constructor(
+    private readonly {{name}}Service: {{capitalName}}Service,
+  ) {}
+
+  @Post('page')
+  @ApiOperation({
+    summary: '分页{{description}}列表'
+  })
+  @ApiPaginatedResponse({{capitalName}}Entity)
+  async get{{capitalName}}PageList(@Body() {{name}}PageListDto: {{capitalName}}PageListDto) {
+    return await this.{{name}}Service.get{{capitalName}}PageList({{name}}PageListDto)
+  }
+
+  @Post('list')
+  @ApiOperation({
+    summary: '{{description}}列表'
+  })
+  @ApiOkResponse({
+    description: '{{description}}列表',
+    type: {{capitalName}}Entity,
+    isArray: true
+  })
+  async get{{capitalName}}List(@Body() {{name}}PageListDto: {{capitalName}}PageListDto) {
+    return await this.{{name}}Service.get{{capitalName}}List({{name}}PageListDto)
+  }
+
+  @Post('save')
+  @ApiOperation({
+    summary: '保存{{description}}'
+  })
+  @ApiOkResponse({
+    description: '保存{{description}}',
+    type: {{capitalName}}Entity
+  })
+  async save{{capitalName}}(@Body() {{name}}: {{capitalName}}SaveDto, @User() user: { id: string }) {
+    const {{name}}Entity = new {{capitalName}}Entity()
+    const userEntity = new UserEntity()
+    userEntity.id = user.id
+    if (!{{name}}.id) {
+      {{name}}Entity.createUser = userEntity
+    }
+    {{name}}Entity.updateUser = userEntity
+    Object.assign({{name}}Entity, {{name}})
+    return await this.{{name}}Service.save{{capitalName}}({{name}}Entity)
+  }
+
+  @Post('import')
+  @ApiOperation({
+    summary: '导入{{description}}'
+  })
+  @ApiOkResponse({
+    description: '导入{{description}}',
+    type: {{capitalName}}Entity,
+    isArray: true
+  })
+  async import{{capitalName}}(@Body() {{name}}: {{capitalName}}ImportDto, @User() user: { id: string }) {
+    const {{name}}List: {{capitalName}}Entity[] = []
+    await validateArrObj({{name}}.list, {{capitalName}}SaveDto)
+    const userEntity = new UserEntity()
+    userEntity.id = user.id
+    for (const item of {{name}}.list) {
+      const {{name}}Item = new {{capitalName}}Entity()
+      if (!item.id) {
+        {{name}}Item.createUser = userEntity
+      }
+      {{name}}Item.updateUser = userEntity
+      Object.assign({{name}}Item, item)
+      {{name}}List.push({{name}}Item)
+    }
+    return await this.{{name}}Service.import{{capitalName}}({{name}}List)
+  }
+
+  @Get('id')
+  @ApiOperation({
+    summary: 'id查询{{description}}详情'
+  })
+  @ApiOkResponse({
+    description: 'id查询{{description}}详情',
+    type: {{capitalName}}SaveDto
+  })
+  async get{{capitalName}}ById(@Query('id') id: string) {
+    return await this.{{name}}Service.get{{capitalName}}ById(id)
+  }
+
+  @Post('delete')
+  @ApiOperation({
+    summary: 'id删除{{description}}',
+    requestBody: {
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              id: {
+                type: 'array',
+                items: {
+                  type: 'string'
+                }
+              }
+            },
+            required: ['id']
+          }
+        }
+      },
+      required: true,
+      description: '待删除的id数组'
+    }
+  })
+  @ApiOkResponse({
+    description: 'id删除{{description}}',
+    type: DeleteResult
+  })
+  async delete{{capitalName}}ById(@Body('id') id: string[]) {
+    return await this.{{name}}Service.delete{{capitalName}}ById(id)
+  }
+}

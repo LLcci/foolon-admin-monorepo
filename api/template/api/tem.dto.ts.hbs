@@ -1,0 +1,46 @@
+import { ApiProperty, IntersectionType, OmitType, PickType } from '@nestjs/swagger'
+import { {{capitalName}}Entity } from './{{name}}.entity'
+import { PageRequestDto } from '@/common/class/response.dto'
+import { ArrayNotEmpty, IsNotEmpty, IsArray, IsOptional, IsString, IsNumber, IsBoolean, IsObject } from 'class-validator'
+
+export class {{capitalName}}ListDto extends PickType({{capitalName}}Entity, ['status']) {
+{{#each listDtoFields}}
+  {{apiProperty}}
+  {{#if validator}}
+  {{validator}}
+  {{/if}}
+  @IsOptional()
+  {{name}}?: {{type}}
+{{/each}}
+}
+
+export class {{capitalName}}PageListDto extends IntersectionType(PageRequestDto, {{capitalName}}ListDto) {}
+
+export class {{capitalName}}SaveDto extends PickType({{capitalName}}Entity, ['id', 'status']) {
+{{#each saveDtoFields}}
+  {{apiProperty}}
+  {{#if validator}}
+  {{validator}}
+  {{/if}}
+  {{#if required}}
+  @IsNotEmpty({ message: '{{description}}不能为空' })
+  {{else}}
+  @IsOptional()
+  {{/if}}
+  {{name}}{{#if required}}{{else}}?{{/if}}: {{type}}
+{{/each}}
+}
+
+export class {{capitalName}}ImportDto {
+  @ApiProperty({
+    description: '{{description}}列表',
+    required: true,
+    type: {{capitalName}}SaveDto,
+    isArray: true
+  })
+  @IsArray({
+    message: '{{description}}列表格式不正确'
+  })
+  @ArrayNotEmpty({ message: '{{description}}列表不能为空' })
+  list: {{capitalName}}SaveDto[]
+}

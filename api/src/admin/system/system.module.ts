@@ -38,6 +38,8 @@ import { DictTypeController } from './dict/dict.type.controller'
 import { DictTypeService } from './dict/dict.type.service'
 import { DictDataController } from './dict/dict.data.controller'
 import { DictDataService } from './dict/dict.data.service'
+import { CodeGenController } from './codeGen/code-gen.controller'
+import { CodeGenService } from './codeGen/code-gen.service'
 
 @Module({
   imports: [
@@ -75,7 +77,8 @@ import { DictDataService } from './dict/dict.data.service'
     QueuesController,
     TaskController,
     DictTypeController,
-    DictDataController
+    DictDataController,
+    CodeGenController
   ],
   providers: [
     LoginService,
@@ -94,7 +97,8 @@ import { DictDataService } from './dict/dict.data.service'
     },
     TaskService,
     DictTypeService,
-    DictDataService
+    DictDataService,
+    CodeGenService
   ]
 })
 export class SystemModule {}
