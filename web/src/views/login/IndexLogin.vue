@@ -25,10 +25,14 @@
                   ></el-input>
                 </el-form-item>
                 <el-form-item prop="code">
-                  <div class="flex items-center">
-                    <el-input v-model="formData.code" placeholder="验证码"></el-input>
-                    <el-image @click="getCode" :src="code?.img" fit="fill" :lazy="true"></el-image>
-                  </div>
+                  <cap-widget
+                    id="cap"
+                    :data-cap-api-endpoint="capApi"
+                    data-cap-i18n-verifying-label="验证中..."
+                    data-cap-i18n-initial-state="点击验证"
+                    data-cap-i18n-solved-label="验证通过"
+                    data-cap-i18n-error-label="验证失败，请重试"
+                  ></cap-widget>
                 </el-form-item>
                 <el-form-item>
                   <el-button
@@ -36,7 +40,7 @@
                     type="primary"
                     size="large"
                     @click="onSubmit"
-                    :loading="loginFetching"
+                    :loading="loginLoading"
                     >登录</el-button
                   >
                 </el-form-item>
@@ -50,13 +54,14 @@
 </template>
 <script setup lang="ts">
 import { type FormInstance, type FormRules } from 'element-plus'
-import { reactive, ref } from 'vue'
-import { useCode, useLogin } from './api'
-import type { LoginForm } from './types'
+import { onMounted, reactive, ref } from 'vue'
+import { useLogin } from './api'
 import { useUser } from '@/stores/useUser'
-import { useSystem } from '@/stores/useSystem'
 import { useRouter } from 'vue-router'
 import { useDict } from '@/stores/useDict'
+import type { paths } from '@/types/Schema'
+
+const capApi = ref(`${import.meta.env.VITE_API_URL}/admin/sys/login/`)
 
 const router = useRouter()
 
@@ -65,35 +70,34 @@ const description = ref(import.meta.env.VITE_APP_DESCRIPTION)
 
 const formRef = ref<FormInstance>()
 
-let formData = reactive<LoginForm>({
+let formData = reactive<
+  paths['/admin/sys/login']['post']['requestBody']['content']['application/json']
+>({
   username: '',
   password: '',
-  code: '',
-  codeId: ''
+  code: ''
 })
 
 const rules = reactive<FormRules<typeof formData>>({
   username: [{ required: true, message: '请输入用户名' }],
   password: [{ required: true, message: '请输入密码' }],
-  code: [{ required: true, message: '请输入验证码' }]
+  code: [{ required: true, message: '请点击验证' }]
 })
 
-const { data: code, execute: getCode } = useCode()
-getCode()
+onMounted(() => {
+  const widget = document.querySelector('#cap')
 
-const {
-  data: loginData,
-  onFetchError: onLoginError,
-  isFetching: loginFetching,
-  execute: goLogin
-} = useLogin(formData)
-onLoginError(() => {
-  getCode(), formRef.value?.resetFields(['code'])
+  widget?.addEventListener('solve', function (e: any) {
+    formData.code = e.detail.token
+  })
 })
+
+const { data: loginData, execute: goLogin } = useLogin(formData)
+const loginLoading = ref(false)
 async function onSubmit() {
   try {
+    loginLoading.value = true
     await formRef.value?.validate()
-    formData.codeId = code.value?.id as string
     await goLogin(true)
     useUser().setToken(loginData.value?.token as string)
     await useUser().getPermissions()
@@ -101,6 +105,8 @@ async function onSubmit() {
     router.replace('/')
   } catch (error) {
     console.error(error)
+  } finally {
+    loginLoading.value = false
   }
 }
 </script>

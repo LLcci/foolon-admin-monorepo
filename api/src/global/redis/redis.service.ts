@@ -3,8 +3,6 @@ https://docs.nestjs.com/providers#services
 */
 import { DictTypeEntity } from '@/admin/system/dict/dict.type.entity'
 import {
-  REDIS_CODE_EX,
-  REDIS_CODE_PREFIX,
   REDIS_DICT_ALL_CODE,
   REDIS_DICT_PREFIX,
   REDIS_ROUTE_PREFIX,
@@ -43,20 +41,6 @@ export class RedisService implements OnModuleInit {
 
   async getRoutes() {
     return await this.client.sMembers(REDIS_ROUTE_PREFIX)
-  }
-
-  async setCode(codeId: string, text: string) {
-    return await this.client.set(`${REDIS_CODE_PREFIX}${codeId}`, text, {
-      EX: Number(REDIS_CODE_EX)
-    })
-  }
-
-  async getCode(codeId: string) {
-    return await this.client.get(`${REDIS_CODE_PREFIX}${codeId}`)
-  }
-
-  async deleteCode(codeId: string) {
-    return await this.client.del(`${REDIS_CODE_PREFIX}${codeId}`)
   }
 
   async setToken(token: string, userIv: string) {

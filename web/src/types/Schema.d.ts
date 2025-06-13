@@ -44,6 +44,14 @@ export interface paths {
     /** 获取验证码 */
     get: operations['LoginController_getCode']
   }
+  '/admin/sys/login/challenge': {
+    /** 人机验证 */
+    post: operations['LoginController_challenge']
+  }
+  '/admin/sys/login/redeem': {
+    /** 人机验证 */
+    post: operations['LoginController_redeem']
+  }
   '/admin/sys/menu/page': {
     /** 分页菜单列表 */
     post: operations['MenuController_getMenuPageList']
@@ -266,13 +274,13 @@ export interface components {
        */
       status?: '0' | '1'
       /** Format: date-time */
-      createTime?: string
+      createTime?: string | Record<string, never>
       /** Format: date-time */
-      updateTime?: string
+      updateTime?: string | Record<string, never>
       /** @description 创建用户 */
-      createUser?: components['schemas']['UserEntity']
+      createUser?: string | Record<string, never>
       /** @description 更新用户 */
-      updateUser?: components['schemas']['UserEntity']
+      updateUser?: string | Record<string, never>
       /** Format: date-time */
       deleteTime?: string
       /** @description 父菜单id */
@@ -314,13 +322,13 @@ export interface components {
        */
       status?: '0' | '1'
       /** Format: date-time */
-      createTime?: string
+      createTime?: string | Record<string, never>
       /** Format: date-time */
-      updateTime?: string
+      updateTime?: string | Record<string, never>
       /** @description 创建用户 */
-      createUser?: components['schemas']['UserEntity']
+      createUser?: string | Record<string, never>
       /** @description 更新用户 */
-      updateUser?: components['schemas']['UserEntity']
+      updateUser?: string | Record<string, never>
       /** Format: date-time */
       deleteTime?: string
       /** @description 角色名称,查询时非必传,新增更新时必传 */
@@ -341,13 +349,13 @@ export interface components {
        */
       status?: '0' | '1'
       /** Format: date-time */
-      createTime?: string
+      createTime?: string | Record<string, never>
       /** Format: date-time */
-      updateTime?: string
+      updateTime?: string | Record<string, never>
       /** @description 创建用户 */
-      createUser?: components['schemas']['UserEntity']
+      createUser?: string | Record<string, never>
       /** @description 更新用户 */
-      updateUser?: components['schemas']['UserEntity']
+      updateUser?: string | Record<string, never>
       /** Format: date-time */
       deleteTime?: string
       /** @description 用户账户,查询时非必传,新增更新时必传 */
@@ -393,13 +401,13 @@ export interface components {
        */
       status?: '0' | '1'
       /** Format: date-time */
-      createTime?: string
+      createTime?: string | Record<string, never>
       /** Format: date-time */
-      updateTime?: string
+      updateTime?: string | Record<string, never>
       /** @description 创建用户 */
-      createUser?: components['schemas']['UserEntity']
+      createUser?: string | Record<string, never>
       /** @description 更新用户 */
-      updateUser?: components['schemas']['UserEntity']
+      updateUser?: string | Record<string, never>
       /** Format: date-time */
       deleteTime?: string
       /** @description 用户账户,查询时非必传,新增更新时必传 */
@@ -426,13 +434,13 @@ export interface components {
        */
       status?: '0' | '1'
       /** Format: date-time */
-      createTime?: string
+      createTime?: string | Record<string, never>
       /** Format: date-time */
-      updateTime?: string
+      updateTime?: string | Record<string, never>
       /** @description 创建用户 */
-      createUser?: components['schemas']['UserEntity']
+      createUser?: string | Record<string, never>
       /** @description 更新用户 */
-      updateUser?: components['schemas']['UserEntity']
+      updateUser?: string | Record<string, never>
       /** Format: date-time */
       deleteTime?: string
       /** @description 用户名,查询时非必传,新增更新时必传 */
@@ -467,13 +475,13 @@ export interface components {
        */
       status?: '0' | '1'
       /** Format: date-time */
-      createTime?: string
+      createTime?: string | Record<string, never>
       /** Format: date-time */
-      updateTime?: string
+      updateTime?: string | Record<string, never>
       /** @description 创建用户 */
-      createUser?: components['schemas']['UserEntity']
+      createUser?: string | Record<string, never>
       /** @description 更新用户 */
-      updateUser?: components['schemas']['UserEntity']
+      updateUser?: string | Record<string, never>
       /** Format: date-time */
       deleteTime?: string
       /** @description 用户账户,查询时非必传,新增更新时必传 */
@@ -497,8 +505,6 @@ export interface components {
       password: string
       /** @description 验证码 */
       code: string
-      /** @description 验证码id */
-      codeId: string
     }
     Token: {
       /** @description Token */
@@ -519,13 +525,13 @@ export interface components {
        */
       status?: '0' | '1'
       /** Format: date-time */
-      createTime?: string
+      createTime?: string | Record<string, never>
       /** Format: date-time */
-      updateTime?: string
+      updateTime?: string | Record<string, never>
       /** @description 创建用户 */
-      createUser?: components['schemas']['UserEntity']
+      createUser?: string | Record<string, never>
       /** @description 更新用户 */
-      updateUser?: components['schemas']['UserEntity']
+      updateUser?: string | Record<string, never>
       /** Format: date-time */
       deleteTime?: string
       /** @description 父菜单id */
@@ -613,13 +619,13 @@ export interface components {
        */
       status?: '0' | '1'
       /** Format: date-time */
-      createTime?: string
+      createTime?: string | Record<string, never>
       /** Format: date-time */
-      updateTime?: string
+      updateTime?: string | Record<string, never>
       /** @description 创建用户 */
-      createUser?: components['schemas']['UserEntity']
+      createUser?: string | Record<string, never>
       /** @description 更新用户 */
-      updateUser?: components['schemas']['UserEntity']
+      updateUser?: string | Record<string, never>
       /** Format: date-time */
       deleteTime?: string
       /** @description 角色名称,查询时非必传,新增更新时必传 */
@@ -726,13 +732,13 @@ export interface components {
        */
       status?: '0' | '1'
       /** Format: date-time */
-      createTime?: string
+      createTime?: string | Record<string, never>
       /** Format: date-time */
-      updateTime?: string
+      updateTime?: string | Record<string, never>
       /** @description 创建用户 */
-      createUser?: components['schemas']['UserEntity']
+      createUser?: string | Record<string, never>
       /** @description 更新用户 */
-      updateUser?: components['schemas']['UserEntity']
+      updateUser?: string | Record<string, never>
       /** Format: date-time */
       deleteTime?: string
       /** @description 查询时非必传,新增更新时需要传 */
@@ -778,13 +784,13 @@ export interface components {
        */
       status?: '0' | '1'
       /** Format: date-time */
-      createTime?: string
+      createTime?: string | Record<string, never>
       /** Format: date-time */
-      updateTime?: string
+      updateTime?: string | Record<string, never>
       /** @description 创建用户 */
-      createUser?: components['schemas']['UserEntity']
+      createUser?: string | Record<string, never>
       /** @description 更新用户 */
-      updateUser?: components['schemas']['UserEntity']
+      updateUser?: string | Record<string, never>
       /** Format: date-time */
       deleteTime?: string
       /** @description 字典标签 */
@@ -810,13 +816,13 @@ export interface components {
        */
       status?: '0' | '1'
       /** Format: date-time */
-      createTime?: string
+      createTime?: string | Record<string, never>
       /** Format: date-time */
-      updateTime?: string
+      updateTime?: string | Record<string, never>
       /** @description 创建用户 */
-      createUser?: components['schemas']['UserEntity']
+      createUser?: string | Record<string, never>
       /** @description 更新用户 */
-      updateUser?: components['schemas']['UserEntity']
+      updateUser?: string | Record<string, never>
       /** Format: date-time */
       deleteTime?: string
       /** @description 字典类型名称 */
@@ -858,13 +864,13 @@ export interface components {
        */
       status?: '0' | '1'
       /** Format: date-time */
-      createTime?: string
+      createTime?: string | Record<string, never>
       /** Format: date-time */
-      updateTime?: string
+      updateTime?: string | Record<string, never>
       /** @description 创建用户 */
-      createUser?: components['schemas']['UserEntity']
+      createUser?: string | Record<string, never>
       /** @description 更新用户 */
-      updateUser?: components['schemas']['UserEntity']
+      updateUser?: string | Record<string, never>
       /** Format: date-time */
       deleteTime?: string
       /** @description 字典类型名称 */
@@ -910,13 +916,13 @@ export interface components {
        */
       status?: '0' | '1'
       /** Format: date-time */
-      createTime?: string
+      createTime?: string | Record<string, never>
       /** Format: date-time */
-      updateTime?: string
+      updateTime?: string | Record<string, never>
       /** @description 创建用户 */
-      createUser?: components['schemas']['UserEntity']
+      createUser?: string | Record<string, never>
       /** @description 更新用户 */
-      updateUser?: components['schemas']['UserEntity']
+      updateUser?: string | Record<string, never>
       /** Format: date-time */
       deleteTime?: string
       /** @description 字典标签 */
@@ -1193,6 +1199,22 @@ export interface operations {
         content: {
           'application/json': components['schemas']['Code']
         }
+      }
+    }
+  }
+  /** 人机验证 */
+  LoginController_challenge: {
+    responses: {
+      201: {
+        content: never
+      }
+    }
+  }
+  /** 人机验证 */
+  LoginController_redeem: {
+    responses: {
+      201: {
+        content: never
       }
     }
   }

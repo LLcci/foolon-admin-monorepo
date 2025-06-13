@@ -9,9 +9,8 @@ import { BadRequestException, Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
-import * as svgCaptcha from 'svg-captcha'
-import { nanoid } from 'nanoid'
 import * as bcrypt from 'bcryptjs'
+import Cap from '@cap.js/server'
 @Injectable()
 export class LoginService {
   constructor(
@@ -21,15 +20,13 @@ export class LoginService {
     private readonly redisService: RedisService
   ) {}
 
+  cap: Cap = new Cap({ tokens_store_path: '.data/tokensList.json' })
+
   async login(loginDto: LoginDto) {
-    const redisCode = await this.redisService.getCode(loginDto.codeId)
-    if (!redisCode) {
-      throw new BadRequestException('验证码已过期')
+    const result = await this.cap.validateToken(loginDto.code)
+    if (!result.success) {
+      throw new BadRequestException('人机验证失败')
     }
-    if (loginDto.code != redisCode) {
-      throw new BadRequestException('验证码错误')
-    }
-    await this.redisService.deleteCode(loginDto.codeId)
     let user = new UserEntity()
     user = await this.userRepository.findOne({
       select: ['id', 'password', 'salt'],
@@ -52,22 +49,5 @@ export class LoginService {
     return {
       token
     }
-  }
-
-  async getCode() {
-    const svg = svgCaptcha.create({
-      size: 4,
-      color: true,
-      noise: 4,
-      width: 100,
-      height: 50,
-      charPreset: '1234567890'
-    })
-    const result = {
-      img: `data:image/svg+xml;base64,${Buffer.from(svg.data).toString('base64')}`,
-      id: nanoid()
-    }
-    await this.redisService.setCode(result.id, svg.text)
-    return result
   }
 }

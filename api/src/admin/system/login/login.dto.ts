@@ -13,8 +13,8 @@ export class LoginDto extends PickType(UserEntity, ['username']) {
   @IsNotEmpty()
   code: string
 
-  @ApiProperty({ description: '验证码id' })
-  @IsString()
-  @IsNotEmpty()
-  codeId: string
+  // @ApiProperty({ description: '验证码id' })
+  // @IsString()
+  // @IsNotEmpty()
+  // codeId: string
 }

@@ -1,14 +1,10 @@
 import { useFetch } from '@/hooks/useFetch'
-import type { Code, LoginForm, Token } from '../types'
+import type { paths } from '@/types/Schema'
 
-/**
- * 获取验证码
- * @returns img: 图片svg; id: 验证码ID
- */
-export function useCode() {
-  return useFetch<Code>('/admin/sys/login/code', { immediate: false }).get()
-}
-
-export function useLogin(data: LoginForm) {
-  return useFetch<Token>('/admin/sys/login', { immediate: false }).post(data)
+export function useLogin(
+  data: paths['/admin/sys/login']['post']['requestBody']['content']['application/json']
+) {
+  return useFetch<
+    paths['/admin/sys/login']['post']['responses']['200']['content']['application/json']
+  >('/admin/sys/login', { immediate: false }).post(data)
 }

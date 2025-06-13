@@ -1,0 +1,1 @@
+export const NO_COMMON_RESULT = 'NO_COMMON_RESULT'

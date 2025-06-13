@@ -4,10 +4,11 @@ https://docs.nestjs.com/controllers#controllers
 
 import { LoginDto } from '@/admin/system/login/login.dto'
 import { LoginService } from '@/admin/system/login/login.service'
-import { Body, Controller, Get, Post } from '@nestjs/common'
+import { BadRequestException, Body, Controller, Post } from '@nestjs/common'
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
-import { Code, Token } from './login.class'
+import { Token } from './login.class'
 import { Authorize } from '@/common/decorator/authorize.decorator'
+import { NoComRes } from '@/common/decorator/noComRes.decorator'
 
 @Authorize()
 @ApiTags('登录')
@@ -22,10 +23,21 @@ export class LoginController {
     return await this.loginService.login(loginDto)
   }
 
-  @Get('/code')
-  @ApiOperation({ summary: '获取验证码' })
-  @ApiOkResponse({ description: '获取验证码成功', type: Code })
-  async getCode() {
-    return await this.loginService.getCode()
+  @NoComRes()
+  @Post('/challenge')
+  @ApiOperation({ summary: '人机验证' })
+  async challenge() {
+    return this.loginService.cap.createChallenge()
+  }
+
+  @NoComRes()
+  @Post('/redeem')
+  @ApiOperation({ summary: '人机验证' })
+  async redeem(@Body() body: { token: string; solutions: Array<[string, string, string]> }) {
+    const { token, solutions } = body
+    if (!token || !solutions) {
+      return new BadRequestException('人机验证失败')
+    }
+    return this.loginService.cap.redeemChallenge({ token, solutions })
   }
 }
