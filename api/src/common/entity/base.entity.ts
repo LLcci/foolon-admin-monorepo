@@ -10,6 +10,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm'
+import { Transform } from 'class-transformer'
+import dayjs from 'dayjs'
 
 export class BaseEntity {
   @PrimaryGeneratedColumn('uuid')
@@ -41,24 +43,65 @@ export class BaseEntity {
 
   @Index()
   @CreateDateColumn({ name: 'create_time', comment: '创建时间' })
-  @ApiProperty({ required: false, readOnly: true })
+  @ApiProperty({
+    required: false,
+    readOnly: true,
+    oneOf: [
+      { type: 'string', description: '创建时间,格式YYYY-MM-DD HH:mm:ss' },
+      { type: 'Date', description: '创建时间,Date' }
+    ]
+  })
+  @Transform(({ value }) => dayjs(value).format('YYYY-MM-DD HH:mm:ss'))
   createTime: Date
 
   @Index()
   @UpdateDateColumn({ name: 'update_time', comment: '更新时间' })
   @ApiProperty({ required: false, readOnly: true })
+  @ApiProperty({
+    required: false,
+    readOnly: true,
+    oneOf: [
+      { type: 'string', description: '创建时间,格式YYYY-MM-DD HH:mm:ss' },
+      { type: 'Date', description: '创建时间,Date' }
+    ]
+  })
+  @Transform(({ value }) => dayjs(value).format('YYYY-MM-DD HH:mm:ss'))
   updateTime: Date
 
-  @ApiProperty({ required: false, readOnly: true, description: '创建用户', type: () => UserEntity })
+  @ApiProperty({
+    required: false,
+    readOnly: true,
+    description: '创建用户',
+    oneOf: [
+      { type: 'string', description: '用户名' },
+      {
+        type: 'object',
+        description: '用户实体'
+      }
+    ]
+  })
   @ManyToOne(() => UserEntity, {
     createForeignKeyConstraints: false
   })
-  createUser: UserEntity
+  @Transform(({ value }) => value?.realname)
+  createUser: UserEntity | string
 
-  @ApiProperty({ required: false, readOnly: true, description: '更新用户', type: () => UserEntity })
+  @ApiProperty({
+    required: false,
+    readOnly: true,
+    description: '更新用户',
+    oneOf: [
+      { type: 'string', description: '用户名' },
+      {
+        type: 'object',
+        description: '用户实体'
+      }
+    ]
+  })
   @ManyToOne(() => UserEntity, {
     createForeignKeyConstraints: false
   })
+  @Transform(({ value }) => value?.realname)
   updateUser: UserEntity
 
   @Index()
