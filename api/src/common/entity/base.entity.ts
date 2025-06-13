@@ -102,7 +102,7 @@ export class BaseEntity {
     createForeignKeyConstraints: false
   })
   @Transform(({ value }) => value?.realname)
-  updateUser: UserEntity
+  updateUser: UserEntity | string
 
   @Index()
   @DeleteDateColumn({ name: 'delete_time', comment: '删除时间', nullable: true })
