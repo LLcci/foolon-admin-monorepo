@@ -13,5 +13,5 @@ module.exports = {
     ecmaVersion: 'latest',
     parser: '@typescript-eslint/parser'
   },
-  ignorePatterns: ['index.html', 'README.md', 'cap.js']
+  ignorePatterns: ['index.html', 'README.md', '/public/cap.min.js', '/public/cap_wasm.min.js']
 }

@@ -3,3 +3,5 @@
 
 /api/template/**/**
 /api/.data/**
+
+/web/public/**
