@@ -5,7 +5,7 @@ https://docs.nestjs.com/providers#services
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { {{capitalName}}Entity } from './{{name}}.entity'
-import { Repository, Not, MoreThan, LessThan, MoreThanOrEqual, LessThanOrEqual, Like } from 'typeorm'
+import { Repository, {{#if needNot}}Not, {{/if}}{{#if needMoreThan}}MoreThan, {{/if}}{{#if needLessThan}}LessThan, {{/if}}{{#if needMoreThanOrEqual}}MoreThanOrEqual, {{/if}}{{#if needLessThanOrEqual}}LessThanOrEqual, {{/if}}{{#if needLike}}Like{{/if}} } from 'typeorm'
 import { {{capitalName}}PageListDto } from './{{name}}.dto'
 import { PageResultDto } from '@/common/class/response.dto'
 

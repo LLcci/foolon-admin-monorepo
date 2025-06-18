@@ -100,6 +100,35 @@ export class CodeGenService {
      * 详情显示字段
      */
     let detailFields = ''
+    /**
+     * dto需要的引入
+     */
+    const dtoNeedMap: {
+      needIsString: boolean
+      needIsNumber: boolean
+      needIsBoolean: boolean
+      needIsObject: boolean
+    } = {
+      needIsString: false,
+      needIsNumber: false,
+      needIsBoolean: false,
+      needIsObject: false
+    }
+    const serviceNeedMap: {
+      needNot: boolean
+      needMoreThan: boolean
+      needLessThan: boolean
+      needMoreThanOrEqual: boolean
+      needLessThanOrEqual: boolean
+      needLike: boolean
+    } = {
+      needNot: false,
+      needMoreThan: false,
+      needLessThan: false,
+      needMoreThanOrEqual: false,
+      needLessThanOrEqual: false,
+      needLike: false
+    }
     for (const field of genApiDto.fields) {
       // 将下划线链接转为小驼峰
       const camelCaseName = field.name.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase())
@@ -112,21 +141,27 @@ export class CodeGenService {
             queryFields += `${camelCaseName}: ${genApiDto.name}PageListDto.${camelCaseName} ?? undefined,`
             break
           case QueryTypeEnum['!=']:
+            serviceNeedMap.needNot = true
             queryFields += `${camelCaseName}: ${genApiDto.name}PageListDto.${camelCaseName} ? Not(${genApiDto.name}PageListDto.${camelCaseName}) : undefined,`
             break
           case QueryTypeEnum['>']:
+            serviceNeedMap.needMoreThan = true
             queryFields += `${camelCaseName}: ${genApiDto.name}PageListDto.${camelCaseName} ? MoreThan(${genApiDto.name}PageListDto.${camelCaseName}) : undefined,`
             break
           case QueryTypeEnum['<']:
+            serviceNeedMap.needLessThan = true
             queryFields += `${camelCaseName}: ${genApiDto.name}PageListDto.${camelCaseName} ? LessThan(${genApiDto.name}PageListDto.${camelCaseName}) : undefined,`
             break
           case QueryTypeEnum['>=']:
+            serviceNeedMap.needMoreThanOrEqual = true
             queryFields += `${camelCaseName}: ${genApiDto.name}PageListDto.${camelCaseName} ? MoreThanOrEqual(${genApiDto.name}PageListDto.${camelCaseName}) : undefined,`
             break
           case QueryTypeEnum['<=']:
+            serviceNeedMap.needLessThanOrEqual = true
             queryFields += `${camelCaseName}: ${genApiDto.name}PageListDto.${camelCaseName} ? LessThanOrEqual(${genApiDto.name}PageListDto.${camelCaseName}) : undefined,`
             break
           case QueryTypeEnum['like']:
+            serviceNeedMap.needLike = true
             queryFields += `${camelCaseName}: ${genApiDto.name}PageListDto.${camelCaseName} ? Like(${genApiDto.name}PageListDto.${camelCaseName}) : undefined,`
             break
           default:
@@ -156,10 +191,18 @@ export class CodeGenService {
         const capitalType = type.charAt(0).toUpperCase() + type.slice(1)
         let validator = `@Is${capitalType}({ message: '${field.description}，格式错误' })`
         if (type === 'any') {
+          dtoNeedMap.needIsObject = true
           validator = undefined
         }
         if (type === 'number') {
+          dtoNeedMap.needIsNumber = true
           validator = `@IsNumber({}, { message: '${field.description}，格式错误' })`
+        }
+        if (type === 'string') {
+          dtoNeedMap.needIsString = true
+        }
+        if (type === 'boolean') {
+          dtoNeedMap.needIsBoolean = true
         }
         saveDtoFields.push({
           apiProperty,
@@ -183,7 +226,8 @@ export class CodeGenService {
       description: genApiDto.description,
       selectFields,
       queryFields,
-      detailFields
+      detailFields,
+      ...serviceNeedMap
     })
     writeFileSync(
       join(process.cwd(), genApiDto.apiGenPath, `${genApiDto.name}.service.ts`),
@@ -199,7 +243,8 @@ export class CodeGenService {
       capitalName,
       description: genApiDto.description,
       listDtoFields,
-      saveDtoFields
+      saveDtoFields,
+      ...dtoNeedMap
     })
     writeFileSync(
       join(process.cwd(), genApiDto.apiGenPath, `${genApiDto.name}.dto.ts`),

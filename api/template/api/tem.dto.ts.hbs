@@ -1,7 +1,7 @@
-import { ApiProperty, IntersectionType, OmitType, PickType } from '@nestjs/swagger'
+import { ApiProperty, IntersectionType, PickType } from '@nestjs/swagger'
 import { {{capitalName}}Entity } from './{{name}}.entity'
 import { PageRequestDto } from '@/common/class/response.dto'
-import { ArrayNotEmpty, IsNotEmpty, IsArray, IsOptional, IsString, IsNumber, IsBoolean, IsObject } from 'class-validator'
+import { ArrayNotEmpty, IsNotEmpty, IsArray, IsOptional, {{#if needIsString}}IsString, {{/if}}{{#if needIsNumber}}IsNumber, {{/if}}{{#if needIsBoolean}}IsBoolean, {{/if}}{{#if needIsObject}}IsObject{{/if}} } from 'class-validator'
 
 export class {{capitalName}}ListDto extends PickType({{capitalName}}Entity, ['status']) {
 {{#each listDtoFields}}
