@@ -33,7 +33,7 @@ export class LoginController {
   @NoComRes()
   @Post('/redeem')
   @ApiOperation({ summary: '人机验证' })
-  async redeem(@Body() body: { token: string; solutions: Array<[string, string, string]> }) {
+  async redeem(@Body() body: { token: string; solutions: Array<[string, string, number]> }) {
     const { token, solutions } = body
     if (!token || !solutions) {
       return new BadRequestException('人机验证失败')
