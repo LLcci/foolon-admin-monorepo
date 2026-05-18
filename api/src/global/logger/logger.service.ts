@@ -18,7 +18,7 @@ export class LoggerService implements NestLoggerService {
         format.colorize({ all: true }),
         format.printf((info) => {
           // 定义文件输出内容
-          return `${info.timestamp} [foolon-admin] ${info.meta.file} ${info.message} ${info.ms}`
+          return `${info.timestamp} [foolon-admin] ${(info.meta as { file: string }).file} ${info.message} ${info.ms}`
         })
       ),
       // 生成文件
@@ -51,7 +51,7 @@ export class LoggerService implements NestLoggerService {
             format.colorize({ all: false }),
             format.printf((info) => {
               // 定义文件输出内容
-              return `${info.timestamp} [foolon-admin] ${info.meta.file} ${info.message} ${info.ms}`
+              return `${info.timestamp} [foolon-admin] ${(info.meta as { file: string }).file} ${info.message} ${info.ms}`
             })
           ),
           // 日志等级，不设置所有日志将在同一个文件
@@ -74,7 +74,7 @@ export class LoggerService implements NestLoggerService {
             format.colorize({ all: false }),
             format.printf((info) => {
               // 定义文件输出内容
-              return `${info.timestamp} [foolon-admin] ${info.meta.file} ${info.message} ${info.ms}`
+              return `${info.timestamp} [foolon-admin] ${(info.meta as { file: string }).file} ${info.message} ${info.ms}`
             })
           ),
           level: 'error'
