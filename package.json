@@ -4,7 +4,7 @@
   "description": "",
   "private": true,
   "scripts": {
-    "docker:compose:deploy": "cd ./api && pnpm run build && cd ../web && pnpm run build && cd ../ && docker-compose up -d --build",
+    "docker:compose:deploy": "cd ./api && pnpm run build && cd ../web && pnpm run build && cd ../ && docker compose up -d --build",
     "prepare": "husky install",
     "format": "prettier --write \"**/*.{vue,js,ts,jsx,tsx,json,md,html,css,scss}\""
   },
@@ -22,7 +22,7 @@
     "eslint": "^8.57.0",
     "lint-staged": "^15.2.7",
     "prettier": "^3.2.5",
-    "typescript": "^5.3.3"
+    "typescript": "5.4.5"
   },
   "lint-staged": {
     "./web/**/*.{vue,js,ts,jsx,tsx}": "eslint --fix",
