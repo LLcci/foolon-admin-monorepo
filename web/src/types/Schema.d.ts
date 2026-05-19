@@ -40,10 +40,6 @@ export interface paths {
     /** 登录 */
     post: operations['LoginController_login']
   }
-  '/admin/sys/login/code': {
-    /** 获取验证码 */
-    get: operations['LoginController_getCode']
-  }
   '/admin/sys/login/challenge': {
     /** 人机验证 */
     post: operations['LoginController_challenge']
@@ -509,12 +505,6 @@ export interface components {
     Token: {
       /** @description Token */
       token: string
-    }
-    Code: {
-      /** @description 验证码SVG */
-      img: string
-      /** @description 唯一id */
-      id: string
     }
     MenuTree: {
       /** @description id,新增时不需要传,更新时需要传 */
@@ -1187,17 +1177,6 @@ export interface operations {
       200: {
         content: {
           'application/json': components['schemas']['Token']
-        }
-      }
-    }
-  }
-  /** 获取验证码 */
-  LoginController_getCode: {
-    responses: {
-      /** @description 获取验证码成功 */
-      200: {
-        content: {
-          'application/json': components['schemas']['Code']
         }
       }
     }
