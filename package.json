@@ -6,7 +6,8 @@
   "scripts": {
     "docker:compose:deploy": "cd ./api && pnpm run build && cd ../web && pnpm run build && cd ../ && docker compose up -d --build",
     "prepare": "husky install",
-    "format": "prettier --write \"**/*.{vue,js,ts,jsx,tsx,json,md,html,css,scss}\""
+    "format": "prettier --write \"**/*.{vue,js,ts,jsx,tsx,json,md,html,css,scss}\"",
+    "lint": "eslint . --fix"
   },
   "keywords": [],
   "author": "",
@@ -18,17 +19,22 @@
   "devDependencies": {
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
+    "@rushstack/eslint-patch": "^1.3.3",
     "@types/lodash": "^4.17.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "@vue/eslint-config-prettier": "^8.0.0",
+    "@vue/eslint-config-typescript": "^13.0.0",
     "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-vue": "^9.17.0",
     "lint-staged": "^15.2.7",
     "prettier": "^3.2.5",
     "typescript": "5.4.5"
   },
   "lint-staged": {
-    "./web/**/*.{vue,js,ts,jsx,tsx}": "eslint --fix",
-    "./api/**/*.ts": [
-      "eslint --fix"
-    ],
+    "**/*.{js,ts,vue,jsx,tsx}": "eslint --fix",
     "**/*.{vue,js,ts,jsx,tsx,json,md,html,css,scss}": "prettier --write"
   }
 }
