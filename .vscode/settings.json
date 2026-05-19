@@ -32,19 +32,7 @@
     "html",
     "markdown",
     "json",
-    "jsonc",
-    "yaml",
-    "toml",
-    "xml",
-    "gql",
-    "graphql",
-    "astro",
-    "svelte",
-    "css",
-    "less",
-    "scss",
-    "pcss",
-    "postcss"
+    "jsonc"
   ],
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.patterns": {
