@@ -44,20 +44,20 @@ api/src/
 
 ## 快速查找
 
-| 需求 | 文件/模块 |
-|------|-------------|
-| 认证流程 | `admin/system/login/` + `admin.guard.ts` |
-| 权限校验 | `@Permissions('system:user:create')` 装饰器 → `admin.guard.ts` |
+| 需求         | 文件/模块                                                      |
+| ------------ | -------------------------------------------------------------- |
+| 认证流程     | `admin/system/login/` + `admin.guard.ts`                       |
+| 权限校验     | `@Permissions('system:user:create')` 装饰器 → `admin.guard.ts` |
 | 基础实体字段 | `common/entity/` (CommonEntity) → `common/class/` (BaseEntity) |
-| 代码生成 | `codeGen/` — 从 `api/template/api/` 读取模板 |
-| 文件上传 | `upload/` — 控制器 + 服务，无实体 |
-| 队列类型 | `queues/` — task (延迟) + email |
-| 在线追踪 | `online/` — 基于 Redis 的连接用户集合 |
-| Excel 导出 | `common/utils/excel.service.ts` |
-| 树形结构构建 | `common/utils/tree.utils.ts` |
-| 装饰器 | `common/decorator/` — 6 个装饰器 |
-| Socket.IO | `socket/` — 网关 + RedisIoAdapter |
-| E2E 测试 | `api/test/` (jest-e2e.json 配置) |
+| 代码生成     | `codeGen/` — 从 `api/template/api/` 读取模板                   |
+| 文件上传     | `upload/` — 控制器 + 服务，无实体                              |
+| 队列类型     | `queues/` — task (延迟) + email                                |
+| 在线追踪     | `online/` — 基于 Redis 的连接用户集合                          |
+| Excel 导出   | `common/utils/excel.service.ts`                                |
+| 树形结构构建 | `common/utils/tree.utils.ts`                                   |
+| 装饰器       | `common/decorator/` — 6 个装饰器                               |
+| Socket.IO    | `socket/` — 网关 + RedisIoAdapter                              |
+| E2E 测试     | `api/test/` (jest-e2e.json 配置)                               |
 
 ## 约定规范
 

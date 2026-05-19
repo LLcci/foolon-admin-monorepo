@@ -1,4 +1,5 @@
 # WEB — VUE3 前端
+
 Vue3 SPA (Vite, Pinia, Element Plus, UnoCSS, Socket.IO 客户端, hash 路由)。
 
 ## 目录结构
@@ -43,20 +44,20 @@ web/src/
 
 ## 快速查找
 
-| 任务 | 位置 |
-|------|----------|
-| 应用入口、Pinia $reset polyfill | `src/main.ts` |
-| 路由 (hash)、鉴权守卫 | `src/router/index.ts` |
-| 认证状态、token、权限 | `src/stores/useUser.ts` |
-| API 层 (Axios、错误处理) | `src/hooks/useFetch.ts` |
-| 按钮级权限 | `src/hooks/useDirectives.ts` (v-permissions) |
-| 自动生成的 schema 类型 (2221 行) | `src/types/Schema.d.ts` (请勿编辑) |
-| 基于 JSON schema 的通用 CRUD | `src/components/schemaTableForm/` |
-| Cron 表达式 UI (860 行) | `src/components/cronInput/` |
-| 布局 (侧边栏、顶栏、标签页) | `src/components/layout/` |
-| 字典缓存 | `src/stores/useDict.ts` |
-| 8 个管理功能页面 | `src/views/sys/` |
-| Socket.IO | `src/sockets/` (自动连接) |
+| 任务                             | 位置                                         |
+| -------------------------------- | -------------------------------------------- |
+| 应用入口、Pinia $reset polyfill  | `src/main.ts`                                |
+| 路由 (hash)、鉴权守卫            | `src/router/index.ts`                        |
+| 认证状态、token、权限            | `src/stores/useUser.ts`                      |
+| API 层 (Axios、错误处理)         | `src/hooks/useFetch.ts`                      |
+| 按钮级权限                       | `src/hooks/useDirectives.ts` (v-permissions) |
+| 自动生成的 schema 类型 (2221 行) | `src/types/Schema.d.ts` (请勿编辑)           |
+| 基于 JSON schema 的通用 CRUD     | `src/components/schemaTableForm/`            |
+| Cron 表达式 UI (860 行)          | `src/components/cronInput/`                  |
+| 布局 (侧边栏、顶栏、标签页)      | `src/components/layout/`                     |
+| 字典缓存                         | `src/stores/useDict.ts`                      |
+| 8 个管理功能页面                 | `src/views/sys/`                             |
+| Socket.IO                        | `src/sockets/` (自动连接)                    |
 
 ## 约定规范
 

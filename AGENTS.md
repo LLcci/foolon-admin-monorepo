@@ -21,21 +21,21 @@ foolon-admin-monorepo — 全栈管理后台脚手架。NestJS 后端 + Vue3 前
 
 ## 快速查找
 
-| 任务 | 位置 | 说明 |
-|------|----------|-------|
-| API 入口 | `api/src/main.ts` | NestFactory、全局管道/拦截器、Swagger、Socket.IO |
-| 根 NestJS 模块 | `api/src/app.module.ts` | ConfigModule、TypeORM、Redis、Bull、JWT、AdminModule、SocketModule |
-| 管理系统模块 | `api/src/admin/system/*/` | 12 个功能模块 (用户、角色、菜单、字典、任务、队列等) |
-| 认证与守卫 | `api/src/admin/admin.guard.ts` | JWT 守卫、路由级权限校验 |
-| 通用工具 | `api/src/common/` | 常量、装饰器、基础实体、工具函数 |
-| Web 入口 | `web/src/main.ts` | Vue 应用启动、Pinia、路由、指令 |
-| Vue 路由 | `web/src/router/index.ts` | Hash 历史模式、路由鉴权 (beforeEach) |
-| Pinia 状态管理 | `web/src/stores/` | useUser、useDict、useSystem |
-| 可复用组件 | `web/src/components/` | SchemaForm、SchemaTable、cronInput、布局 |
-| 页面视图 | `web/src/views/sys/` | 8 个管理页面、5 个 API 模块 |
-| 自定义组合式函数 | `web/src/hooks/` | useFetch、useDict、useDirectives、useVite |
-| Socket.IO | `api/src/socket/` + `web/src/sockets/` | Redis 驱动的 WebSocket 适配器 |
-| 文档 | `doc/` | VitePress，3 个部分：apiDoc/ webDoc/ quickStart/ |
+| 任务             | 位置                                   | 说明                                                               |
+| ---------------- | -------------------------------------- | ------------------------------------------------------------------ |
+| API 入口         | `api/src/main.ts`                      | NestFactory、全局管道/拦截器、Swagger、Socket.IO                   |
+| 根 NestJS 模块   | `api/src/app.module.ts`                | ConfigModule、TypeORM、Redis、Bull、JWT、AdminModule、SocketModule |
+| 管理系统模块     | `api/src/admin/system/*/`              | 12 个功能模块 (用户、角色、菜单、字典、任务、队列等)               |
+| 认证与守卫       | `api/src/admin/admin.guard.ts`         | JWT 守卫、路由级权限校验                                           |
+| 通用工具         | `api/src/common/`                      | 常量、装饰器、基础实体、工具函数                                   |
+| Web 入口         | `web/src/main.ts`                      | Vue 应用启动、Pinia、路由、指令                                    |
+| Vue 路由         | `web/src/router/index.ts`              | Hash 历史模式、路由鉴权 (beforeEach)                               |
+| Pinia 状态管理   | `web/src/stores/`                      | useUser、useDict、useSystem                                        |
+| 可复用组件       | `web/src/components/`                  | SchemaForm、SchemaTable、cronInput、布局                           |
+| 页面视图         | `web/src/views/sys/`                   | 8 个管理页面、5 个 API 模块                                        |
+| 自定义组合式函数 | `web/src/hooks/`                       | useFetch、useDict、useDirectives、useVite                          |
+| Socket.IO        | `api/src/socket/` + `web/src/sockets/` | Redis 驱动的 WebSocket 适配器                                      |
+| 文档             | `doc/`                                 | VitePress，3 个部分：apiDoc/ webDoc/ quickStart/                   |
 
 ## 约定规范
 
