@@ -3,6 +3,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import { useUser } from '@/stores/useUser'
+import { useDict } from '@/stores/useDict'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -33,7 +34,7 @@ const router = createRouter({
   ]
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   NProgress.start()
   if (to.meta.title) {
     document.title = `${import.meta.env.VITE_APP_TITLE}-${to.meta.title}`
@@ -43,6 +44,10 @@ router.beforeEach((to, from, next) => {
   }
   if (to.path != '/login' && !useUser().token) {
     return next({ path: '/login', replace: true })
+  }
+  // 刷新或首次进入时加载权限和字典（登录页已自行加载，此处通过 userRoutes 判空避免重复）
+  if (useUser().token && useUser().userRoutes.length === 0) {
+    await Promise.all([useUser().getPermissions(), useDict().initDictMap()])
   }
   next()
 })

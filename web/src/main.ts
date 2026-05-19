@@ -21,8 +21,6 @@ import { permissions } from './hooks/useDirectives'
 import { useUser } from './stores/useUser'
 
 import './sockets'
-import { useDict } from './stores/useDict'
-
 const app = createApp(App)
 
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
@@ -42,11 +40,6 @@ app.use(pinia)
 useUser().initToken()
 
 app.use(router)
-
-if (useUser().token) {
-  useUser().getPermissions()
-  useDict().initDictMap()
-}
 
 app.directive('permissions', permissions)
 
