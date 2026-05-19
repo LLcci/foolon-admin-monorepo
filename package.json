@@ -6,6 +6,8 @@
   "scripts": {
     "docker:compose:deploy": "cd ./api && pnpm run build && cd ../web && pnpm run build && cd ../ && docker compose up -d --build",
     "prepare": "husky install",
+    "dev": "pnpm run --parallel -r dev",
+    "build": "pnpm -r run build",
     "format": "prettier --write \"**/*.{vue,js,ts,jsx,tsx,json,md,html,css,scss}\"",
     "lint": "eslint . --fix",
     "gen:types": "pnpm --filter web run openapi-typescript && pnpm run format"
