@@ -1,1 +1,9 @@
 AGENTS.md
+node_modules/
+dist/
+package.json
+pnpm-lock.yaml
+**/index.html
+**/README.md
+**/public/cap.min.js
+**/public/cap_wasm.min.js
