@@ -1,0 +1,49 @@
+services:
+  mysql-dev:
+    container_name: foolon-mysql-dev
+    image: mysql:8.4.3
+    restart: unless-stopped
+    ports:
+      - '3306:3306'
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./api/sql/:/docker-entrypoint-initdb.d/
+    environment:
+      MYSQL_DATABASE: foolon-admin
+      MYSQL_ROOT_PASSWORD: root
+      TZ: Asia/Shanghai
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost', '-u', 'root', '-proot']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - foolon-dev
+
+  redis-dev:
+    container_name: foolon-redis-dev
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - '6379:6379'
+    command: redis-server --requirepass floolon-admin:H9tCSNrpQXSpLYNmJ=EJ
+    volumes:
+      - redis-data:/data
+    environment:
+      TZ: Asia/Shanghai
+    healthcheck:
+      test: ['CMD', 'redis-cli', '--raw', 'incr', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - foolon-dev
+
+volumes:
+  mysql-data:
+  redis-data:
+
+networks:
+  foolon-dev:
+    driver: bridge
